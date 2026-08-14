@@ -19,6 +19,9 @@ _env = Environment(
 )
 
 
-def render_prompt(name: str, **variables) -> str:
-    """載入 app/prompts/{name}.txt 並以 Jinja2 渲染。"""
-    return _env.get_template(f"{name}.txt").render(**variables)
+def render_prompt(template_path: str, /, **variables) -> str:
+    """載入 app/prompts/{template_path}.txt 並以 Jinja2 渲染。
+
+    第一個參數限定位置傳遞（/），避免與模板變數（如 name）撞名。
+    """
+    return _env.get_template(f"{template_path}.txt").render(**variables)

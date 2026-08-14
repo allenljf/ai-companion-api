@@ -7,14 +7,16 @@
 - C from_zero：不打 LLM，固定文案
 """
 
-import json
-
 from app.core.prompt_loader import render_prompt
 from app.services.llm.client import LLMClient, call_and_parse
+from app.services.plan.persona import (
+    DEFAULT_COMPANION_NAME,
+    _trim,
+    persona_text,
+    wrap_user_input as _wrap_user_input,
+)
 
 TASK = "travel_summary"
-
-DEFAULT_COMPANION_NAME = "小旅"
 
 FIXED_WELCOME_TEMPLATE = (
     "嗨，我是{name}！還沒有想法也沒關係，我們可以慢慢聊——想放鬆度假，還是想來點探險？"
@@ -26,26 +28,9 @@ SOFT_FAIL_SUMMARY = "嗯…我這邊看得不太清楚，能再多說一點你�
 SUMMARY_MAX_TOKENS = 1000
 
 
-def _trim(value) -> str:
-    return str(value).strip() if isinstance(value, (str, int, float)) else ""
-
-
-def persona_text(params: dict) -> str:
-    """旅伴 persona 段（兩期共用慣例，對照 PHP personaText()）。"""
-    name = _trim(params.get("companion_name")) or DEFAULT_COMPANION_NAME
-    traits = [t for t in (_trim(params.get("personality")), _trim(params.get("speech_style"))) if t]
-    if not traits:
-        return f"你的名字是「{name}」。"
-    return f"你的名字是「{name}」，人格特質與說話風格關鍵字：{'、'.join(traits)}，請以此語氣說話。"
-
-
 def authority_city(params: dict) -> str:
     """權威入口（quiz/from_orders）的城市：請求帶什麼回什麼，不經 LLM。"""
     return _trim(params.get("city"))
-
-
-def _wrap_user_input(payload: dict) -> str:
-    return "<<<USER_INPUT\n" + json.dumps(payload, ensure_ascii=False) + "\n>>>END_USER_INPUT"
 
 
 def build_quiz_user_message(params: dict) -> str:
