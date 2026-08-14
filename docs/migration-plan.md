@@ -761,7 +761,7 @@ superpowers 跟 SDD **不衝突，但層級不同**：
 
 | 階段 | 狀態 | 完成日 | 備註（實際踩到的問題） |
 |---|---|---|---|
-| 0 選型驗證 | 🔶 進行中（過大半） | | 2026-08-14 選型定案：Cloud Run（asia-east1，專案 ai-companion-505507）+ Neon + Gemini + Groq。SQLite 不可用 → 改 Neon。已部署上線：https://ai-companion-api-30568057620.asia-east1.run.app ，驗收通過：/health ✅、ai-partner 信封 ✅、400 契約 ✅、**45s 請求存活 ✅（timeout 硬門檻過）**。踩過的坑：① gh CLI 登錯帳號把 repo 建到公司帳號（已刪重建於 allenljf）② token 缺 workflow scope ③ API 啟用後有傳播延遲 ④ **GCP_PROJECT_ID secret 誤填專案名稱 ai-companion 而非 ID ai-companion-505507**（deploy 三連敗主因）。真實 ai_partner.json（v11）已上線並驗證，附贈 partner_intro_prompt（階段 7 可用）。待辦：冷啟動實測（閒置 30 分後 time curl /health）、記憶體觀察（console Metrics） |
+| 0 選型驗證 | ✅ 完成 | 2026-08-14 | 選型：Cloud Run（asia-east1，專案 ai-companion-505507）+ Neon + Gemini + Groq。SQLite 不可用 → 改 Neon。服務：https://ai-companion-api-30568057620.asia-east1.run.app 。全驗收通過：/health ✅、ai-partner 信封 ✅、400 契約 ✅、45s 請求存活 ✅（timeout 硬門檻）、**冷啟動 3.5s**（閒置 4hr 後實測；熱請求 0.05s，無需保溫）、**記憶體 RSS 58.8MB / 512Mi ≈ 11%** ✅、CI 自動部署 ✅。真實 ai_partner.json（v11）已上線，附贈 partner_intro_prompt（階段 7 可用）；120 張頭像壓縮（246MB→16.6MB, 512px）並搬到自有 GCS（ai-companion-assets-allenljf，公開讀取）。踩過的坑：① gh CLI 登錯帳號把 repo 建到公司帳號（已刪重建於 allenljf）② token 缺 workflow scope ③ API 啟用有傳播延遲 ④ **GCP_PROJECT_ID secret 誤填專案名稱而非 ID**（deploy 三連敗主因）⑤ GCS 公開讀取要先解除 public access prevention 再加 allUsers。觀測點：/debug/sleep、/debug/memory |
 | 1 LLM 層 + travel-summary | ⬜ | | |
 | 2 三支城市判讀 | ⬜ | | |
 | 3 recommend-city | ⬜ | | |
