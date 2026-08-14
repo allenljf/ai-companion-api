@@ -761,7 +761,7 @@ superpowers 跟 SDD **不衝突，但層級不同**：
 
 | 階段 | 狀態 | 完成日 | 備註（實際踩到的問題） |
 |---|---|---|---|
-| 0 選型驗證 | ⬜ 未開始 | | |
+| 0 選型驗證 | 🔶 進行中 | | 2026-08-14 選型定案：Cloud Run（asia-east1）+ Neon Postgres + Gemini（重度+產圖）+ Groq（輕量）。SQLite 判定不可用（Cloud Run 暫時檔案系統+多副本）→ 改 Neon。骨架完成（/health、ai-partner、/debug/sleep、信封+400 契約、Dockerfile、CI），4 個測試過。待辦：跑 scripts/setup-wizard.sh 申請金鑰 → 首次部署 → timeout/冷啟動/記憶體實測 → 取回真實 ai_partner.json |
 | 1 LLM 層 + travel-summary | ⬜ | | |
 | 2 三支城市判讀 | ⬜ | | |
 | 3 recommend-city | ⬜ | | |

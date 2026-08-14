@@ -1,0 +1,10 @@
+{
+  "personality": [
+    {"tag": "placeholder_personality", "label": "佔位人格", "description": "這是佔位資料：請用原始服務 GET /v3/companion/ai-partner 的回應原樣覆蓋本檔案（見 CLAUDE.md 資料缺口表）"}
+  ],
+  "speech_style": [
+    {"tag": "placeholder_style", "label": "佔位風格", "description": "佔位資料，待以真實 DCS ai_partner 內容取代"}
+  ],
+  "gender": [],
+  "avatars": []
+}
