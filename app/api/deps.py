@@ -36,6 +36,7 @@ def get_llm_client() -> LLMClient:
         "travel_summary_from_history": _parse_route(settings.llm_travel_summary_from_history),
         "recommend_city": _parse_route(settings.llm_recommend_city),
         "travel_guide": _parse_route(settings.llm_travel_guide),
+        "travel_revise": _parse_route(settings.llm_travel_revise),
     }
     # 金鑰沒設時 provider 不存在 → chat 時 KeyError → call_and_parse 軟失敗，服務仍可啟動
     return LLMClient(providers=providers, routing=routing)

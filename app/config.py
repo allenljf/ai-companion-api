@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     # guide 例外走 llama-3.3-70b：qwen 的 TPM 8000 裝不下「長 prompt + max_tokens 8000」（實測 413），
     # llama-3.3-70b TPM 12000 才夠；非 reasoning 模型，不需要 effort 參數
     llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
+    # revise 輸入含完整行程 + 完整對話，比 guide 更長，同樣只有 llama 的 TPM 12000 裝得下
+    llm_travel_revise: str = "groq:llama-3.3-70b-versatile"
 
     data_dir: Path = BASE_DIR / "data"
 

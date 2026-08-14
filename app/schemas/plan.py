@@ -124,6 +124,41 @@ class TravelGuideRequest(PersonaFields):
         return self
 
 
+class ReviseDayInput(BaseModel):
+    """單天骨架：內部結構刻意不深驗（彈性原則），缺欄位由 normalize 補齊；
+    只擋異常膨脹的 items payload 灌進 LLM prompt。"""
+
+    model_config = {"extra": "allow"}
+
+    items: list | None = Field(None, max_length=50)
+
+
+class TravelReviseRequest(PersonaFields):
+    # 當前最新完整行程（App 每輪帶 merge 後的最新版），形狀 = travel-guide 的 itinerary_patch.days
+    itinerary: list[ReviseDayInput] = Field(..., min_length=1, max_length=30)
+
+    # 帶了 city 就是權威輸入：輸出必須一致，不一致視為失敗
+    city: str | None = Field(None, max_length=50)
+
+    # 優先只動這一天；未帶 = 整份可動
+    target_day: int | None = Field(None, ge=1)
+
+    # 整個聊天室從頭到尾的完整對話（同 recommend-city 做法），最後一則 = 本次修改需求
+    messages: list[ChatMessage] = Field(..., min_length=1, max_length=100)
+
+    preferences: dict[str, object] | None = None
+
+    # 只需帶「要新排入」的材料；行程既有 id 自動併入白名單
+    orders: list[GuideOrderInput] | None = Field(None, max_length=3)
+    products: list[ProductInput] | None = Field(None, max_length=10)
+
+    @model_validator(mode="after")
+    def _check_preferences_size(self):
+        if self.preferences is not None and len(self.preferences) > 30:
+            raise ValueError("The preferences may not have more than 30 items.")
+        return self
+
+
 class TravelSummaryRequest(BaseModel):
     entry_type: Literal["quiz_completion", "from_orders", "imported_itinerary", "from_zero"]
 

@@ -72,6 +72,33 @@ def build_system_prompt(params: dict) -> str:
     )
 
 
+def booked_orders_payload(params: dict) -> list[dict]:
+    """LLM user message 用的 orders payload（材料原樣傳遞，oid 供對映）；guide/revise 共用。"""
+    return [
+        {
+            "oid": str(order.get("oid") or ""),
+            "prod_name": str(order.get("prod_name") or ""),
+            "package_name": str(order.get("package_name") or ""),
+            "destination_name": str(order.get("destination_name") or ""),
+            "go_dt": str(order.get("go_dt") or ""),
+        }
+        for order in params.get("orders") or []
+    ]
+
+
+def selected_products_payload(params: dict) -> list[dict]:
+    """LLM user message 用的 products payload（材料原樣傳遞，prod_id 供對映）；guide/revise 共用。"""
+    return [
+        {
+            "prod_id": str(product.get("prod_id") or ""),
+            "prod_name": str(product.get("prod_name") or ""),
+            "introduction": str(product.get("introduction") or ""),
+            "destination_names": [str(n) for n in (product.get("destination_names") or [])],
+        }
+        for product in params.get("products") or []
+    ]
+
+
 def build_user_message(params: dict) -> str:
     payload: dict = {
         "summary": str(params.get("summary") or ""),
@@ -79,26 +106,9 @@ def build_user_message(params: dict) -> str:
         "preferences": dict(params.get("preferences") or {}),
     }
     if params.get("orders"):
-        payload["orders"] = [
-            {
-                "oid": str(order.get("oid") or ""),
-                "prod_name": str(order.get("prod_name") or ""),
-                "package_name": str(order.get("package_name") or ""),
-                "destination_name": str(order.get("destination_name") or ""),
-                "go_dt": str(order.get("go_dt") or ""),
-            }
-            for order in params["orders"]
-        ]
+        payload["orders"] = booked_orders_payload(params)
     if params.get("products"):
-        payload["products"] = [
-            {
-                "prod_id": str(product.get("prod_id") or ""),
-                "prod_name": str(product.get("prod_name") or ""),
-                "introduction": str(product.get("introduction") or ""),
-                "destination_names": [str(n) for n in (product.get("destination_names") or [])],
-            }
-            for product in params["products"]
-        ]
+        payload["products"] = selected_products_payload(params)
     return wrap_user_input(payload)
 
 
@@ -203,14 +213,14 @@ def normalize_days(
 
     normalized = [
         normalize_day_shape(
-            _convert_day_text(day), day_number, oid_whitelist, product_id_whitelist
+            convert_day_text(day), day_number, oid_whitelist, product_id_whitelist
         )
         for day, day_number in zip(days, numbers)
     ]
     return dedupe_tracked_ids(normalized)
 
 
-def _convert_day_text(day: dict) -> dict:
+def convert_day_text(day: dict) -> dict:
     """items 文字欄位簡轉繁（風險 #3 fallback：prompt 強調仍有單字級滲漏）。"""
     items = day.get("items")
     if not isinstance(items, list):

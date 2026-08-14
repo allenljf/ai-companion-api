@@ -7,6 +7,7 @@ from app.schemas.common import success_envelope
 from app.schemas.plan import (
     RecommendCityRequest,
     TravelGuideRequest,
+    TravelReviseRequest,
     TravelSummaryFromHistoryRequest,
     TravelSummaryFromOrdersRequest,
     TravelSummaryFromWishRequest,
@@ -15,6 +16,7 @@ from app.schemas.plan import (
 from app.services.llm.client import LLMClient
 from app.services.plan.guide import generate as generate_guide
 from app.services.plan.recommend_city import recommend
+from app.services.plan.revise import revise as revise_itinerary
 from app.services.plan.summary import summarize
 from app.services.plan.summary_from_history import summarize_from_history
 from app.services.plan.summary_from_orders import summarize_from_orders
@@ -61,6 +63,14 @@ async def travel_guide(
     body: TravelGuideRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
     data = await generate_guide(body.model_dump(), client)
+    return success_envelope(data)
+
+
+@router.post("/travel-revise")
+async def travel_revise(
+    body: TravelReviseRequest, client: LLMClient = Depends(get_llm_client)
+) -> dict:
+    data = await revise_itinerary(body.model_dump(), client)
     return success_envelope(data)
 
 
