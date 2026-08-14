@@ -87,6 +87,43 @@ class RecommendCityRequest(PersonaFields):
         return self
 
 
+class GuideOrderInput(BaseModel):
+    """已預訂訂單（帶了就必須排入行程並以 oid 對映；oid 取 orders API 的訂單 id）。"""
+
+    oid: str = Field(..., max_length=50)
+    prod_name: str = Field(..., max_length=200)
+    package_name: str | None = Field(None, max_length=200)
+    destination_name: str | None = Field(None, max_length=100)
+    go_dt: str | None = None
+
+    @model_validator(mode="after")
+    def _check_go_dt(self):
+        if self.go_dt is not None and not _DATE_RE.match(self.go_dt):
+            raise ValueError("The orders.go_dt field must match the format Y-m-d.")
+        return self
+
+
+class TravelGuideRequest(PersonaFields):
+    # travel-summary 回傳的摘要，作為背景資訊帶入本次規劃
+    summary: str = Field(..., max_length=4000)
+    # 帶了 city 就是權威輸入：輸出城市必須一致，不一致視為失敗（技法 5）
+    city: str | None = Field(None, max_length=50)
+
+    # 旅遊偏好：map 形式、key/value 不固定（題目未來放 DCS 動態擴充），
+    # 只限整體 key 數 ≤30，不對內容做結構驗證
+    preferences: dict[str, object] | None = None
+
+    orders: list[GuideOrderInput] | None = Field(None, max_length=3)
+    # 來自 from-wish／from-history 被點選城市底下的 products；尚未購買，不推導 booked_anchor
+    products: list[ProductInput] | None = Field(None, max_length=10)
+
+    @model_validator(mode="after")
+    def _check_preferences_size(self):
+        if self.preferences is not None and len(self.preferences) > 30:
+            raise ValueError("The preferences may not have more than 30 items.")
+        return self
+
+
 class TravelSummaryRequest(BaseModel):
     entry_type: Literal["quiz_completion", "from_orders", "imported_itinerary", "from_zero"]
 

@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     llm_travel_summary_from_wish: str = "groq:qwen/qwen3.6-27b:none"
     llm_travel_summary_from_history: str = "groq:qwen/qwen3.6-27b:none"
     llm_recommend_city: str = "groq:qwen/qwen3.6-27b:none"
+    # guide 例外走 llama-3.3-70b：qwen 的 TPM 8000 裝不下「長 prompt + max_tokens 8000」（實測 413），
+    # llama-3.3-70b TPM 12000 才夠；非 reasoning 模型，不需要 effort 參數
+    llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
 
     data_dir: Path = BASE_DIR / "data"
 
