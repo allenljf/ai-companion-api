@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     llm_travel_summary_from_orders: str = "groq:qwen/qwen3.6-27b:none"
     llm_travel_summary_from_wish: str = "groq:qwen/qwen3.6-27b:none"
     llm_travel_summary_from_history: str = "groq:qwen/qwen3.6-27b:none"
+    llm_recommend_city: str = "groq:qwen/qwen3.6-27b:none"
 
     data_dir: Path = BASE_DIR / "data"
 

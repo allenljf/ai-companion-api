@@ -66,6 +66,27 @@ class TravelSummaryFromHistoryRequest(PersonaFields):
     products: list[ProductInput] = Field(..., min_length=1, max_length=20)
 
 
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(..., max_length=2000)
+
+
+class RecommendCityRequest(PersonaFields):
+    # 無狀態設計：App 每次把完整對話歷史（含本次使用者輸入）全量傳入，
+    # 後端以 role=user 的訊息數計算輪次（上限 5 輪）
+    messages: list[ChatMessage] = Field(..., min_length=1, max_length=20)
+
+    # 需排除的城市（已推薦過/使用者已去過），兼換城次數計數器
+    shown_cities: list[str] | None = Field(None, max_length=30)
+
+    @model_validator(mode="after")
+    def _check_shown_city_lengths(self):
+        for city in self.shown_cities or []:
+            if len(city) > 50:
+                raise ValueError("The shown_cities items may not be greater than 50 characters.")
+        return self
+
+
 class TravelSummaryRequest(BaseModel):
     entry_type: Literal["quiz_completion", "from_orders", "imported_itinerary", "from_zero"]
 

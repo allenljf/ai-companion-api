@@ -5,12 +5,14 @@ from fastapi import APIRouter, Depends
 from app.api.deps import get_llm_client
 from app.schemas.common import success_envelope
 from app.schemas.plan import (
+    RecommendCityRequest,
     TravelSummaryFromHistoryRequest,
     TravelSummaryFromOrdersRequest,
     TravelSummaryFromWishRequest,
     TravelSummaryRequest,
 )
 from app.services.llm.client import LLMClient
+from app.services.plan.recommend_city import recommend
 from app.services.plan.summary import summarize
 from app.services.plan.summary_from_history import summarize_from_history
 from app.services.plan.summary_from_orders import summarize_from_orders
@@ -41,6 +43,14 @@ async def travel_summary_from_wish(
     body: TravelSummaryFromWishRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
     data = await summarize_from_wish(body.model_dump(), client)
+    return success_envelope(data)
+
+
+@router.post("/recommend-city")
+async def recommend_city(
+    body: RecommendCityRequest, client: LLMClient = Depends(get_llm_client)
+) -> dict:
+    data = await recommend(body.model_dump(), client)
     return success_envelope(data)
 
 
