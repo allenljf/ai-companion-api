@@ -3,12 +3,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.api import debug
-from app.api.v1 import companion
+from app.api.v1 import companion, plan
 from app.schemas.common import validation_error_envelope
 
 app = FastAPI(title="AI Companion API", version="0.1.0")
 
 app.include_router(companion.router)
+app.include_router(plan.router)
 app.include_router(debug.router)
 
 

@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     # Neon Postgres（階段 6 前主要當 cache/gallery/lock 用）
     database_url: str | None = None
 
+    # LLM 任務路由："provider:model[:reasoning_effort]"（provider = gemini | groq）
+    # 每支 API 可獨立指定模型（CLAUDE.md 技術決策），換模型改 env 即可。
+    # Qwen 是 reasoning 模型，輕量任務關掉思考（:none）避免 tokens 被吃光
+    llm_travel_summary: str = "groq:qwen/qwen3.6-27b:none"
+
     data_dir: Path = BASE_DIR / "data"
 
 

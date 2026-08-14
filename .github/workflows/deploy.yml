@@ -39,4 +39,5 @@ jobs:
             --cpu 1 \
             --timeout 300 \
             --min-instances 0 \
-            --max-instances 1
+            --max-instances 1 \
+            --update-env-vars "^@^GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}@GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}"
