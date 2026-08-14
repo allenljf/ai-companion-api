@@ -11,6 +11,15 @@ from app.services.plan.recommend_city import recommend
 
 pytestmark = pytest.mark.prompt_regression
 
+# 常見「簡體字獨有寫法」抽樣（繁體文本不會出現這些字形）——偵測簡中滲漏（風險 #3）
+SIMPLIFIED_CHARS = set("没关风发让说见问东乐选过这样时间为个们边购读户体验议记忆点击带应")
+
+
+def assert_traditional_chinese(*texts: str):
+    for text in texts:
+        leaked = {ch for ch in text} & SIMPLIFIED_CHARS
+        assert not leaked, f"疑似簡體字滲漏 {leaked}：{text}"
+
 
 @pytest.fixture(autouse=True)
 def fresh_llm_client():
@@ -28,6 +37,7 @@ async def test_round_1_asks_a_question_with_chips():
     assert result["fail_reason"] is None
     assert result["reply"]
     assert result["round"] == 1
+    assert_traditional_chinese(result["reply"], *result["quick_replies"])
     # 第 1 輪通常提問收斂偏好；若提前收斂也合法，但未收斂時 chips 要有 2~4 個
     if not result["is_final"]:
         assert 2 <= len(result["quick_replies"]) <= 4
@@ -57,6 +67,7 @@ async def test_round_5_forced_convergence_respects_ban_list():
     assert result["recommended_city"] != ""
     assert result["recommended_city"] not in shown
     assert result["city_reason"]
+    assert_traditional_chinese(result["reply"], result["city_reason"])
     # 收斂 chips 由後端固定
     assert result["quick_replies"][0] == f"就去{result['recommended_city']}！"
     assert "換一個城市" in result["quick_replies"]

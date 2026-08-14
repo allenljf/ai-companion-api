@@ -47,6 +47,7 @@
 - 若你覺得資訊已經足夠，不用等輪次用完，可以直接給出 recommended_city（提前收斂）
 {% endif %}
 ## 輸出格式（嚴格遵守）
+所有文字欄位（reply、quick_replies、city_reason）一律使用**繁體中文（台灣用語）**，絕對不可輸出簡體中文。
 只輸出純 JSON，不得有任何 JSON 以外的文字或 Markdown 程式碼框：
 {
   "reply": "string",
