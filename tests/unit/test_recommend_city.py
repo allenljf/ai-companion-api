@@ -266,3 +266,24 @@ class TestRecommend:
         )
         assert result["swap_limit_reached"] is False
         assert result["recommended_city"] == "沖繩"
+
+
+class TestTraditionalChinesePostProcess:
+    @pytest.mark.asyncio
+    async def test_simplified_output_converted(self):
+        simplified = '{"reply": "没关系，推荐冲绳！", "quick_replies": ["躺平发呆"], "recommended_city": "冲绳", "city_reason": "预算刚好", "off_topic": false}'
+        provider = SequenceProvider([simplified])
+        result = await recommend({"messages": user_rounds(2)}, make_client(provider))
+
+        assert result["reply"] == "沒關係，推薦沖繩！"
+        assert result["recommended_city"] == "沖繩"
+        assert result["city_reason"] == "預算剛好"
+        # 收斂 chips 由後端組（城市名已轉繁）
+        assert result["quick_replies"][0] == "就去沖繩！"
+
+    @pytest.mark.asyncio
+    async def test_unconverged_quick_replies_converted(self):
+        simplified = '{"reply": "想去哪儿？", "quick_replies": ["看海边", "逛庙会"], "recommended_city": "", "city_reason": "", "off_topic": false}'
+        provider = SequenceProvider([simplified])
+        result = await recommend({"messages": user_rounds(1)}, make_client(provider))
+        assert result["quick_replies"] == ["看海邊", "逛廟會"]

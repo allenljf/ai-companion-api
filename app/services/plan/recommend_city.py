@@ -13,6 +13,7 @@ shown_cities 違規：字面比對（trim + 不分大小寫）命中時帶違規
 import logging
 
 from app.core.prompt_loader import render_prompt
+from app.core.zh import to_traditional
 from app.services.llm.client import LLMClient, call_and_parse
 from app.services.plan.persona import _trim, persona_text, wrap_user_input
 
@@ -87,11 +88,12 @@ async def recommend(params: dict, client: LLMClient) -> dict:
         }
 
     decoded, city = resolution["decoded"], resolution["city"]
+    # 簡轉繁後處理（風險 #3 fallback）：prompt 強調仍會有單字級滲漏（如「预算」）
     return _base_result(round_, model) | {
-        "reply": _trim(decoded.get("reply")),
-        "quick_replies": _build_quick_replies(decoded, city, len(shown_cities)),
+        "reply": to_traditional(_trim(decoded.get("reply"))),
+        "quick_replies": [to_traditional(q) for q in _build_quick_replies(decoded, city, len(shown_cities))],
         "recommended_city": city,
-        "city_reason": _trim(decoded.get("city_reason")),
+        "city_reason": to_traditional(_trim(decoded.get("city_reason"))),
         "is_final": city != "",
         "off_topic": bool(decoded.get("off_topic", False)),
     }
@@ -112,7 +114,8 @@ async def _resolve_recommendation(
     if not _trim(decoded.get("reply")):
         return {"error": "LLM fail: LLM 回應無法解析為預期 JSON（缺 reply 欄位）"}
 
-    city = _trim(decoded.get("recommended_city"))
+    # 城市名先轉繁再做違規比對——簡體「冲绳」不能繞過「沖繩」的字面檢查
+    city = to_traditional(_trim(decoded.get("recommended_city")))
 
     # 強制收斂輪 LLM 仍沒給城市 → 視為失敗（App 原樣重打即可，無副作用）
     if round_ >= MAX_ROUNDS and city == "":
@@ -128,7 +131,7 @@ async def _resolve_recommendation(
             return {"error": f"LLM fail: 重試呼叫失敗（{retry.fail_reason}）"}
 
         decoded = retry.data if isinstance(retry.data, dict) else {}
-        city = _trim(decoded.get("recommended_city"))
+        city = to_traditional(_trim(decoded.get("recommended_city")))
         if not _trim(decoded.get("reply")) or city == "" or is_shown_city(city, shown_cities):
             return {"error": "LLM fail: 重試後推薦城市仍與 shown_cities 重複"}
 
