@@ -762,7 +762,7 @@ superpowers 跟 SDD **不衝突，但層級不同**：
 | 階段 | 狀態 | 完成日 | 備註（實際踩到的問題） |
 |---|---|---|---|
 | 0 選型驗證 | ✅ 完成 | 2026-08-14 | 選型：Cloud Run（asia-east1，專案 ai-companion-505507）+ Neon + Gemini + Groq。SQLite 不可用 → 改 Neon。服務：https://ai-companion-api-30568057620.asia-east1.run.app 。全驗收通過：/health ✅、ai-partner 信封 ✅、400 契約 ✅、45s 請求存活 ✅（timeout 硬門檻）、**冷啟動 3.5s**（閒置 4hr 後實測；熱請求 0.05s，無需保溫）、**記憶體 RSS 58.8MB / 512Mi ≈ 11%** ✅、CI 自動部署 ✅。真實 ai_partner.json（v11）已上線，附贈 partner_intro_prompt（階段 7 可用）；120 張頭像壓縮（246MB→16.6MB, 512px）並搬到自有 GCS（ai-companion-assets-allenljf，公開讀取）。踩過的坑：① gh CLI 登錯帳號把 repo 建到公司帳號（已刪重建於 allenljf）② token 缺 workflow scope ③ API 啟用有傳播延遲 ④ **GCP_PROJECT_ID secret 誤填專案名稱而非 ID**（deploy 三連敗主因）⑤ GCS 公開讀取要先解除 public access prevention 再加 allUsers。觀測點：/debug/sleep、/debug/memory |
-| 1 LLM 層 + travel-summary | ⬜ | | |
+| 1 LLM 層 + travel-summary | ✅ 完成 | 2026-08-14 | 全驗收通過：LLMProvider 抽象（Gemini/Groq 共用 OpenAICompatProvider，走 OpenAI 相容端點）、decode_llm_json（容忍 fence + 框外解說）、call_and_parse 軟失敗、Jinja2 prompt 檔、`POST /v1/plan/travel-summary` 四入口線上實打 ✅、400 契約 ✅。**踩到的坑**：① `gemini-2.5-flash` 對新用戶已停用（404 "no longer available to new users"），且 **Gemini prepay credits 已耗盡（429）**→ 改用 Groq `qwen/qwen3.6-27b`（繁中品質好、支援 image 輸入可覆蓋 B 入口 vision、json_mode）② **Qwen 是 reasoning 模型，思考 tokens 會吃光 max_tokens 導致 json_validate_failed 空回應**→ 抽象層加 reasoning_effort 支援，路由格式 `provider:model[:reasoning_effort]`（env `LLM_TRAVEL_SUMMARY`，預設 `groq:qwen/qwen3.6-27b:none`）③ CI 補 `--update-env-vars` 送金鑰上 Cloud Run（GitHub secrets：GEMINI_API_KEY/GROQ_API_KEY）。**觀察**：A2 開場白偶有輕微幻覺（提到未輸入的「住宿」）、長度偶爾超 120 字——記入 prompt 調校待辦，未擋驗收。prompt 回歸測試 3 條已建立（`pytest -m prompt_regression`）。 |
 | 2 三支城市判讀 | ⬜ | | |
 | 3 recommend-city | ⬜ | | |
 | 4 normalize + travel-guide | ⬜ | | |
