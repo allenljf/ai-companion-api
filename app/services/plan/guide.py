@@ -191,16 +191,22 @@ def normalize_days(
     days: list, oid_whitelist: list[str], product_id_whitelist: list[str]
 ) -> list[dict]:
     """逐日正規化：day 編號優先採用模型輸出、缺則用陣列索引遞增（對照 PHP normalizeDays），
-    再做全行程 oid/prod_id 去重（各自獨立、只認第一次）。"""
-    normalized = []
-    for index, day in enumerate(days):
-        day = day if isinstance(day, dict) else {}
-        day_number = _coerce_int(day.get("day")) or index + 1
-        normalized.append(
-            normalize_day_shape(
-                _convert_day_text(day), day_number, oid_whitelist, product_id_whitelist
-            )
+    再做全行程 oid/prod_id 去重（各自獨立、只認第一次）。
+
+    防呆（與 PHP 刻意不同）：模型給的編號不唯一時（實測 llama-3.3-70b 會把最後一天
+    拆成兩個同號區塊），一律改用陣列索引重編，避免 App 出現兩個相同的 Day。
+    """
+    days = [day if isinstance(day, dict) else {} for day in days]
+    numbers = [_coerce_int(day.get("day")) or index + 1 for index, day in enumerate(days)]
+    if len(set(numbers)) != len(numbers):
+        numbers = [index + 1 for index in range(len(days))]
+
+    normalized = [
+        normalize_day_shape(
+            _convert_day_text(day), day_number, oid_whitelist, product_id_whitelist
         )
+        for day, day_number in zip(days, numbers)
+    ]
     return dedupe_tracked_ids(normalized)
 
 

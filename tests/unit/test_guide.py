@@ -376,6 +376,18 @@ async def test_generate_day_numbering_prefers_model_day_falls_back_to_index():
 
 
 @pytest.mark.asyncio
+async def test_generate_duplicate_model_days_renumbered_by_index():
+    # 線上實測（llama-3.3-70b）：模型把最後一天拆成兩個 day=5 區塊——
+    # 編號不唯一時不採信模型，全部改用陣列索引重編，避免 App 出現兩個 Day 5
+    reply = llm_reply(
+        itinerary=[{"day": d, "items": []} for d in (1, 2, 3, 4, 5, 5)], days=5
+    )
+    client, _ = make_client(reply)
+    result = await generate(dict(BASE_PARAMS), client)
+    assert [d["day"] for d in result["itinerary_patch"]["days"]] == [1, 2, 3, 4, 5, 6]
+
+
+@pytest.mark.asyncio
 async def test_generate_unplanned_days_phase_plan():
     reply = llm_reply(
         unplanned_days=[2],
