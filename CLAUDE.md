@@ -94,7 +94,7 @@ def _coerce(cls, v): return v if v in ("spot","logistics","meal") else "spot"
 | 缺什麼 | 影響階段 | 怎麼補 |
 |---|---|---|
 | **DCS `ai_quiz.dimensions`（測驗題庫）** | 階段 7 | 原始服務存在 DCS、不在 repo 裡。需要從 DCS 後台匯出，或用 `POST /v3/companion/quiz` 反覆呼叫蒐集（每次只回每維度 1 題，要跑很多次） |
-| **DCS `ai_partner`（人格/風格選項）** | 階段 1 起就會用到 persona | 可直接打 `GET /v3/companion/ai-partner` 取回（原樣透傳 DCS），存成 `data/ai_partner.json` |
+| ~~DCS `ai_partner`（人格/風格選項）~~ | ~~階段 1 起~~ | ✅ **已補**（2026-08-14，version 11 存於 `data/ai_partner.json`；內含 `partner_intro_prompt`，可直接供階段 7 self-introduction 使用） |
 | **DCS 版的 `response_prompt`** | 階段 7 | `docs/source-spec.md` 8.3 有程式碼內建 fallback 版；線上 DCS 版另有 `reasoning` 逐句與分段 `recommendation` 的要求，需要時從 DCS 後台取 |
 
 ## 指令
