@@ -1,0 +1,36 @@
+# === 原始 PHP 實作快照（公司程式碼，不進版控）=====================
+# 只留 README 說明用途，其餘檔案本機保留但不 commit
+reference/*
+!reference/README.md
+
+# === 機密 ==========================================================
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# === Python ========================================================
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# === 執行期產物 =====================================================
+*.db
+*.sqlite
+*.sqlite3
+data/cache/
+tmp/
+*.log
+
+# === 編輯器 / OS ====================================================
+.DS_Store
+.idea/
+.vscode/
