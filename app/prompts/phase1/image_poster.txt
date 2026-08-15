@@ -1,0 +1,362 @@
+# Travel DNA Design System v3.2
+
+> Master Design System for KKday Travel DNA Social Cards
+
+## Objective
+
+Generate one premium travel personality social sharing card.
+
+Do **not** design a new poster. Treat every output as another edition of
+the same collectible travel postcard series.
+
+------------------------------------------------------------------------
+
+# Required Inputs
+
+Every generation always includes:
+
+1.  **Design System (.md)**
+2.  **Composition Reference Image**
+3.  **Result JSON**
+
+## Priority
+
+1.  Design System
+2.  Composition Reference Image
+3.  Result JSON
+
+The **Composition Reference Image** defines the layout only.
+
+The **Design System** defines the visual language, composition rules and
+generation behavior.
+
+The **Result JSON** provides the dynamic content.
+
+------------------------------------------------------------------------
+
+# Design Philosophy
+
+-   Maintain an existing product design system.
+-   Consistency is more important than layout creativity.
+-   Creativity should be expressed only through the Hero Illustration
+    and destination-localized elements.
+-   Imagine updating content inside a locked Figma template.
+
+------------------------------------------------------------------------
+
+# Four-Layer Design System
+
+## Layer 1 --- Layout (Locked)
+
+The Composition Reference Image is a **wireframe**, not an illustration
+reference.
+
+It defines only:
+
+-   Overall composition
+-   Visual hierarchy
+-   White space
+-   Component positions
+-   Component proportions
+-   Hero / Information Card relationship
+-   Companion Postcard placement
+-   Branding placement
+-   Marketing area placement
+
+Never redesign or reinterpret the layout.
+
+### Placeholder Slots (Critical)
+
+The wireframe contains placeholder markers: grey blocks, dashed
+outlines, generic image icons, and labels such as "YOUR ILLUSTRATION
+HERE" or "PLACEHOLDER".
+
+These markers indicate **content slots only**. They must **NEVER**
+appear in the final output --- no grey boxes, no dashed borders, no
+generic image icons, no placeholder text of any kind.
+
+Every placeholder slot must be filled with fully rendered, finished
+content appropriate to the destination and personality:
+
+-   The large top area → the Hero Illustration (full-bleed, finished
+    artwork).
+-   The three small boxes above the hashtags → three finished icon
+    illustrations, one per hashtag, each visually matching its hashtag
+    meaning and localized to the destination.
+-   The bottom-left and bottom-right placeholder boxes → localized
+    decorative sticker artwork (see Layer 3).
+-   The QR block → keep as a scannable-looking QR code graphic in the
+    same position.
+
+If any slot would be left empty, fill it with destination-appropriate
+decorative artwork instead --- never leave wireframe graphics visible.
+
+------------------------------------------------------------------------
+
+## Layer 2 --- Hero Illustration (Creative)
+
+Create a completely new Hero Illustration every generation.
+
+Do NOT imitate the reference image's:
+
+-   Camera angle
+-   Viewpoint
+-   Character pose
+-   Framing
+-   Subject arrangement
+-   Foreground composition
+
+Instead answer:
+
+> "If this travel personality visited this destination, what memorable
+> moment would they experience?"
+
+Prioritize environmental storytelling over landmark showcase.
+
+### Hero Composition Rules
+
+-   The final canvas is **9:16**.
+-   The center **4:5** region is the Safe Area.
+-   Assume Instagram Feed and Threads crop away the top and bottom.
+-   Place the visual focus inside the 4:5 Safe Area.
+-   Position the visual focus slightly lower than the vertical center of
+    the full canvas.
+-   Keep the traveler's face, body and important storytelling inside the
+    Safe Area.
+-   Avoid placing important subjects near the very top or bottom.
+
+Upper Story Extension should mainly contain:
+
+-   Sky
+-   Clouds
+-   Atmosphere
+-   Lighting
+-   Mountains
+-   Skyline
+
+Lower Story Extension should smoothly transition into the marketing
+section without containing important storytelling.
+
+The cropped 4:5 Safe Area should still feel like a complete standalone
+composition.
+
+### Character Scale (Critical)
+
+The traveler must be depicted as a **small figure within a grand
+environment** --- roughly **half the height** of a typical human-scale
+subject in this kind of illustration. The environment, not the
+character, is the visual protagonist.
+
+Concretely:
+
+-   The character's full body height should occupy no more than
+    **15--20% of the frame's vertical height** (a small, wide, or
+    establishing shot, not a portrait or medium close-up).
+-   Never crop the character at the waist or chest to make them appear
+    larger --- the character should be shown at full or near-full body
+    scale, simply positioned further back within a spacious scene.
+-   Surround the character with generous negative space, environment
+    detail, and depth (foreground, midground, background) so the scene
+    reads as a wide environmental shot.
+-   Do NOT fill the frame with the character. Do NOT use a close-up,
+    portrait, or medium shot. Avoid the character's body or face
+    dominating more than a small fraction of the composition.
+-   The face must still read as clearly visible and recognizable at
+    this smaller scale --- keep enough resolution and clarity on the
+    face even though the character occupies less of the frame.
+
+### Character Guidelines
+
+The traveler should feel naturally integrated into the destination
+rather than posing for the viewer.
+
+**Gender (Required Variation):** Randomly choose the traveler's gender
+--- male or female --- independently for every generation, with roughly
+equal probability. Do NOT default to male. The chosen gender must fit
+the personality and scene naturally.
+
+The character may be:
+
+-   Walking through the destination
+-   Exploring local streets
+-   Interacting with local people
+-   Enjoying local food
+-   Participating in local activities
+-   Quietly observing the surroundings
+-   Resting naturally within the environment
+
+**Viewpoint (Strict):** The head and body must always read as one
+anatomically coherent pose --- never force the head to face a different
+direction than the body naturally would. The neck may rotate the head
+relative to the shoulders/torso only within a natural, comfortable
+range (no more than roughly 45--60° from the torso's facing direction).
+Never twist the head against the body's rotation to fake a frontal or
+visible face.
+
+Choose ONE overall body orientation, and let the head follow it
+naturally:
+
+-   **Front view:** torso faces the camera or scene in front; head faces
+    forward, or turns slightly (up to ~45°) to either side.
+-   **Three-quarter view:** torso is angled roughly 30--45° away from the
+    camera; head is angled to match, optionally turning a little further
+    toward camera within the natural neck-rotation range.
+-   **Side view:** torso is in full side profile; head is also in side
+    profile (or turned only very slightly), never counter-rotated to
+    face the camera.
+
+The character's face must be clearly visible in every generation ---
+achieve this by choosing a body orientation (front or three-quarter)
+that naturally shows the face, never by twisting the head unnaturally
+against a side- or rear-facing body.
+
+If a pose or action (e.g., looking at a menu, bending down, reaching for
+something, interacting with a vendor) would naturally turn the body away
+from the camera, choose a body/head orientation combination (front or
+three-quarter) where the face remains naturally visible, rather than
+forcing the head to counter-rotate against the body.
+
+**NEVER**:
+
+-   Depict the character fully from behind, walking away, or with the
+    body facing away from the camera while the head/face is forced to
+    turn back toward the viewer --- this produces an anatomically
+    impossible, unsettling neck twist.
+-   Rotate the head beyond a natural range relative to the shoulders/
+    torso facing direction.
+-   Hide the face with hair, hats, objects, motion blur, or an unnatural
+    angle.
+
+Avoid overly staged poses or generic "standing and looking at a
+landmark" compositions.
+
+The character's facial expression, body language and interactions should
+reinforce the travel personality.
+
+Whenever appropriate, storytelling should come from the character's
+actions rather than relying only on the scenery.
+
+------------------------------------------------------------------------
+
+## Layer 3 --- Localized Elements
+
+Regenerate these according to the destination:
+
+-   Passport stamp artwork
+-   Decorative plants
+-   Decorative ornaments
+-   Accent colors
+-   Local textures
+-   Local patterns
+-   Supporting illustrations
+-   Travel tickets
+-   The three hashtag icon illustrations
+
+The reference image defines only their placement.
+
+Never copy destination-specific decorative assets from the reference
+image.
+
+Decorations should reflect the local culture and environment while
+preserving the same visual weight and placement.
+
+------------------------------------------------------------------------
+
+
+## Layer 4 — Content (JSON)
+
+
+Populate every text and hashtag slot only with the supplied JSON. Use the JSON values verbatim: never invent, translate, rephrase, shorten, or extend them. If a field has no value, leave that slot visually empty and fill it with decorative artwork (see Layer 1); never leave placeholder text.
+
+
+### Content Blocks and Data Mapping
+
+
+The Information Card contains two text groups, one companion note, and one hashtag row. Map each slot to its JSON field exactly as follows.
+
+
+Group A — Personality (upper text block, left)
+
+- Eyebrow label: fixed text "我的旅行人格". Static; a small label above the title.
+- Personality name (main title): from JSON Personality. The largest text in this group; the dominant title.
+
+Group B — Destination (lower text block, left)
+
+- Eyebrow label: fixed text "我的命定旅程". Static; a small label above the destination.
+- Destination (main title): from JSON Destination.
+- Subtitle: from JSON Journey Copy. Sits directly below the Destination.
+
+Group C — Companion Postcard (right note)
+
+- Companion quote: from JSON Companion Quote. Rendered as a handwritten-style note on the torn-paper postcard.
+- Signature: from the JSON companion name field, e.g. "— 你的旅伴 小K".
+- Passport stamp: localized artwork (see Layer 3), containing the destination name and country in a localized stamp design.
+
+
+Group D — Hashtag Row (three icons with labels)
+
+- Hashtag 1: from JSON hashtags item 1, rendered with a leading "#".
+- Hashtag 2: from JSON hashtags item 2, rendered with a leading "#".
+- Hashtag 3: from JSON hashtags item 3, rendered with a leading "#".
+- Three hashtag icons: localized icon illustrations (see Layer 3). One finished icon per hashtag, each icon's meaning matching its - - hashtag.
+
+The three hashtags are dynamic (they change per result) and must never be hard-coded. Each icon must visually correspond to the meaning of its paired hashtag and be localized to the destination.
+
+
+### Typography Hierarchy and Order (Locked)
+
+Within each left-side text group, the vertical order and size hierarchy are fixed here (horizontal position still follows the reference image):
+
+Eyebrow labels ("我的旅行人格", "我的命定旅程") are the smallest text, positioned above their respective titles as small labels.
+Personality name and Destination are main titles — the largest text in their groups.
+The Subtitle (Journey Copy) sits directly below the Destination and must be clearly one level smaller than the Destination. The size difference must be obvious at a glance, so the Destination reads as the dominant title and the Subtitle as secondary supporting text.
+
+Top-to-bottom order in the left column: 我的旅行人格 → Personality name → 我的命定旅程 → Destination → Subtitle.
+
+### Hashtag Row Rules
+
+- Exactly three hashtags, evenly spaced in one row, aligned to the reference image positions.
+- Each hashtag is centered with its own icon as a label-icon pair; keep the three pairs equal in visual weight and size.
+- All three hashtag labels share the same size (smaller than the titles); do not emphasize any one over the others.
+
+### Do Not
+
+- Do not add, remove, or reorder content blocks.
+- Do not change which JSON field feeds which slot.
+- Do not make the Subtitle equal to or larger than the Destination.
+- Do not hard-code hashtags or invent extra ones.
+- Do not leave any eyebrow label, title, subtitle, or hashtag blank if its JSON value exists.
+
+------------------------------------------------------------------------
+
+# Canvas
+
+Master canvas: **9:16**
+
+The Composition Reference Image represents only the central **4:5 Safe
+Area**.
+
+Always generate new Story Extensions above and below.
+
+Upper extension: - Sky - Clouds - Atmosphere - Lighting
+
+Lower extension: - CTA - KKday logo - QR placeholder
+
+------------------------------------------------------------------------
+
+# Final Rule
+
+If multiple cards are displayed side by side:
+
+-   Layout should remain visually identical.
+-   Hero Illustrations should all be unique.
+-   Destination decorations should be localized.
+-   Traveler genders and viewpoints should vary across cards (never all
+    male, never all the same pose), while faces always remain visible.
+-   The character should consistently occupy a small scale within a
+    spacious environment across all cards (see Character Scale), never
+    a close-up or medium shot on any single card.
+-   Every card should instantly be recognized as belonging to the same
+    Travel DNA product family.
+-   No wireframe placeholder graphics or placeholder text may remain
+    visible in any card.

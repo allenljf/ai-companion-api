@@ -1,0 +1,1659 @@
+{
+  "dimensions": [
+    {
+      "id": 1,
+      "name": "旅行主題-1",
+      "tags": [
+        {
+          "id": "t1-1",
+          "label": "資深吃貨"
+        },
+        {
+          "id": "t1-2",
+          "label": "身心療癒派"
+        },
+        {
+          "id": "t1-3",
+          "label": "文青魂上身"
+        },
+        {
+          "id": "t1-4",
+          "label": "歡樂派對咖"
+        },
+        {
+          "id": "t1-5",
+          "label": "戰利品收藏家"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "1-1",
+          "mode": "Character",
+          "text": "週末突然空出來，你最想做的是？",
+          "type": "生活情境",
+          "index": 1,
+          "options": [
+            {
+              "id": "1-1-1",
+              "text": "查好評餐廳，專程去吃一頓",
+              "index": 1,
+              "tag_id": "t1-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-1-1.jpg"
+            },
+            {
+              "id": "1-1-2",
+              "text": "找個好的按摩或泡湯，什麼都不想",
+              "index": 2,
+              "tag_id": "t1-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-1-2.jpg"
+            },
+            {
+              "id": "1-1-3",
+              "text": "逛逛有趣的選物店或展覽",
+              "index": 3,
+              "tag_id": "t1-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-1-3.jpg"
+            },
+            {
+              "id": "1-1-4",
+              "text": "跟朋友約出去，哪裡熱鬧去哪裡",
+              "index": 4,
+              "tag_id": "t1-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-1-4.jpg"
+            },
+            {
+              "id": "1-1-5",
+              "text": "去找一件最近一直想買的東西",
+              "index": 5,
+              "tag_id": "t1-5",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-1-5.jpg"
+            }
+          ],
+          "dimension_id": 1
+        },
+        {
+          "id": "1-2",
+          "mode": "Character",
+          "text": "朋友要幫你慶生，最可能安排的是？",
+          "type": "他人視角",
+          "index": 2,
+          "options": [
+            {
+              "id": "1-2-1",
+              "text": "訂一間很難訂到的餐廳，好好吃一頓",
+              "index": 1,
+              "tag_id": "t1-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-2-1.jpg"
+            },
+            {
+              "id": "1-2-2",
+              "text": "找一個有趣的展覽或市集一起逛",
+              "index": 2,
+              "tag_id": "t1-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-2-2.jpg"
+            },
+            {
+              "id": "1-2-3",
+              "text": "包場做個 spa 或按摩，讓你徹底放鬆",
+              "index": 3,
+              "tag_id": "t1-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-2-3.jpg"
+            },
+            {
+              "id": "1-2-4",
+              "text": "找一堆朋友來場派對，熱鬧就對了",
+              "index": 4,
+              "tag_id": "t1-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-2-4.jpg"
+            },
+            {
+              "id": "1-2-5",
+              "text": "陪你去買一直想買但捨不得買的東西",
+              "index": 5,
+              "tag_id": "t1-5",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-2-5.jpg"
+            }
+          ],
+          "dimension_id": 1
+        },
+        {
+          "id": "1-3",
+          "mode": "Content",
+          "text": "滑手機的時候，你最常停下來看的是？",
+          "type": "直覺投射",
+          "index": 3,
+          "options": [
+            {
+              "id": "1-3-1",
+              "text": "餐廳、咖啡廳的美食照",
+              "index": 1,
+              "tag_id": "t1-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-3-1.jpg"
+            },
+            {
+              "id": "1-3-2",
+              "text": "展覽、選物店、設計感的空間",
+              "index": 2,
+              "tag_id": "t1-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-3-2.jpg"
+            },
+            {
+              "id": "1-3-3",
+              "text": "按摩、溫泉、度假村的療癒畫面",
+              "index": 3,
+              "tag_id": "t1-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-3-3.jpg"
+            },
+            {
+              "id": "1-3-4",
+              "text": "朋友在派對或活動的熱鬧現場",
+              "index": 4,
+              "tag_id": "t1-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-3-4.jpg"
+            },
+            {
+              "id": "1-3-5",
+              "text": "穿搭、購物開箱、限定商品",
+              "index": 5,
+              "tag_id": "t1-5",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-3-5.jpg"
+            }
+          ],
+          "dimension_id": 1
+        },
+        {
+          "id": "1-4",
+          "mode": "Character",
+          "text": "突然收到一筆意外之財，你第一個念頭是？",
+          "type": "慾望想像",
+          "index": 4,
+          "options": [
+            {
+              "id": "1-4-1",
+              "text": "馬上去一間一直想去的餐廳大吃一頓",
+              "index": 1,
+              "tag_id": "t1-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-4-1.jpg"
+            },
+            {
+              "id": "1-4-2",
+              "text": "去一個有趣的展覽或市集好好逛一天",
+              "index": 2,
+              "tag_id": "t1-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-4-2.jpg"
+            },
+            {
+              "id": "1-4-3",
+              "text": "約上所有朋友，今晚出去好好玩",
+              "index": 3,
+              "tag_id": "t1-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-4-3.jpg"
+            },
+            {
+              "id": "1-4-4",
+              "text": "去做一個完整的 spa 療程，寵自己一整天",
+              "index": 4,
+              "tag_id": "t1-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-4-4.jpg"
+            },
+            {
+              "id": "1-4-5",
+              "text": "直接去店裡把那件想買很久的東西帶回家",
+              "index": 5,
+              "tag_id": "t1-5",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-4-5.jpg"
+            }
+          ],
+          "dimension_id": 1
+        },
+        {
+          "id": "1-5",
+          "mode": "Character",
+          "text": "下班後還有兩個小時，你最想怎麼用？",
+          "type": "生活情境",
+          "index": 5,
+          "options": [
+            {
+              "id": "1-5-1",
+              "text": "找一間新開的餐廳或咖啡廳試試看",
+              "index": 1,
+              "tag_id": "t1-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-5-1.jpg"
+            },
+            {
+              "id": "1-5-2",
+              "text": "去逛逛附近的展覽或選物店",
+              "index": 2,
+              "tag_id": "t1-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-5-2.jpg"
+            },
+            {
+              "id": "1-5-3",
+              "text": "找個地方按摩或泡個澡放空",
+              "index": 3,
+              "tag_id": "t1-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-5-3.jpg"
+            },
+            {
+              "id": "1-5-4",
+              "text": "約朋友去有點熱鬧的地方喝一杯",
+              "index": 4,
+              "tag_id": "t1-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-5-4.jpg"
+            },
+            {
+              "id": "1-5-5",
+              "text": "專程去買一件想買很久的東西",
+              "index": 5,
+              "tag_id": "t1-5",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/1-5-5.jpg"
+            }
+          ],
+          "dimension_id": 1
+        }
+      ],
+      "option_count": 5
+    },
+    {
+      "id": 2,
+      "name": "旅行主題-2",
+      "tags": [
+        {
+          "id": "t2-1",
+          "label": "歷史文化迷"
+        },
+        {
+          "id": "t2-2",
+          "label": "異國體驗派"
+        },
+        {
+          "id": "t2-3",
+          "label": "戶外挑戰咖"
+        },
+        {
+          "id": "t2-4",
+          "label": "大自然充電族"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "2-1",
+          "mode": "Character",
+          "text": "如果可以請假一個月，你最想過哪種生活？",
+          "type": "慾望想像",
+          "index": 1,
+          "options": [
+            {
+              "id": "2-1-1",
+              "text": "住在某個古城裡，每天去不同的廟或博物館晃",
+              "index": 1,
+              "tag_id": "t2-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-1-1.jpg"
+            },
+            {
+              "id": "2-1-2",
+              "text": "在山裡或海邊，每天去挑戰一件事",
+              "index": 2,
+              "tag_id": "t2-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-1-2.jpg"
+            },
+            {
+              "id": "2-1-3",
+              "text": "住進當地人的社區，跟著他們的節奏過日子",
+              "index": 3,
+              "tag_id": "t2-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-1-3.jpg"
+            },
+            {
+              "id": "2-1-4",
+              "text": "找一個有山有水的地方，每天只是待著看風景",
+              "index": 4,
+              "tag_id": "t2-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-1-4.jpg"
+            }
+          ],
+          "dimension_id": 2
+        },
+        {
+          "id": "2-2",
+          "mode": "Content",
+          "text": "滑到別人的旅遊影片，你最容易停下來看完的是？",
+          "type": "直覺投射",
+          "index": 2,
+          "options": [
+            {
+              "id": "2-2-1",
+              "text": "探訪古城廟宇、講歷史故事的那種",
+              "index": 1,
+              "tag_id": "t2-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-2-1.jpg"
+            },
+            {
+              "id": "2-2-2",
+              "text": "跟著當地人生活、市場攤販日常的那種",
+              "index": 2,
+              "tag_id": "t2-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-2-2.jpg"
+            },
+            {
+              "id": "2-2-3",
+              "text": "挑戰登山健行、戶外探險的那種",
+              "index": 3,
+              "tag_id": "t2-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-2-3.jpg"
+            },
+            {
+              "id": "2-2-4",
+              "text": "一個人在某個安靜地方發呆的那種",
+              "index": 4,
+              "tag_id": "t2-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-2-4.jpg"
+            }
+          ],
+          "dimension_id": 2
+        },
+        {
+          "id": "2-3",
+          "mode": "Content",
+          "text": "這四種 YouTube 頻道，你最有可能訂閱的是哪種？",
+          "type": "直覺投射",
+          "index": 3,
+          "options": [
+            {
+              "id": "2-3-1",
+              "text": "深入介紹各地歷史文化的知識型頻道",
+              "index": 1,
+              "tag_id": "t2-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-3-1.jpg"
+            },
+            {
+              "id": "2-3-2",
+              "text": "素人記錄在異地生活日常的 vlog",
+              "index": 2,
+              "tag_id": "t2-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-3-2.jpg"
+            },
+            {
+              "id": "2-3-3",
+              "text": "戶外探險、登山、潛水的挑戰型頻道",
+              "index": 3,
+              "tag_id": "t2-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-3-3.jpg"
+            },
+            {
+              "id": "2-3-4",
+              "text": "什麼都不做、純粹放空的慢生活頻道",
+              "index": 4,
+              "tag_id": "t2-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-3-4.jpg"
+            }
+          ],
+          "dimension_id": 2
+        },
+        {
+          "id": "2-4",
+          "mode": "Content",
+          "text": "這四種書，你最想讀的是？",
+          "type": "直覺投射",
+          "index": 4,
+          "options": [
+            {
+              "id": "2-4-1",
+              "text": "一本介紹世界各地歷史文化的圖文書",
+              "index": 1,
+              "tag_id": "t2-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-4-1.jpg"
+            },
+            {
+              "id": "2-4-2",
+              "text": "一本記錄有人在異鄉生活的真實故事",
+              "index": 2,
+              "tag_id": "t2-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-4-2.jpg"
+            },
+            {
+              "id": "2-4-3",
+              "text": "一本戶外探險家的壯遊紀實",
+              "index": 3,
+              "tag_id": "t2-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-4-3.jpg"
+            },
+            {
+              "id": "2-4-4",
+              "text": "一本關於慢活與放空哲學的散文",
+              "index": 4,
+              "tag_id": "t2-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-4-4.jpg"
+            }
+          ],
+          "dimension_id": 2
+        },
+        {
+          "id": "2-5",
+          "mode": "Content",
+          "text": "這四種 IG 帳號，你最可能追蹤的是？",
+          "type": "直覺投射",
+          "index": 5,
+          "options": [
+            {
+              "id": "2-5-1",
+              "text": "專門拍古城、廟宇、歷史建築的攝影帳號",
+              "index": 1,
+              "tag_id": "t2-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-5-1.jpg"
+            },
+            {
+              "id": "2-5-2",
+              "text": "記錄在異鄉生活、融入當地的旅居帳號",
+              "index": 2,
+              "tag_id": "t2-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-5-2.jpg"
+            },
+            {
+              "id": "2-5-3",
+              "text": "戶外探險、極限運動的冒險帳號",
+              "index": 3,
+              "tag_id": "t2-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-5-3.jpg"
+            },
+            {
+              "id": "2-5-4",
+              "text": "在某個安靜角落發呆、純粹放空的慢活帳號",
+              "index": 4,
+              "tag_id": "t2-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/2-5-4.jpg"
+            }
+          ],
+          "dimension_id": 2
+        }
+      ],
+      "option_count": 4
+    },
+    {
+      "id": 3,
+      "name": "消費傾向",
+      "tags": [
+        {
+          "id": "t3-1",
+          "label": "寵自己沒在客氣"
+        },
+        {
+          "id": "t3-2",
+          "label": "該省則省派"
+        },
+        {
+          "id": "t3-3",
+          "label": "省錢王者"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "3-1",
+          "mode": "Content",
+          "text": "旅行時看到這三種住宿選擇，你會選哪個？",
+          "type": "慾望想像",
+          "index": 1,
+          "options": [
+            {
+              "id": "3-1-1",
+              "text": "設計感十足的精品旅館，價格不便宜但每個細節都到位",
+              "index": 1,
+              "tag_id": "t3-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-1-1.jpg"
+            },
+            {
+              "id": "3-1-2",
+              "text": "評價好、位置佳、價格合理的商務旅館",
+              "index": 2,
+              "tag_id": "t3-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-1-2.jpg"
+            },
+            {
+              "id": "3-1-3",
+              "text": "乾淨整潔的青旅或平價民宿，錢留著去玩更重要",
+              "index": 3,
+              "tag_id": "t3-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-1-3.jpg"
+            }
+          ],
+          "dimension_id": 3
+        },
+        {
+          "id": "3-2",
+          "mode": "Character",
+          "text": "旅行中看到一個當地限定、但價格不便宜的東西，你會？",
+          "type": "直覺投射",
+          "index": 2,
+          "options": [
+            {
+              "id": "3-2-1",
+              "text": "忍住，紀念品帶回去也不一定會用",
+              "index": 1,
+              "tag_id": "t3-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-2-1.jpg"
+            },
+            {
+              "id": "3-2-2",
+              "text": "考慮一下，真的很喜歡才買",
+              "index": 2,
+              "tag_id": "t3-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-2-2.jpg"
+            },
+            {
+              "id": "3-2-3",
+              "text": "直接買，限定的東西錯過就沒了",
+              "index": 3,
+              "tag_id": "t3-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-2-3.jpg"
+            }
+          ],
+          "dimension_id": 3
+        },
+        {
+          "id": "3-3",
+          "mode": "Character",
+          "text": "旅行中吃飯，你通常會選？",
+          "type": "直覺投射",
+          "index": 3,
+          "options": [
+            {
+              "id": "3-3-1",
+              "text": "在地小吃攤或市場，便宜又有氣氛",
+              "index": 1,
+              "tag_id": "t3-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-3-1.jpg"
+            },
+            {
+              "id": "3-3-2",
+              "text": "評價不錯的一般餐廳，不用太貴但要好吃",
+              "index": 2,
+              "tag_id": "t3-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-3-2.jpg"
+            },
+            {
+              "id": "3-3-3",
+              "text": "直接去米其林餐廳摘星，難得來就好好吃一頓",
+              "index": 3,
+              "tag_id": "t3-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-3-3.jpg"
+            }
+          ],
+          "dimension_id": 3
+        },
+        {
+          "id": "3-4",
+          "mode": "Content",
+          "text": "旅行中這三種體驗，你最想選的是？",
+          "type": "慾望想像",
+          "index": 4,
+          "options": [
+            {
+              "id": "3-4-1",
+              "text": "免費的公園、老街、市集，自由自在地逛",
+              "index": 1,
+              "tag_id": "t3-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-4-1.jpg"
+            },
+            {
+              "id": "3-4-2",
+              "text": "需要買票但不貴的博物館或特色景點",
+              "index": 2,
+              "tag_id": "t3-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-4-2.jpg"
+            },
+            {
+              "id": "3-4-3",
+              "text": "價格不便宜但口碑很好的特殊體驗或活動",
+              "index": 3,
+              "tag_id": "t3-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-4-3.jpg"
+            }
+          ],
+          "dimension_id": 3
+        },
+        {
+          "id": "3-5",
+          "mode": "Character",
+          "text": "旅行訂機票，你通常會選？",
+          "type": "直覺投射",
+          "index": 5,
+          "options": [
+            {
+              "id": "3-5-1",
+              "text": "最一般的經濟艙座位，能飛到就好",
+              "index": 1,
+              "tag_id": "t3-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-5-1.jpg"
+            },
+            {
+              "id": "3-5-2",
+              "text": "經濟艙但加價選靠窗或前排的好位子",
+              "index": 2,
+              "tag_id": "t3-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-5-2.jpg"
+            },
+            {
+              "id": "3-5-3",
+              "text": "豪華經濟艙或商務艙，飛行本身也是享受",
+              "index": 3,
+              "tag_id": "t3-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/3-5-3.jpg"
+            }
+          ],
+          "dimension_id": 3
+        }
+      ],
+      "option_count": 3
+    },
+    {
+      "id": 4,
+      "name": "行程步調",
+      "tags": [
+        {
+          "id": "t4-1",
+          "label": "行程滿到爆"
+        },
+        {
+          "id": "t4-2",
+          "label": "隨興補空白"
+        },
+        {
+          "id": "t4-3",
+          "label": "行程是什麼能吃嗎"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "4-1",
+          "mode": "Content",
+          "text": "朋友問你這次旅行要去哪，你通常怎麼回答？",
+          "type": "他人視角",
+          "index": 1,
+          "options": [
+            {
+              "id": "4-1-1",
+              "text": "直接傳一份詳細的行程表給他看",
+              "index": 1,
+              "tag_id": "t4-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-1-1.jpg"
+            },
+            {
+              "id": "4-1-2",
+              "text": "說幾個大概想去的地方，細節還沒想",
+              "index": 2,
+              "tag_id": "t4-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-1-2.jpg"
+            },
+            {
+              "id": "4-1-3",
+              "text": "「還不知道，到時候再說」",
+              "index": 3,
+              "tag_id": "t4-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-1-3.jpg"
+            }
+          ],
+          "dimension_id": 4
+        },
+        {
+          "id": "4-2",
+          "mode": "Content",
+          "text": "你的手機裡，旅行前通常會有什麼？",
+          "type": "直覺投射",
+          "index": 2,
+          "options": [
+            {
+              "id": "4-2-1",
+              "text": "建好的 Google Maps 清單，每個景點都標好順序",
+              "index": 1,
+              "tag_id": "t4-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-2-1.jpg"
+            },
+            {
+              "id": "4-2-2",
+              "text": "幾個存起來的地方，其他沒特別準備",
+              "index": 2,
+              "tag_id": "t4-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-2-2.jpg"
+            },
+            {
+              "id": "4-2-3",
+              "text": "什麼都沒存，到了再說",
+              "index": 3,
+              "tag_id": "t4-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-2-3.jpg"
+            }
+          ],
+          "dimension_id": 4
+        },
+        {
+          "id": "4-3",
+          "mode": "Character",
+          "text": "旅行中突然多出兩個小時，你第一個反應是？",
+          "type": "生活情境",
+          "index": 3,
+          "options": [
+            {
+              "id": "4-3-1",
+              "text": "從之前就列好的備用景點裡挑一個去",
+              "index": 1,
+              "tag_id": "t4-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-3-1.jpg"
+            },
+            {
+              "id": "4-3-2",
+              "text": "快速查一下附近有什麼，挑一個去",
+              "index": 2,
+              "tag_id": "t4-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-3-2.jpg"
+            },
+            {
+              "id": "4-3-3",
+              "text": "直接出發，走到哪逛到哪",
+              "index": 3,
+              "tag_id": "t4-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-3-3.jpg"
+            }
+          ],
+          "dimension_id": 4
+        },
+        {
+          "id": "4-4",
+          "mode": "Content",
+          "text": "你最嚮往的旅行節奏是？",
+          "type": "慾望想像",
+          "index": 4,
+          "options": [
+            {
+              "id": "4-4-1",
+              "text": "從早到晚排好幾個景點，每個都去到",
+              "index": 1,
+              "tag_id": "t4-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-4-1.jpg"
+            },
+            {
+              "id": "4-4-2",
+              "text": "上午去一個想去的地方，下午再看狀況",
+              "index": 2,
+              "tag_id": "t4-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-4-2.jpg"
+            },
+            {
+              "id": "4-4-3",
+              "text": "早上睡到自然醒，出門再說",
+              "index": 3,
+              "tag_id": "t4-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-4-3.jpg"
+            }
+          ],
+          "dimension_id": 4
+        },
+        {
+          "id": "4-5",
+          "mode": "Character",
+          "text": "旅行前一天晚上，你通常在做什麼？",
+          "type": "生活情境",
+          "index": 5,
+          "options": [
+            {
+              "id": "4-5-1",
+              "text": "再確認一次明天的行程和預訂",
+              "index": 1,
+              "tag_id": "t4-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-5-1.jpg"
+            },
+            {
+              "id": "4-5-2",
+              "text": "大概想一下明天要去哪",
+              "index": 2,
+              "tag_id": "t4-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-5-2.jpg"
+            },
+            {
+              "id": "4-5-3",
+              "text": "什麼都沒準備，明天再說",
+              "index": 3,
+              "tag_id": "t4-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/4-5-3.jpg"
+            }
+          ],
+          "dimension_id": 4
+        }
+      ],
+      "option_count": 3
+    },
+    {
+      "id": 5,
+      "name": "刺激程度",
+      "tags": [
+        {
+          "id": "t5-1",
+          "label": "安心舒適圈"
+        },
+        {
+          "id": "t5-2",
+          "label": "偶爾想試點新的"
+        },
+        {
+          "id": "t5-3",
+          "label": "越冷門越想衝"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "5-1",
+          "mode": "Content",
+          "text": "菜單上有三道菜，你最先點的是？",
+          "type": "直覺投射",
+          "index": 1,
+          "options": [
+            {
+              "id": "5-1-1",
+              "text": "招牌菜，大家都說好吃的那道",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-1-1.jpg"
+            },
+            {
+              "id": "5-1-2",
+              "text": "聽起來有點陌生、但描述讓你有點心動的",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-1-2.jpg"
+            },
+            {
+              "id": "5-1-3",
+              "text": "完全看不懂食材是什麼、但就是想試試",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-1-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        },
+        {
+          "id": "5-2",
+          "mode": "Content",
+          "text": "這三個旅行選項，你最想選的是？",
+          "type": "慾望想像",
+          "index": 2,
+          "options": [
+            {
+              "id": "5-2-1",
+              "text": "去一個大家都去過、評價超好的熱門城市",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-2-1.jpg"
+            },
+            {
+              "id": "5-2-2",
+              "text": "去一個聽過但沒什麼人去的新興目的地",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-2-2.jpg"
+            },
+            {
+              "id": "5-2-3",
+              "text": "去一個連名字都沒聽過的地方，全靠自己摸索",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-2-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        },
+        {
+          "id": "5-3",
+          "mode": "Content",
+          "text": "這三種旅遊貼文，你最想點進去看的是？",
+          "type": "直覺投射",
+          "index": 3,
+          "options": [
+            {
+              "id": "5-3-1",
+              "text": "「東京必去的 10 個經典景點」",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-3-1.jpg"
+            },
+            {
+              "id": "5-3-2",
+              "text": "「首爾沒有人告訴你的隱藏版路線」",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-3-2.jpg"
+            },
+            {
+              "id": "5-3-3",
+              "text": "「我在一個你沒聽過的地方住了一個月」",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-3-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        },
+        {
+          "id": "5-4",
+          "mode": "Content",
+          "text": "你更想去哪種餐廳吃飯？",
+          "type": "生活情境",
+          "index": 4,
+          "options": [
+            {
+              "id": "5-4-1",
+              "text": "排隊排很長、網路上評價超多的名店",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-4-1.jpg"
+            },
+            {
+              "id": "5-4-2",
+              "text": "朋友推薦、但網路上資料不多的小店",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-4-2.jpg"
+            },
+            {
+              "id": "5-4-3",
+              "text": "完全沒有評價、只有一塊手寫招牌的路邊攤",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-4-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        },
+        {
+          "id": "5-5",
+          "mode": "Character",
+          "text": "朋友說你旅行的風格是？",
+          "type": "他人視角",
+          "index": 5,
+          "options": [
+            {
+              "id": "5-5-1",
+              "text": "去有把握的地方，玩起來才真的開心",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-5-1.jpg"
+            },
+            {
+              "id": "5-5-2",
+              "text": "喜歡試試看沒去過的，但不會太極端",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-5-2.jpg"
+            },
+            {
+              "id": "5-5-3",
+              "text": "越沒有人去過越想衝，踩雷也是種體驗",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-5-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        },
+        {
+          "id": "5-6",
+          "mode": "Content",
+          "text": "走進一間書店，你最可能帶走的是？",
+          "type": "生活情境",
+          "index": 6,
+          "options": [
+            {
+              "id": "5-6-1",
+              "text": "暢銷榜第一名、到處都有人在看的書",
+              "index": 1,
+              "tag_id": "t5-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-6-1.jpg"
+            },
+            {
+              "id": "5-6-2",
+              "text": "封面設計特別、但不是很多人知道的書",
+              "index": 2,
+              "tag_id": "t5-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-6-2.jpg"
+            },
+            {
+              "id": "5-6-3",
+              "text": "一本完全沒聽過、純粹因為感覺對就拿起來的書",
+              "index": 3,
+              "tag_id": "t5-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/5-6-3.jpg"
+            }
+          ],
+          "dimension_id": 5
+        }
+      ],
+      "option_count": 3
+    },
+    {
+      "id": 6,
+      "name": "人為干擾程度",
+      "tags": [
+        {
+          "id": "t6-1",
+          "label": "繁華都市控"
+        },
+        {
+          "id": "t6-2",
+          "label": "生活感小鎮派"
+        },
+        {
+          "id": "t6-3",
+          "label": "悠閒野趣派"
+        },
+        {
+          "id": "t6-4",
+          "label": "荒野原始派"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "6-1",
+          "mode": "Content",
+          "text": "閉上眼睛，哪個畫面最讓你有感覺？",
+          "type": "直覺投射",
+          "index": 1,
+          "options": [
+            {
+              "id": "6-1-1",
+              "text": "霓虹燈、人潮、24 小時都有事情做的街道",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-1-1.jpg"
+            },
+            {
+              "id": "6-1-2",
+              "text": "有小店有咖啡廳，但不擁擠的小鎮街道",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-1-2.jpg"
+            },
+            {
+              "id": "6-1-3",
+              "text": "山路、稻田、偶爾遇到幾個人的步道",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-1-3.jpg"
+            },
+            {
+              "id": "6-1-4",
+              "text": "人煙稀少、景色壯闊的荒野秘境",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-1-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-2",
+          "mode": "Content",
+          "text": "如果可以在某個地方擁有屬於自己的度假空間，你最想要的是？",
+          "type": "慾望想像",
+          "index": 2,
+          "options": [
+            {
+              "id": "6-2-1",
+              "text": "城市裡的高樓公寓，樓下什麼都有",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-2-1.jpg"
+            },
+            {
+              "id": "6-2-2",
+              "text": "小鎮裡的老房子，附近有幾間喜歡的小店",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-2-2.jpg"
+            },
+            {
+              "id": "6-2-3",
+              "text": "郊外的山間小屋，推開門就是自然",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-2-3.jpg"
+            },
+            {
+              "id": "6-2-4",
+              "text": "海邊或荒野裡的獨棟小屋，四周沒有鄰居",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-2-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-3",
+          "mode": "Content",
+          "text": "規劃一個人的旅行，你最理想的住宿環境是？",
+          "type": "生活情境",
+          "index": 3,
+          "options": [
+            {
+              "id": "6-3-1",
+              "text": "市中心、樓下就是便利商店和餐廳",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-3-1.jpg"
+            },
+            {
+              "id": "6-3-2",
+              "text": "有點距離市區、但走路還能到老街小店",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-3-2.jpg"
+            },
+            {
+              "id": "6-3-3",
+              "text": "郊區民宿、附近有步道或農田",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-3-3.jpg"
+            },
+            {
+              "id": "6-3-4",
+              "text": "完全在山裡或海邊、附近什麼都沒有",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-3-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-4",
+          "mode": "Content",
+          "text": "這四張桌布，你最想設成手機桌布的是？",
+          "type": "直覺投射",
+          "index": 4,
+          "options": [
+            {
+              "id": "6-4-1",
+              "text": "城市夜景，燈火通明",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-4-1.jpg"
+            },
+            {
+              "id": "6-4-2",
+              "text": "歐洲小鎮街道，有花有咖啡廳",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-4-2.jpg"
+            },
+            {
+              "id": "6-4-3",
+              "text": "山間小徑，陽光穿過樹葉",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-4-3.jpg"
+            },
+            {
+              "id": "6-4-4",
+              "text": "無人荒野，天地之間只有你",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-4-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-5",
+          "mode": "Character",
+          "text": "對朋友來說，你是那種放假會？",
+          "type": "他人視角",
+          "index": 5,
+          "options": [
+            {
+              "id": "6-5-1",
+              "text": "往市區衝，哪裡熱鬧去哪裡的人",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-5-1.jpg"
+            },
+            {
+              "id": "6-5-2",
+              "text": "找個有質感的小鎮慢慢晃的人",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-5-2.jpg"
+            },
+            {
+              "id": "6-5-3",
+              "text": "往郊外跑、找步道或自然景觀的人",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-5-3.jpg"
+            },
+            {
+              "id": "6-5-4",
+              "text": "消失去某個很遠很安靜的地方的人",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-5-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-6",
+          "mode": "Content",
+          "text": "理想中的早晨是？",
+          "type": "慾望想像",
+          "index": 6,
+          "options": [
+            {
+              "id": "6-6-1",
+              "text": "樓下就有早餐店、咖啡廳，出門就有東西吃",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-6-1.jpg"
+            },
+            {
+              "id": "6-6-2",
+              "text": "走幾分鐘有個小市場或麵包店，不趕時間",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-6-2.jpg"
+            },
+            {
+              "id": "6-6-3",
+              "text": "推開窗是一片綠，安靜到只聽得到鳥叫",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-6-3.jpg"
+            },
+            {
+              "id": "6-6-4",
+              "text": "醒來四周沒有人聲，只有風聲或海浪聲",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-6-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-7",
+          "mode": "Content",
+          "text": "朋友說要帶你去一個「完全符合你個性」的地方，你覺得會是？",
+          "type": "生活情境",
+          "index": 7,
+          "options": [
+            {
+              "id": "6-7-1",
+              "text": "一個很潮、很好逛的商圈或市集",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-7-1.jpg"
+            },
+            {
+              "id": "6-7-2",
+              "text": "一個有氣氛的小鎮，有咖啡廳可以坐一整天",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-7-2.jpg"
+            },
+            {
+              "id": "6-7-3",
+              "text": "一個郊外的自然景點，空氣好、人不多",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-7-3.jpg"
+            },
+            {
+              "id": "6-7-4",
+              "text": "一個遠離人群、幾乎沒有訊號的秘境",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-7-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        },
+        {
+          "id": "6-8",
+          "mode": "Content",
+          "text": "如果可以在某個地方住一個月，你最想是？",
+          "type": "慾望想像",
+          "index": 8,
+          "options": [
+            {
+              "id": "6-8-1",
+              "text": "一個什麼都有、隨時都能出門的城市",
+              "index": 1,
+              "tag_id": "t6-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-8-1.jpg"
+            },
+            {
+              "id": "6-8-2",
+              "text": "一個有幾間好咖啡廳、走路能到處逛的小鎮",
+              "index": 2,
+              "tag_id": "t6-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-8-2.jpg"
+            },
+            {
+              "id": "6-8-3",
+              "text": "一個安靜、有自然景觀、偶爾看得到人的地方",
+              "index": 3,
+              "tag_id": "t6-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-8-3.jpg"
+            },
+            {
+              "id": "6-8-4",
+              "text": "一個人煙稀少、被自然包圍的地方",
+              "index": 4,
+              "tag_id": "t6-4",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/6-8-4.jpg"
+            }
+          ],
+          "dimension_id": 6
+        }
+      ],
+      "option_count": 4
+    },
+    {
+      "id": 7,
+      "name": "同行偏好",
+      "tags": [
+        {
+          "id": "t7-1",
+          "label": "一個人最自在"
+        },
+        {
+          "id": "t7-2",
+          "label": "兩個人剛剛好"
+        },
+        {
+          "id": "t7-3",
+          "label": "一群人才好玩"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "7-1",
+          "mode": "Character",
+          "text": "放長假的第一天早上，你最希望醒來的狀態是？",
+          "type": "生活情境",
+          "index": 1,
+          "options": [
+            {
+              "id": "7-1-1",
+              "text": "一個人，整天都是自己的，想做什麼做什麼",
+              "index": 1,
+              "tag_id": "t7-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-1-1.jpg"
+            },
+            {
+              "id": "7-1-2",
+              "text": "身邊有一個人，可以一起做想做的事",
+              "index": 2,
+              "tag_id": "t7-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-1-2.jpg"
+            },
+            {
+              "id": "7-1-3",
+              "text": "一群人在同個屋簷下，隨時都有人可以找",
+              "index": 3,
+              "tag_id": "t7-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-1-3.jpg"
+            }
+          ],
+          "dimension_id": 7
+        },
+        {
+          "id": "7-2",
+          "mode": "Character",
+          "text": "朋友問你要不要一起去旅行，你第一個念頭是？",
+          "type": "生活情境",
+          "index": 2,
+          "options": [
+            {
+              "id": "7-2-1",
+              "text": "其實比較想自己去，一個人比較自在",
+              "index": 1,
+              "tag_id": "t7-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-2-1.jpg"
+            },
+            {
+              "id": "7-2-2",
+              "text": "要看是誰，對的人才想一起",
+              "index": 2,
+              "tag_id": "t7-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-2-2.jpg"
+            },
+            {
+              "id": "7-2-3",
+              "text": "當然好啊，越多人越熱鬧",
+              "index": 3,
+              "tag_id": "t7-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-2-3.jpg"
+            }
+          ],
+          "dimension_id": 7
+        },
+        {
+          "id": "7-3",
+          "mode": "Character",
+          "text": "對朋友來說，你是那種？",
+          "type": "他人視角",
+          "index": 3,
+          "options": [
+            {
+              "id": "7-3-1",
+              "text": "常常一個人就出發、不太需要人陪的人",
+              "index": 1,
+              "tag_id": "t7-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-3-1.jpg"
+            },
+            {
+              "id": "7-3-2",
+              "text": "有固定的一兩個旅伴，換人就不對味的人",
+              "index": 2,
+              "tag_id": "t7-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-3-2.jpg"
+            },
+            {
+              "id": "7-3-3",
+              "text": "揪誰都好、只要有人陪就開心的人",
+              "index": 3,
+              "tag_id": "t7-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-3-3.jpg"
+            }
+          ],
+          "dimension_id": 7
+        },
+        {
+          "id": "7-4",
+          "mode": "Character",
+          "text": "旅行中最讓你有感覺的時刻，通常是？",
+          "type": "慾望想像",
+          "index": 4,
+          "options": [
+            {
+              "id": "7-4-1",
+              "text": "一個人坐在某個角落，完全屬於自己的安靜",
+              "index": 1,
+              "tag_id": "t7-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-4-1.jpg"
+            },
+            {
+              "id": "7-4-2",
+              "text": "跟最懂你的人，什麼都不說也很好的那種默契",
+              "index": 2,
+              "tag_id": "t7-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-4-2.jpg"
+            },
+            {
+              "id": "7-4-3",
+              "text": "一群人笑著瘋，那種熱鬧才叫旅行",
+              "index": 3,
+              "tag_id": "t7-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/7-4-3.jpg"
+            }
+          ],
+          "dimension_id": 7
+        }
+      ],
+      "option_count": 3
+    },
+    {
+      "id": 8,
+      "name": "在地互動",
+      "tags": [
+        {
+          "id": "t8-1",
+          "label": "安靜觀察家"
+        },
+        {
+          "id": "t8-2",
+          "label": "看心情社交"
+        },
+        {
+          "id": "t8-3",
+          "label": "走到哪聊到哪"
+        }
+      ],
+      "quizzes": [
+        {
+          "id": "8-1",
+          "mode": "Character",
+          "text": "對朋友來說，你是那種出門？",
+          "type": "他人視角",
+          "index": 1,
+          "options": [
+            {
+              "id": "8-1-1",
+              "text": "喜歡靜靜觀察周遭、不太主動搭話的人",
+              "index": 1,
+              "tag_id": "t8-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-1-1.jpg"
+            },
+            {
+              "id": "8-1-2",
+              "text": "有緣分就聊、沒有也無所謂的人",
+              "index": 2,
+              "tag_id": "t8-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-1-2.jpg"
+            },
+            {
+              "id": "8-1-3",
+              "text": "到哪都能跟陌生人打成一片的人",
+              "index": 3,
+              "tag_id": "t8-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-1-3.jpg"
+            }
+          ],
+          "dimension_id": 8
+        },
+        {
+          "id": "8-2",
+          "mode": "Character",
+          "text": "旅行中遇到一個有趣的店家老闆，你通常會？",
+          "type": "生活情境",
+          "index": 2,
+          "options": [
+            {
+              "id": "8-2-1",
+              "text": "心裡覺得有趣，但不會主動開口",
+              "index": 1,
+              "tag_id": "t8-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-2-1.jpg"
+            },
+            {
+              "id": "8-2-2",
+              "text": "如果對方先聊就聊，不會刻意找話題",
+              "index": 2,
+              "tag_id": "t8-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-2-2.jpg"
+            },
+            {
+              "id": "8-2-3",
+              "text": "主動搭話，說不定能聊出什麼故事",
+              "index": 3,
+              "tag_id": "t8-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-2-3.jpg"
+            }
+          ],
+          "dimension_id": 8
+        },
+        {
+          "id": "8-3",
+          "mode": "Character",
+          "text": "在一間很有味道的小店待了一會兒，離開時你通常是？",
+          "type": "生活情境",
+          "index": 3,
+          "options": [
+            {
+              "id": "8-3-1",
+              "text": "靜靜離開，把感受留在心裡",
+              "index": 1,
+              "tag_id": "t8-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-3-1.jpg"
+            },
+            {
+              "id": "8-3-2",
+              "text": "跟老闆點頭道別，有說有笑但不深聊",
+              "index": 2,
+              "tag_id": "t8-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-3-2.jpg"
+            },
+            {
+              "id": "8-3-3",
+              "text": "跟老闆聊開了，離開前還互加了聯絡方式",
+              "index": 3,
+              "tag_id": "t8-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-3-3.jpg"
+            }
+          ],
+          "dimension_id": 8
+        },
+        {
+          "id": "8-4",
+          "mode": "Character",
+          "text": "在一條陌生的街上走著，你最希望發生的是？",
+          "type": "慾望想像",
+          "index": 4,
+          "options": [
+            {
+              "id": "8-4-1",
+              "text": "沒有人注意你，安靜地融入這條街",
+              "index": 1,
+              "tag_id": "t8-1",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-4-1.jpg"
+            },
+            {
+              "id": "8-4-2",
+              "text": "偶爾有人主動幫你指路或推薦東西，聊幾句就道別",
+              "index": 2,
+              "tag_id": "t8-2",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-4-2.jpg"
+            },
+            {
+              "id": "8-4-3",
+              "text": "旁邊的攤販或店家主動跟你搭話，聊著聊著就變熟了",
+              "index": 3,
+              "tag_id": "t8-3",
+              "image_url": "https://storage.googleapis.com/ai-companion-assets-allenljf/quiz/8-4-3.jpg"
+            }
+          ],
+          "dimension_id": 8
+        }
+      ],
+      "option_count": 3
+    }
+  ],
+  "image_config": {
+    "image_size": "1152x2048",
+    "image_quality": "low",
+    "art_style_version": "2",
+    "poster_prompt_version": "2",
+    "response_prompt_version": "2",
+    "example_image_url": "https://cdn.sit.kkday.com/mvp-ai-companion/example_poster.png"
+  }
+}
