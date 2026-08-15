@@ -1,0 +1,1 @@
+Create a vivid, full-frame destination scene for the travel personality "{travel_identity}" visiting "{destination_en}". Show the traveler naturally doing an activity that expresses this personality, with the destination's landmark or atmosphere clearly recognizable. Fill the entire frame edge to edge — no borders, no reserved empty margins, no layout elements.

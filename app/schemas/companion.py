@@ -33,6 +33,12 @@ class QuizCompletionsRequest(BaseModel):
     partner_avatar_url: str | None = Field(None, max_length=500)
 
 
+class ShareImageV2Request(BaseModel):
+    completion_uuid: UUID
+    # 原始服務用它做旅伴人物合成；Cloudflare 免費層不支援參考圖 → 接受但忽略（App 相容）
+    partner_image_url: str | None = Field(None, max_length=500)
+
+
 class SelfIntroductionRequest(BaseModel):
     companion_name: str = Field(..., min_length=1, max_length=20)
     personality: str

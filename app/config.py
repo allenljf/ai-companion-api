@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     llm_quiz_completions: str = "groq:llama-3.3-70b-versatile"
     llm_self_introduction: str = "groq:qwen/qwen3.6-27b:none"
 
+    # 圖片生成（階段 8）：Cloudflare Workers AI，免費層 10,000 neurons/天
+    cloudflare_account_id: str | None = None
+    cloudflare_api_token: str | None = None
+
     data_dir: Path = BASE_DIR / "data"
 
 

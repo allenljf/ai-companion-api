@@ -47,6 +47,37 @@ def get_llm_client() -> LLMClient:
 
 
 @lru_cache(maxsize=1)
+def get_image_provider():
+    """圖片生成 provider（階段 8）。金鑰沒設時仍可啟動——產圖時 401 →
+    service 的 partial-fail 吸收（ready + URL null），不擋文字功能。"""
+    from app.services.image.client import CloudflareImageProvider
+
+    return CloudflareImageProvider(
+        account_id=settings.cloudflare_account_id or "",
+        api_token=settings.cloudflare_api_token or "",
+    )
+
+
+@lru_cache(maxsize=1)
+def get_object_store():
+    from app.storage.objects import GcsObjectStore
+
+    return GcsObjectStore()
+
+
+@lru_cache(maxsize=1)
+def get_gallery():
+    """gallery（quiz-gallery / share-image 寫入）：有 DATABASE_URL 走 Neon、否則記憶體。"""
+    if settings.database_url:
+        from app.storage.pg import PostgresGallery
+
+        return PostgresGallery(settings.database_url)
+    from app.storage.gallery import InMemoryGallery
+
+    return InMemoryGallery()
+
+
+@lru_cache(maxsize=1)
 def get_kv():
     """KV 快取單例（quiz-completions 24h 快取、階段 8 產圖鎖）。
 

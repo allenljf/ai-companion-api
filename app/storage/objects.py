@@ -35,3 +35,40 @@ def object_exists(key: str) -> bool:
 
 def public_url(key: str) -> str:
     return f"{PUBLIC_BASE}/{key}"
+
+
+class GcsObjectStore:
+    """async 介面包裝（google-cloud-storage 是同步 client，丟 thread 避免卡 event loop）。"""
+
+    async def exists(self, key: str) -> bool:
+        import anyio
+
+        return await anyio.to_thread.run_sync(object_exists, key)
+
+    async def upload(self, key: str, data: bytes, content_type: str) -> str:
+        import anyio
+        from functools import partial
+
+        return await anyio.to_thread.run_sync(
+            partial(upload_object, key, data, content_type=content_type)
+        )
+
+    def url(self, key: str) -> str:
+        return public_url(key)
+
+
+class InMemoryObjectStore:
+    """測試/本地用：不打 GCS。"""
+
+    def __init__(self):
+        self.objects: dict[str, bytes] = {}
+
+    async def exists(self, key: str) -> bool:
+        return key in self.objects
+
+    async def upload(self, key: str, data: bytes, content_type: str) -> str:
+        self.objects[key] = data
+        return self.url(key)
+
+    def url(self, key: str) -> str:
+        return f"{PUBLIC_BASE}/{key}"

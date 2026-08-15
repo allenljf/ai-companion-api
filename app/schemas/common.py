@@ -16,3 +16,8 @@ def success_envelope(data: Any) -> dict:
 
 def validation_error_envelope(messages: list[str]) -> dict:
     return {"metadata": {"status": STATUS_VALIDATION_ERROR, "desc": messages}}
+
+
+def business_error_envelope(code: str, desc: str) -> dict:
+    """Companion 業務錯誤（如 C007）：HTTP 200 + metadata.status=Cxxx、無 data 欄位。"""
+    return {"metadata": {"status": code, "desc": desc}}

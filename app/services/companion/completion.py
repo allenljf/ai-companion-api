@@ -134,8 +134,7 @@ async def complete_quiz(params: dict, client: LLMClient, kv: InMemoryKV) -> dict
         # 產圖按需：pending=可呼叫 share-image 產圖；skipped=分析失敗、無從產圖
         "share_image_status": "pending" if fail_reason is None else "skipped",
         "ai_model": client.model_for(TASK),
-        # 產圖 provider 尚未建（階段 8）；先回設定值供 App 端除錯
-        "share_image_ai_model": None,
+        "share_image_ai_model": _hero_model(),
         "share_image_size": str(image_config.get("image_size") or ""),
         "share_image_quality": str(image_config.get("image_quality") or ""),
         "fail_reason": fail_reason,
@@ -143,6 +142,12 @@ async def complete_quiz(params: dict, client: LLMClient, kv: InMemoryKV) -> dict
         "poster_prompt_version": image_config.get("poster_prompt_version"),
         "response_prompt_version": image_config.get("response_prompt_version"),
     }
+
+
+def _hero_model() -> str:
+    from app.services.companion.share_image import HERO_MODEL
+
+    return HERO_MODEL
 
 
 def _text(value) -> str:
