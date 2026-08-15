@@ -100,7 +100,7 @@ async def complete_quiz(params: dict, client: LLMClient, kv: InMemoryKV) -> dict
     # 分析成功才快取（供 share-image 按需產圖）；寫入失敗只記錄、不讓整支失敗
     if fail_reason is None:
         try:
-            kv.set(
+            await kv.set(
                 CACHE_KEY_PREFIX + completion_uuid,
                 {
                     "analysis": analysis,

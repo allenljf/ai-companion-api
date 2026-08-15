@@ -15,7 +15,6 @@ from app.services.companion.completion import complete_quiz
 from app.services.companion.quiz import fetch_quiz
 from app.services.companion.self_introduction import generate_self_introduction
 from app.services.llm.client import LLMClient
-from app.storage.kv import InMemoryKV
 
 router = APIRouter(prefix="/v1/companion", tags=["companion"])
 
@@ -44,7 +43,7 @@ async def quiz(body: QuizFetchRequest, client: LLMClient = Depends(get_llm_clien
 async def quiz_completions(
     body: QuizCompletionsRequest,
     client: LLMClient = Depends(get_llm_client),
-    kv: InMemoryKV = Depends(get_kv),
+    kv=Depends(get_kv),
 ) -> dict:
     params = body.model_dump()
     params["completion_uuid"] = str(body.completion_uuid)

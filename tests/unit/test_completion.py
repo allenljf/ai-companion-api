@@ -104,7 +104,7 @@ async def test_success_caches_analysis_24h():
     client, _ = make_client(llm_reply())
     kv = InMemoryKV()
     await complete_quiz(dict(BASE_PARAMS), client, kv)
-    cached = kv.get(CACHE_KEY_PREFIX + UUID)
+    cached = await kv.get(CACHE_KEY_PREFIX + UUID)
     assert cached is not None
     assert cached["analysis"]["travel_identity"] == "遠征冒險團"  # 覆寫後才快取
     assert cached["companion_name"] == "阿旅"
@@ -120,7 +120,7 @@ async def test_failure_does_not_cache_and_skips_image():
     assert result["share_image_status"] == "skipped"
     # 失敗仍回 mapping 稱號（規則式判定不依賴 LLM）
     assert result["travel_identity"] == "遠征冒險團"
-    assert kv.get(CACHE_KEY_PREFIX + UUID) is None
+    assert await kv.get(CACHE_KEY_PREFIX + UUID) is None
 
 
 @pytest.mark.asyncio
@@ -177,7 +177,7 @@ async def test_simplified_output_converted_to_traditional():
 @pytest.mark.asyncio
 async def test_cache_write_failure_does_not_fail_request():
     class BrokenKV(InMemoryKV):
-        def set(self, *args, **kwargs):
+        async def set(self, *args, **kwargs):
             raise RuntimeError("kv down")
 
     client, _ = make_client(llm_reply())

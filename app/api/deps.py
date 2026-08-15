@@ -47,9 +47,14 @@ def get_llm_client() -> LLMClient:
 
 
 @lru_cache(maxsize=1)
-def get_kv() -> InMemoryKV:
-    """KV 快取單例（quiz-completions 24h 分析快取）。
+def get_kv():
+    """KV 快取單例（quiz-completions 24h 快取、階段 8 產圖鎖）。
 
-    階段 6 前為記憶體版：Cloud Run 重啟即遺失、多副本不共用（限制記於 migration-plan）。
+    有 DATABASE_URL 走 Neon Postgres（跨請求/跨重啟持久）；
+    沒設時退回記憶體版（本地開發、測試用）。
     """
+    if settings.database_url:
+        from app.storage.pg import PostgresKV
+
+        return PostgresKV(settings.database_url)
     return InMemoryKV()

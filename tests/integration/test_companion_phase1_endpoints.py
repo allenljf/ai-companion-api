@@ -1,5 +1,6 @@
 """Phase 1 文字三支端到端（mock LLM）：400 契約 + 軟失敗 + 成功包裝（階段 7 驗收）。"""
 
+import asyncio
 import json
 
 import pytest
@@ -156,7 +157,7 @@ class TestQuizCompletions:
         assert data["travel_identity"] == "獨處療癒師"      # mapping 覆寫
         assert data["share_image_status"] == "pending"
         assert data["destination_cn"] == "清邁"
-        cached = kv.get("companion:completion:" + COMPLETION_BODY["completion_uuid"])
+        cached = asyncio.run(kv.get("companion:completion:" + COMPLETION_BODY["completion_uuid"]))
         assert cached["analysis"]["travel_identity"] == "獨處療癒師"
 
     def test_llm_failure_soft_fails_without_cache(self, client, stub, kv):
@@ -167,7 +168,7 @@ class TestQuizCompletions:
         assert data["fail_reason"] is not None
         assert data["share_image_status"] == "skipped"
         assert data["travel_identity"] == "獨處療癒師"      # 規則式判定不依賴 LLM
-        assert kv.get("companion:completion:" + COMPLETION_BODY["completion_uuid"]) is None
+        assert asyncio.run(kv.get("companion:completion:" + COMPLETION_BODY["completion_uuid"])) is None
 
 
 # ---------------------------------------------------------------------------

@@ -1,8 +1,9 @@
-"""KV 快取（階段 6 儲存層的介面先行版）。
+"""KV 快取抽象（階段 6）：async get/set(TTL)/delete/add（原子搶鎖）。
 
-目前只有記憶體實作，供 quiz-completions 的 24h 分析快取使用。
-限制（記在 migration-plan 備註）：Cloud Run 重啟/縮容即遺失、多副本不共用——
-階段 6 會以相同介面換成 Neon Postgres 實作，屆時 share-image（階段 8）也靠它跨請求取回分析。
+兩種實作可切換（deps.get_kv 依 DATABASE_URL 決定）：
+- InMemoryKV：本地開發/測試用；單 event loop 內操作天然原子
+- PostgresKV（app/storage/pg.py）：Neon Postgres，跨請求/跨重啟持久，
+  quiz-completions 24h 快取與階段 8 產圖併發鎖都靠它
 """
 
 import time
@@ -14,10 +15,10 @@ class InMemoryKV:
         self._clock = clock
         self._store: dict[str, tuple[float, Any]] = {}
 
-    def set(self, key: str, value: Any, ttl_seconds: float) -> None:
+    async def set(self, key: str, value: Any, ttl_seconds: float) -> None:
         self._store[key] = (self._clock() + ttl_seconds, value)
 
-    def get(self, key: str) -> Any | None:
+    async def get(self, key: str) -> Any | None:
         entry = self._store.get(key)
         if entry is None:
             return None
@@ -27,5 +28,16 @@ class InMemoryKV:
             return None
         return value
 
-    def delete(self, key: str) -> None:
+    async def delete(self, key: str) -> None:
         self._store.pop(key, None)
+
+    async def add(self, key: str, value: Any, ttl_seconds: float) -> bool:
+        """不存在或已過期才寫入（搶鎖語意）；拿到鎖回 True。
+
+        單執行緒 event loop 內無 await 的區段天然原子，不需額外鎖。
+        """
+        entry = self._store.get(key)
+        if entry is not None and self._clock() <= entry[0]:
+            return False
+        self._store[key] = (self._clock() + ttl_seconds, value)
+        return True
