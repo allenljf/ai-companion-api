@@ -4,6 +4,7 @@ from functools import lru_cache
 
 from app.config import settings
 from app.services.llm.client import LLMClient, OpenAICompatProvider
+from app.storage.kv import InMemoryKV
 
 # Gemini / Groq 都提供 OpenAI 相容端點，共用同一個 provider 實作
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"
@@ -37,6 +38,18 @@ def get_llm_client() -> LLMClient:
         "recommend_city": _parse_route(settings.llm_recommend_city),
         "travel_guide": _parse_route(settings.llm_travel_guide),
         "travel_revise": _parse_route(settings.llm_travel_revise),
+        "quiz": _parse_route(settings.llm_quiz),
+        "quiz_completions": _parse_route(settings.llm_quiz_completions),
+        "self_introduction": _parse_route(settings.llm_self_introduction),
     }
     # 金鑰沒設時 provider 不存在 → chat 時 KeyError → call_and_parse 軟失敗，服務仍可啟動
     return LLMClient(providers=providers, routing=routing)
+
+
+@lru_cache(maxsize=1)
+def get_kv() -> InMemoryKV:
+    """KV 快取單例（quiz-completions 24h 分析快取）。
+
+    階段 6 前為記憶體版：Cloud Run 重啟即遺失、多副本不共用（限制記於 migration-plan）。
+    """
+    return InMemoryKV()

@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
     # revise 輸入含完整行程 + 完整對話，比 guide 更長，同樣只有 llama 的 TPM 12000 裝得下
     llm_travel_revise: str = "groq:llama-3.3-70b-versatile"
+    # Phase 1：quiz 改寫 / 自我介紹是輕量任務走 qwen；completions 是重度結構化（15 keys +
+    # reasoning 10 句 + 多約束）走 llama-3.3-70b（同 guide 的取捨，繁中靠 OpenCC 後處理）
+    llm_quiz: str = "groq:qwen/qwen3.6-27b:none"
+    llm_quiz_completions: str = "groq:llama-3.3-70b-versatile"
+    llm_self_introduction: str = "groq:qwen/qwen3.6-27b:none"
 
     data_dir: Path = BASE_DIR / "data"
 
