@@ -1,0 +1,636 @@
+{
+    "metadata": {
+        "status": "0000",
+        "desc": "正確",
+        "pagination": {
+            "total_count": 3,
+            "current_page": 1,
+            "current_page_size": 3,
+            "page_size": 5,
+            "total_page": 1
+        }
+    },
+    "dynamic": null,
+    "queue_it": {
+        "version": 58
+    },
+    "data": {
+        "exists_over_date_order": false,
+        "orders": [
+            {
+                "id": "26KK216164788",
+                "order_master_mid": "26MM297160850",
+                "pay_deadline": "2026/08/04 11:08:15",
+                "pay_deadline_time_left": -57551,
+                "order_date": 1785839895000,
+                "go_date_description_type": "01",
+                "go_date_setting_type": "01",
+                "go_dt": "2026-09-01",
+                "lst_dt_go": 1788220800000,
+                "lst_dt_back": null,
+                "back_date": 1788220800000,
+                "process_status": "PROCESSING",
+                "prod_name": "東京迪士尼樂園 & 東京迪士尼海洋門票",
+                "package_name": "東京迪士尼度假區：單園一日護照",
+                "qty_total": 1,
+                "is_applying_cancel": false,
+                "cancel_date": null,
+                "cancel_ts": null,
+                "price_refund": 0,
+                "display_price_refund": "0",
+                "cancel_fee": 0,
+                "display_cancel_fee": "0",
+                "unread_msg": 0,
+                "price": 0,
+                "display_price": "0",
+                "price_total": 1826,
+                "display_price_total": "1,826",
+                "price_coupon": null,
+                "display_price_coupon": "0",
+                "img_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_32488/20260323034331_t05tf/jpg",
+                "img_webp_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit%2Ct_webp/s1.kkday.com/product_32488/20260323034331_t05tf/jpg",
+                "instant_booking": true,
+                "currency": "TWD",
+                "display_symbol_currency": "TWD",
+                "has_voucher": false,
+                "comment": {
+                    "id": null,
+                    "score": 0
+                },
+                "order_lang_code": "zh-tw",
+                "city_list": [
+                    {
+                        "id": "A01-003-99999",
+                        "name": "所有城市"
+                    }
+                ],
+                "status": "GO",
+                "confirm_hour": 0,
+                "product_oid": 32488,
+                "product_mid": 19252,
+                "package_oid": 336117,
+                "country": {
+                    "id": "A01-003"
+                },
+                "product_category": {
+                    "main_cat_key": "M05",
+                    "cat_keys": [
+                        "TAG_2_3"
+                    ],
+                    "category": {
+                        "main": "CATEGORY_006",
+                        "sub": []
+                    }
+                },
+                "guide": {
+                    "guide_name": "",
+                    "guide_tel_country_code": "",
+                    "guide_tel": ""
+                },
+                "timezone": "Asia/Tokyo",
+                "is_new": true,
+                "destination": {
+                    "destinations": [
+                        {
+                            "code": "D-JP-18456",
+                            "name": "東京迪士尼海洋",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3218",
+                            "name": "關東",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3260",
+                            "name": "千葉",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3290",
+                            "name": "舞浜",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3302",
+                            "name": "浦安",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-7651",
+                            "name": "東京迪士尼度假區",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-7652",
+                            "name": "東京迪士尼樂園",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-112",
+                            "name": "日本",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3261",
+                            "name": "東京",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        }
+                    ]
+                },
+                "ext_mode": null,
+                "ext_data": null,
+                "is_marketplace": false,
+                "supplier_oid": 8173,
+                "supplier_info": null,
+                "msg_handler": "KKDAY",
+                "supplier": {
+                    "supplier_name": "株式会社オリエンタルランド",
+                    "supplier_logo": "https://img.stage.kkday.com/image/get/w_120%2Cc_fit/s1.kkday.com/supplier/default_image/png"
+                },
+                "kkday_voucher_mode": "PDF",
+                "voucher_type": "OFFICIAL-SUPPLIER",
+                "group_orders": [],
+                "expired_data": {
+                    "is_expired": false,
+                    "expired_date": "2026/08/30 15:00:00"
+                },
+                "payment_rule": "ONLINE",
+                "pay_status": "PAID",
+                "final_payment": 0,
+                "final_payment_currency": null,
+                "display_symbol_final_payment_currency": null,
+                "allow_receipt": true,
+                "customer_offline_fee": 0,
+                "order_status_display": "HANDLE",
+                "display_status": "訂單處理中",
+                "take_status": "2",
+                "bd_tag": "0005",
+                "real_back_dt": null,
+                "cash_reward_deduct": 0,
+                "display_cash_reward_deduct": "0",
+                "vertical": "DEFAULT",
+                "group_mode": null,
+                "back_dt": "2026-09-01",
+                "order_change_event": null,
+                "change_data_info": {
+                    "can_date_change": false,
+                    "show_change_btn": false,
+                    "reason": "OCD001",
+                    "reason_desc": "此日期無法更改，請重新選擇",
+                    "status": "",
+                    "status_desc": "",
+                    "status_instr": "",
+                    "result_title": "",
+                    "result_instr": "",
+                    "pay_deadline": null,
+                    "pay_deadline_time_left": null,
+                    "child_order_master_mid": null,
+                    "cost_info": null
+                }
+            },
+            {
+                "id": "26KK216164888",
+                "order_master_mid": "26MM298160150",
+                "pay_deadline": "2026/08/04 11:11:20",
+                "pay_deadline_time_left": -57366,
+                "order_date": 1785840081000,
+                "go_date_description_type": "01",
+                "go_date_setting_type": "01",
+                "go_dt": "2026-09-02",
+                "lst_dt_go": 1788307200000,
+                "lst_dt_back": null,
+                "back_date": 1788307200000,
+                "process_status": "COMPLETED",
+                "prod_name": "【1人成團】日本京都天橋立一日遊｜伊根灣遊船・伊根舟屋/美山茅草屋之里｜伊根灣遊船・可選鮑魚或半蟹海鮮鍋｜大阪難波／京都出發",
+                "package_name": "【深夜優惠】天橋立三景一日遊｜天橋立＆伊根灣遊船＆美山茅屋之里｜大阪出發",
+                "qty_total": 1,
+                "is_applying_cancel": false,
+                "cancel_date": null,
+                "cancel_ts": null,
+                "price_refund": 0,
+                "display_price_refund": "0",
+                "cancel_fee": 0,
+                "display_cancel_fee": "0",
+                "unread_msg": 0,
+                "price": 0,
+                "display_price": "0",
+                "price_total": 1334,
+                "display_price_total": "1,334",
+                "price_coupon": null,
+                "display_price_coupon": "0",
+                "img_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_16932/20260525022416_U3x5M/jpg",
+                "img_webp_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit%2Ct_webp/s1.kkday.com/product_scm_16932/20260525022416_U3x5M/jpg",
+                "instant_booking": true,
+                "currency": "TWD",
+                "display_symbol_currency": "TWD",
+                "has_voucher": true,
+                "comment": {
+                    "id": null,
+                    "score": 0
+                },
+                "order_lang_code": "zh-tw",
+                "city_list": [
+                    {
+                        "id": "A01-003-99999",
+                        "name": "所有城市"
+                    }
+                ],
+                "status": "GO",
+                "confirm_hour": 0,
+                "product_oid": 155289,
+                "product_mid": 155289,
+                "package_oid": 2020742,
+                "country": {
+                    "id": "A01-003"
+                },
+                "product_category": {
+                    "main_cat_key": "M01",
+                    "cat_keys": [
+                        "TAG_4_4"
+                    ],
+                    "category": {
+                        "main": "CATEGORY_020",
+                        "sub": [
+                            "CATEGORY_023"
+                        ]
+                    }
+                },
+                "guide": {
+                    "guide_name": "",
+                    "guide_tel_country_code": "",
+                    "guide_tel": ""
+                },
+                "timezone": "Asia/Tokyo",
+                "is_new": true,
+                "destination": {
+                    "destinations": [
+                        {
+                            "code": "D-JP-15571",
+                            "name": "天橋立景觀地",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3217",
+                            "name": "關西",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3256",
+                            "name": "京都",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3342",
+                            "name": "心齋橋",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3541",
+                            "name": "丹後",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3548",
+                            "name": "天橋立",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-7784",
+                            "name": "伊根町",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-7820",
+                            "name": "道頓堀",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-8306",
+                            "name": "文殊堂智恩寺",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-8421",
+                            "name": "傘松公園",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-8442",
+                            "name": "美山",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-112",
+                            "name": "日本",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        },
+                        {
+                            "code": "D-JP-3255",
+                            "name": "大阪",
+                            "country": {
+                                "destination_code": "D-JP-112",
+                                "iso_country_code": "JP",
+                                "name": "日本"
+                            }
+                        }
+                    ]
+                },
+                "ext_mode": null,
+                "ext_data": null,
+                "is_marketplace": false,
+                "supplier_oid": 35694,
+                "supplier_info": null,
+                "msg_handler": "SUPPLIER",
+                "supplier": {
+                    "supplier_name": "KKday專屬團",
+                    "supplier_logo": "https://img.stage.kkday.com/image/get/w_120%2Cc_fit/s1.kkday.com/supplier/default_image/png"
+                },
+                "kkday_voucher_mode": "PDF",
+                "voucher_type": "KKDAY",
+                "group_orders": [],
+                "expired_data": null,
+                "payment_rule": "ONLINE",
+                "pay_status": "PAID",
+                "final_payment": 0,
+                "final_payment_currency": null,
+                "display_symbol_final_payment_currency": null,
+                "allow_receipt": true,
+                "customer_offline_fee": 0,
+                "order_status_display": "SENT",
+                "display_status": "憑證已發送",
+                "take_status": "3",
+                "bd_tag": "0006",
+                "real_back_dt": null,
+                "cash_reward_deduct": 0,
+                "display_cash_reward_deduct": "0",
+                "vertical": "DEFAULT",
+                "group_mode": null,
+                "back_dt": "2026-09-02",
+                "order_change_event": null,
+                "change_data_info": {
+                    "can_date_change": false,
+                    "show_change_btn": false,
+                    "reason": "OCD001",
+                    "reason_desc": "此日期無法更改，請重新選擇",
+                    "status": "",
+                    "status_desc": "",
+                    "status_instr": "",
+                    "result_title": "",
+                    "result_instr": "",
+                    "pay_deadline": null,
+                    "pay_deadline_time_left": null,
+                    "child_order_master_mid": null,
+                    "cost_info": null
+                }
+            },
+            {
+                "id": "26KK215164188",
+                "order_master_mid": "26MM298160650",
+                "pay_deadline": "2026/08/04 11:13:02",
+                "pay_deadline_time_left": -57264,
+                "order_date": 1785840184000,
+                "go_date_description_type": "01",
+                "go_date_setting_type": "01",
+                "go_dt": "2026-09-02",
+                "lst_dt_go": 1788307200000,
+                "lst_dt_back": null,
+                "back_date": 1788307200000,
+                "process_status": "PROCESSING",
+                "prod_name": "巴黎博物館通行證 Paris Museum Pass",
+                "package_name": "巴黎博物館通行證 48 小時 + 塞納河遊船",
+                "qty_total": 1,
+                "is_applying_cancel": false,
+                "cancel_date": null,
+                "cancel_ts": null,
+                "price_refund": 0,
+                "display_price_refund": "0",
+                "cancel_fee": 0,
+                "display_cancel_fee": "0",
+                "unread_msg": 1,
+                "price": 0,
+                "display_price": "0",
+                "price_total": 4473,
+                "display_price_total": "4,473",
+                "price_coupon": null,
+                "display_price_coupon": "0",
+                "img_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_120855/20240715060636_vuyVg/png",
+                "img_webp_url": "https://img.stage.kkday.com/image/get/w_600%2Cc_fit%2Ct_webp/s1.kkday.com/product_120855/20240715060636_vuyVg/png",
+                "instant_booking": true,
+                "currency": "TWD",
+                "display_symbol_currency": "TWD",
+                "has_voucher": false,
+                "comment": {
+                    "id": null,
+                    "score": 0
+                },
+                "order_lang_code": "zh-tw",
+                "city_list": [
+                    {
+                        "id": "A03-013-00032",
+                        "name": "法蘭西島"
+                    }
+                ],
+                "status": "GO",
+                "confirm_hour": 0,
+                "product_oid": 120855,
+                "product_mid": 120855,
+                "package_oid": 549203,
+                "country": {
+                    "id": "A03-013"
+                },
+                "product_category": {
+                    "main_cat_key": "M05",
+                    "cat_keys": [
+                        "TAG_2_1"
+                    ],
+                    "category": {
+                        "main": "CATEGORY_004",
+                        "sub": []
+                    }
+                },
+                "guide": {
+                    "guide_name": "",
+                    "guide_tel_country_code": "",
+                    "guide_tel": ""
+                },
+                "timezone": "Europe/Paris",
+                "is_new": true,
+                "destination": {
+                    "destinations": [
+                        {
+                            "code": "D-FR-4322",
+                            "name": "法蘭西島",
+                            "country": {
+                                "destination_code": "D-FR-74",
+                                "iso_country_code": "FR",
+                                "name": "法國"
+                            }
+                        },
+                        {
+                            "code": "D-FR-74",
+                            "name": "法國",
+                            "country": {
+                                "destination_code": "D-FR-74",
+                                "iso_country_code": "FR",
+                                "name": "法國"
+                            }
+                        },
+                        {
+                            "code": "D-FR-8158",
+                            "name": "羅浮宮",
+                            "country": {
+                                "destination_code": "D-FR-74",
+                                "iso_country_code": "FR",
+                                "name": "法國"
+                            }
+                        },
+                        {
+                            "code": "D-FR-4334",
+                            "name": "巴黎",
+                            "country": {
+                                "destination_code": "D-FR-74",
+                                "iso_country_code": "FR",
+                                "name": "法國"
+                            }
+                        }
+                    ]
+                },
+                "ext_mode": null,
+                "ext_data": null,
+                "is_marketplace": false,
+                "supplier_oid": 583,
+                "supplier_info": null,
+                "msg_handler": "KKDAY",
+                "supplier": {
+                    "supplier_name": "ParisCityVision",
+                    "supplier_logo": "https://img.stage.kkday.com/image/get/w_120%2Cc_fit/s1.kkday.com/supplier/default_image/png"
+                },
+                "kkday_voucher_mode": "PDF",
+                "voucher_type": "SUPPLIER",
+                "group_orders": [],
+                "expired_data": {
+                    "is_expired": true,
+                    "expired_date": "2026/08/04 11:13:00"
+                },
+                "payment_rule": "ONLINE",
+                "pay_status": "PAID",
+                "final_payment": 0,
+                "final_payment_currency": null,
+                "display_symbol_final_payment_currency": null,
+                "allow_receipt": true,
+                "customer_offline_fee": 0,
+                "order_status_display": "HANDLE",
+                "display_status": "訂單處理中",
+                "take_status": "2",
+                "bd_tag": "0005",
+                "real_back_dt": null,
+                "cash_reward_deduct": 0,
+                "display_cash_reward_deduct": "0",
+                "vertical": "DEFAULT",
+                "group_mode": null,
+                "back_dt": "2026-09-02",
+                "order_change_event": null,
+                "change_data_info": {
+                    "can_date_change": false,
+                    "show_change_btn": false,
+                    "reason": "OCD001",
+                    "reason_desc": "此日期無法更改，請重新選擇",
+                    "status": "",
+                    "status_desc": "",
+                    "status_instr": "",
+                    "result_title": "",
+                    "result_instr": "",
+                    "pay_deadline": null,
+                    "pay_deadline_time_left": null,
+                    "child_order_master_mid": null,
+                    "cost_info": null
+                }
+            }
+        ]
+    }
+}

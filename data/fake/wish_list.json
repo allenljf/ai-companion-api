@@ -1,0 +1,239 @@
+{
+    "metadata": {
+        "status": "0000",
+        "desc": "Success",
+        "pagination": {
+            "total_count": 48,
+            "start": 0,
+            "count": 48
+        }
+    },
+    "dynamic": null,
+    "queue_it": {
+        "version": 58
+    },
+    "data": {
+        "prods": [
+            {
+                "prod_mid": 157138,
+                "prod_oid": 157138,
+                "name": "從慕尼黑出發的新天鵝堡冬季之旅",
+                "introduction": "與我們一起參觀由童話國王路德維希二世建造的新天鵝堡。這些位於巴伐利亞高山景觀中的獨特建築會讓您著迷!",
+                "rating_count": 4,
+                "rating_star": 4.8,
+                "show_order_count": "50+",
+                "earliest_sale_date": "20261128",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "winter-tour-neuschwanstein-castle-munich",
+                "product_category": {
+                    "main": "CATEGORY_020",
+                    "sub": [
+                        "CATEGORY_025"
+                    ]
+                },
+                "display_tags": [
+                    "1天前可免費取消",
+                    "立即確認"
+                ],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035646_SilSM/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035647_hqM1y/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035648_jHZ2u/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035649_9NiBP/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035647_LL6TN/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_157138/20231127035648_1usoI/jpg"
+                ],
+                "clip_urls": [],
+                "currency": "TWD",
+                "official_price": 2676,
+                "max_price": 2676,
+                "min_price": 2274,
+                "discount": 0.1502,
+                "is_display_price": true,
+                "destinations": [
+                    {
+                        "code": "D-DE-5421",
+                        "name": "新天鵝堡"
+                    }
+                ],
+                "is_marketplace": false,
+                "supplier_oid_list": [
+                    16303
+                ],
+                "supplier_name": null,
+                "supplier_logo": null,
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "cid_activity_labels": [],
+                "activity_labels": [],
+                "discount_labels": [],
+                "user_promotion_labels": [],
+                "prod_discount_type": null,
+                "mkt_tag": [
+                    {
+                        "label_type": "OFFICIAL_PRICE",
+                        "discount_type": "NONE",
+                        "display_text": "15%OFF"
+                    }
+                ],
+                "property_tag": [
+                    {
+                        "display_text": "1天前可免費取消"
+                    },
+                    {
+                        "display_text": "立即確認"
+                    }
+                ]
+            },
+            {
+                "prod_mid": 141270,
+                "prod_oid": 141270,
+                "name": "西班牙馬德里一日遊 | 普拉多博物館&馬德里皇宮|中文導覽",
+                "introduction": "立刻透過 KKday 預訂西班牙馬德里一日遊 ,提供中文導覽讓你用熟悉的語言了解馬德里的歷史文化!本行程含普拉多博物館和馬德里皇宮的快速通關門票!",
+                "rating_count": 1,
+                "rating_star": 5,
+                "show_order_count": "",
+                "earliest_sale_date": "20260807",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "",
+                "product_category": {
+                    "main": "CATEGORY_020",
+                    "sub": [
+                        "CATEGORY_025"
+                    ]
+                },
+                "display_tags": [
+                    "3天前可免費取消",
+                    "即買即用",
+                    "立即確認"
+                ],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215543_scbF0/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215617_UBVHX/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215807_paJ2A/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215736_FE1Rd/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215757_nFC4l/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215501_9c4G5/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215554_cEIee/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322215532_TfPnJ/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_141270/20230322221411_zag5j/jpg"
+                ],
+                "clip_urls": [],
+                "currency": "TWD",
+                "official_price": 3759,
+                "max_price": 5575,
+                "min_price": 3759,
+                "discount": 0,
+                "is_display_price": false,
+                "destinations": [
+                    {
+                        "code": "D-ES-5225",
+                        "name": "普拉多博物館"
+                    }
+                ],
+                "is_marketplace": false,
+                "supplier_oid_list": [
+                    19599
+                ],
+                "supplier_name": null,
+                "supplier_logo": null,
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "cid_activity_labels": [],
+                "activity_labels": [],
+                "discount_labels": [],
+                "user_promotion_labels": [],
+                "prod_discount_type": null,
+                "mkt_tag": [],
+                "property_tag": [
+                    {
+                        "display_text": "3天前可免費取消"
+                    },
+                    {
+                        "display_text": "即買即用"
+                    },
+                    {
+                        "display_text": "立即確認"
+                    }
+                ]
+            },
+            {
+                "prod_mid": 574065,
+                "prod_oid": 574065,
+                "name": "福岡北九州賞花一日遊|季節限定河內藤園紫藤隧道・小倉城庭園・海之中道海濱公園・宮地嶽神社光之道・THE OUTLETS KITAKYUSHU(博多出發)",
+                "introduction": "跟著LION來一趟春季限定的九州賞花之旅,從福岡博多出發,一日走訪北九州人氣景點。於「海之中道海濱公園」漫步海濱花園景觀,造訪 THE OUTLETS KITAKYUSHU 用餐和享受購物時光,深入「河內藤園」欣賞夢幻紫藤隧道,最後前往以絕景「光之道」聞名的「宮地嶽神社」參拜祈福,專車往返、路線順暢,輕鬆蒐集九州春日花景與打卡名所,適合首次造訪福岡或喜愛季節花海的旅客。",
+                "rating_count": 35,
+                "rating_star": 4.7,
+                "show_order_count": "75+",
+                "earliest_sale_date": "20260809",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "",
+                "product_category": {
+                    "main": "CATEGORY_020",
+                    "sub": [
+                        "CATEGORY_025"
+                    ]
+                },
+                "display_tags": [
+                    "8天前可免費取消"
+                ],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225005910_THYbS/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225035442_VXRRo/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225033314_bYjp3/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225021636_QnVkj/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225033358_vJtu7/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225014618_JWygy/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225041500_QNiDa/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225012355_ixk4L/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225033349_VYYb5/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_574065/20260225012324_PiwMz/jpg"
+                ],
+                "clip_urls": [],
+                "currency": "TWD",
+                "official_price": 2210,
+                "max_price": 2210,
+                "min_price": 2198,
+                "discount": 0.0054,
+                "is_display_price": false,
+                "destinations": [
+                    {
+                        "code": "D-JP-4061",
+                        "name": "博多"
+                    }
+                ],
+                "is_marketplace": false,
+                "supplier_oid_list": [
+                    35695
+                ],
+                "supplier_name": null,
+                "supplier_logo": null,
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "cid_activity_labels": [],
+                "activity_labels": [],
+                "discount_labels": [],
+                "user_promotion_labels": [],
+                "prod_discount_type": null,
+                "mkt_tag": [],
+                "property_tag": [
+                    {
+                        "display_text": "8天前可免費取消"
+                    }
+                ]
+            }
+        ]
+    }
+}

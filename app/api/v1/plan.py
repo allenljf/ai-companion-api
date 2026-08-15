@@ -2,6 +2,8 @@
 
 from fastapi import APIRouter, Depends
 
+from app.core.throttle import throttle
+
 from app.api.deps import get_llm_client
 from app.schemas.common import success_envelope
 from app.schemas.plan import (
@@ -25,7 +27,8 @@ from app.services.plan.summary_from_wish import summarize_from_wish
 router = APIRouter(prefix="/v1/plan", tags=["plan"])
 
 
-@router.post("/travel-summary")
+@router.post("/travel-summary", summary="聊天室初始化摘要（四入口）",
+             dependencies=[Depends(throttle("travel_summary"))])
 async def travel_summary(
     body: TravelSummaryRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -34,7 +37,8 @@ async def travel_summary(
     return success_envelope(data)
 
 
-@router.post("/travel-summary-from-orders")
+@router.post("/travel-summary-from-orders", summary="帶訂單開場：判讀訂單城市",
+             dependencies=[Depends(throttle("from_orders"))])
 async def travel_summary_from_orders(
     body: TravelSummaryFromOrdersRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -42,7 +46,8 @@ async def travel_summary_from_orders(
     return success_envelope(data)
 
 
-@router.post("/travel-summary-from-wish")
+@router.post("/travel-summary-from-wish", summary="從願望清單開場：商品→城市判讀",
+             dependencies=[Depends(throttle("from_wish"))])
 async def travel_summary_from_wish(
     body: TravelSummaryFromWishRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -50,7 +55,8 @@ async def travel_summary_from_wish(
     return success_envelope(data)
 
 
-@router.post("/recommend-city")
+@router.post("/recommend-city", summary="城市推薦多輪對話（第 5 輪強制收斂）",
+             dependencies=[Depends(throttle("recommend_city"))])
 async def recommend_city(
     body: RecommendCityRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -58,7 +64,8 @@ async def recommend_city(
     return success_envelope(data)
 
 
-@router.post("/travel-guide")
+@router.post("/travel-guide", summary="一次性產出完整逐日行程",
+             dependencies=[Depends(throttle("travel_guide"))])
 async def travel_guide(
     body: TravelGuideRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -66,7 +73,8 @@ async def travel_guide(
     return success_envelope(data)
 
 
-@router.post("/travel-revise")
+@router.post("/travel-revise", summary="自然語言修改行程（回應恆為完整行程）",
+             dependencies=[Depends(throttle("travel_revise"))])
 async def travel_revise(
     body: TravelReviseRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
@@ -74,7 +82,8 @@ async def travel_revise(
     return success_envelope(data)
 
 
-@router.post("/travel-summary-from-history")
+@router.post("/travel-summary-from-history", summary="從瀏覽紀錄開場：商品→城市判讀",
+             dependencies=[Depends(throttle("from_history"))])
 async def travel_summary_from_history(
     body: TravelSummaryFromHistoryRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:

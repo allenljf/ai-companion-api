@@ -1,0 +1,230 @@
+{
+    "metadata": {
+        "status": "0000",
+        "desc": "Success"
+    },
+    "dynamic": null,
+    "queue_it": {
+        "version": 58
+    },
+    "data": {
+        "prods": [
+            {
+                "prod_mid": 282362,
+                "prod_oid": 282362,
+                "name": "名古屋出發熱門上高地觀光健行巴士一日遊",
+                "introduction": "盡情享受一整天的行程,有充足的時間探索上高地令人嘆為觀止的美景!這趟備受歡迎的健行之旅提供舒適便捷的體驗,全程搭乘直達大巴,讓您的旅程輕鬆愉快。\n\n※即使下雨,此行程照常進行。\n\n(如遇惡劣天氣導致行程取消,我們將與您聯繫。)",
+                "rating_count": 2,
+                "rating_star": 5,
+                "show_order_count": "25+",
+                "earliest_sale_date": "20260816",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "",
+                "product_category": {
+                    "main": "CATEGORY_020",
+                    "sub": [
+                        "CATEGORY_026"
+                    ]
+                },
+                "display_tags": [
+                    "11天前可免費取消"
+                ],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240610031312_Ct4W5/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240610031309_mfwkn/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240610031310_QlOo2/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240610031311_WkVev/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240613031447_eOqEQ/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_181998/20240610031313_cfUBc/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_282362/20250403052550_v2BTr/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_282362/20250403052550_lxRLs/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_282362/20250403052548_nqEPF/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_282362/20250403052549_InMRo/jpg"
+                ],
+                "currency": "TWD",
+                "official_price": 1596,
+                "max_price": 1596,
+                "min_price": 1587,
+                "discount": 0.0056,
+                "is_display_price": false,
+                "destinations": [
+                    {
+                        "code": "D-JP-3682",
+                        "name": "上高地"
+                    }
+                ],
+                "is_marketplace": false,
+                "supplier_oid_list": [
+                    8334
+                ],
+                "supplier_name": null,
+                "supplier_logo": null,
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "prod_discount_type": null,
+                "mkt_tag": [],
+                "property_tag": [
+                    {
+                        "display_text": "11天前可免費取消"
+                    }
+                ]
+            },
+            {
+                "prod_mid": 568735,
+                "prod_oid": 568735,
+                "name": "名古屋出發|立山黑部雪牆3日遊|上高地・白川鄉合掌村・馬籠宿・妻籠宿・大王山葵農場|含門票・住宿・領隊",
+                "introduction": "日本中部精選3日遊,暢遊立山黑部雪牆、上高地秘境與白川鄉合掌村,感受四季絕景,名古屋出發、溫泉旅館入住。",
+                "rating_count": 24,
+                "rating_star": 4.33,
+                "show_order_count": "50+",
+                "earliest_sale_date": "20260812",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "",
+                "product_category": {
+                    "main": "CATEGORY_021",
+                    "sub": [
+                        "CATEGORY_023",
+                        "CATEGORY_030"
+                    ]
+                },
+                "display_tags": [],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_13509/20260403072342_UDJTd/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_568735/20251224113044_H0EA1/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_568735/20251225034750_77KNW/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_13509/20260403034139_9jv1w/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_13509/20260403041702_QCx5J/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_568735/20251225022214_nUEyh/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_568735/20251225022320_zq1pS/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_13509/20260705160737_7z1rt/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_scm_13509/20260705163159_TuafV/jpg"
+                ],
+                "currency": "TWD",
+                "official_price": 16261,
+                "max_price": 24218,
+                "min_price": 16261,
+                "discount": 0,
+                "is_display_price": false,
+                "destinations": [
+                    {
+                        "code": "D-JP-7627",
+                        "name": "河童橋"
+                    }
+                ],
+                "is_marketplace": false,
+                "supplier_oid_list": [
+                    35695
+                ],
+                "supplier_name": null,
+                "supplier_logo": null,
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "prod_discount_type": null,
+                "mkt_tag": [],
+                "property_tag": []
+            },
+            {
+                "prod_mid": 161560,
+                "prod_oid": 161560,
+                "name": "黑部立山二日遊|夏季避暑・秋季賞楓|立山黑部阿爾卑斯山路線・秘境上高地・六種交通體驗・溫泉住宿(名古屋出發)",
+                "introduction": "15人成團,日本名古屋出發!北陸富山黑部立山雪牆絕景二日遊,阿爾卑斯山路線大雪谷&長野上高地\n2026年的營業時間如下\n全線開通期間(電鐵富山~信濃大町) 2026年4月15日~11月30日\n12月1日~4月14日為停業期間",
+                "rating_count": 534,
+                "rating_star": 4.85,
+                "show_order_count": "1K+",
+                "earliest_sale_date": "20260813",
+                "sale_status": 1,
+                "purchase_type": null,
+                "purchase_date": null,
+                "is_tourism_product": true,
+                "readable_url": "",
+                "product_category": {
+                    "main": "CATEGORY_021",
+                    "sub": [
+                        "CATEGORY_023",
+                        "CATEGORY_030"
+                    ]
+                },
+                "display_tags": [
+                    "15天前可免費取消"
+                ],
+                "img_url_list": [
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043144_xE8BX/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043146_tjFAa/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043147_fzGGb/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043148_LrOX2/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043149_a6xD6/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024524_2cDiB/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024523_KZCNv/png",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024523_J6G2O/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043150_GlPIQ/png",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030949_cwgQL/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030948_UVUXs/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260130054648_TbGgW/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20250602102138_sJYIx/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024525_npbeI/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20250616110608_DDAnp/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260501053722_c0kfF/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030949_0pwmf/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024526_W9WeN/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030947_TYnLn/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20250324115132_NoQOV/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030949_WrWgY/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030950_tea6J/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030950_q9Y5u/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20240416054140_Nxi6v/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260130054650_hucEU/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20250616110609_TVjpm/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20251024024527_s3AnC/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260130054652_5jLxz/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260130054653_lckYd/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_265437/20241220053123_biBaV/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260501050613_XglRk/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260501053718_6qngA/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260501050616_T4Ziu/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260501050615_aPP16/jpg",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161555/20240130030951_mB3MI/png",
+                    "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/product_161560/20260630043156_zRNWT/jpg"
+                ],
+                "currency": "TWD",
+                "official_price": 11804,
+                "max_price": 13249,
+                "min_price": 9524,
+                "discount": 0.1932,
+                "is_display_price": true,
+                "destinations": [
+                    {
+                        "code": "D-JP-7627",
+                        "name": "河童橋"
+                    }
+                ],
+                "is_marketplace": true,
+                "supplier_oid_list": [
+                    23854
+                ],
+                "supplier_name": "KKT",
+                "supplier_logo": "https://image.kkday.com/image/get/w_600%2Cc_fit/s1.kkday.com/supplier_23854/20231005053228_RgHi8/png",
+                "supplier_badge": 0,
+                "is_zero_price": false,
+                "is_kkday_best_route": false,
+                "prod_discount_type": null,
+                "mkt_tag": [],
+                "property_tag": [
+                    {
+                        "display_text": "15天前可免費取消"
+                    }
+                ]
+            }
+        ],
+        "exp_version": 0,
+        "algo_version": "history",
+        "session_id": "987f5317-1dad-44d4-aa48-cb6d8fd96650"
+    }
+}

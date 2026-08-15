@@ -11,6 +11,7 @@ from app.api.deps import (
     get_object_store,
 )
 from app.config import settings
+from app.core.throttle import throttle
 from app.schemas.common import business_error_envelope, success_envelope
 from app.schemas.companion import (
     QuizCompletionsRequest,
@@ -33,21 +34,21 @@ def _load_ai_partner() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-@router.get("/ai-partner")
+@router.get("/ai-partner", summary="旅伴設定選項（人格/風格/性別/頭像）")
 async def get_ai_partner() -> dict:
     # 原樣透傳 data/ai_partner.json（原始服務是透傳 DCS ai_partner variant）
     # 不走 LLM、無 throttle（docs/source-spec.md 4.1 / 2.4）
     return success_envelope(_load_ai_partner())
 
 
-@router.post("/quiz")
+@router.post("/quiz", summary="測驗題目：加權隨機選題 + 旅伴語氣改寫")
 async def quiz(body: QuizFetchRequest, client: LLMClient = Depends(get_llm_client)) -> dict:
     # 軟失敗契約：LLM 改寫失敗回原始題目 + fail_reason（source-spec 4.2）
     data = await fetch_quiz(body.model_dump(), client)
     return success_envelope(data)
 
 
-@router.post("/quiz-completions")
+@router.post("/quiz-completions", summary="提交答案：八人格判定 + 文案生成（快取 24h）")
 async def quiz_completions(
     body: QuizCompletionsRequest,
     client: LLMClient = Depends(get_llm_client),
@@ -59,7 +60,8 @@ async def quiz_completions(
     return success_envelope(data)
 
 
-@router.post("/share-image-v2")
+@router.post("/share-image-v2", summary="分享海報素材（hero + 郵戳 + 3 tag 插畫）",
+             dependencies=[Depends(throttle("share_image_v2"))])
 async def share_image_v2(
     body: ShareImageV2Request,
     provider=Depends(get_image_provider),
@@ -76,7 +78,41 @@ async def share_image_v2(
     return success_envelope(data)
 
 
-@router.post("/self-introduction")
+@router.get("/quiz-gallery", summary="其他人的測驗結果牆（只含產圖成功項）")
+async def quiz_gallery(gallery=Depends(get_gallery)) -> dict:
+    """其他人的測驗結果牆（source-spec 4.6）：只收錄產圖成功的項目，新到舊。"""
+    records = [
+        record
+        for record in await gallery.list()
+        if isinstance(record, dict) and record.get("share_image_url")
+    ]
+    return success_envelope({"count": len(records), "items": records})
+
+
+@lru_cache(maxsize=3)
+def _load_fake(name: str) -> dict:
+    return json.loads((settings.data_dir / "fake" / f"{name}.json").read_text(encoding="utf-8"))
+
+
+@router.get("/orders", summary="假訂單清單（前端測試用，原樣回傳）")
+async def fake_orders() -> dict:
+    # 假資料端點（source-spec 5.0）：檔案原樣回傳（含 dynamic/queue_it 信封），
+    # 等真實下游服務接上後替換實作即可，App 端不用改
+    return _load_fake("orders")
+
+
+@router.get("/wish_list", summary="假收藏商品清單（前端測試用，原樣回傳）")
+async def fake_wish_list() -> dict:
+    return _load_fake("wish_list")
+
+
+@router.get("/history", summary="假瀏覽/購買紀錄（前端測試用，原樣回傳）")
+async def fake_history() -> dict:
+    return _load_fake("history")
+
+
+@router.post("/self-introduction", summary="旅伴自我介紹開場白",
+             dependencies=[Depends(throttle("self_introduction"))])
 async def self_introduction(
     body: SelfIntroductionRequest, client: LLMClient = Depends(get_llm_client)
 ) -> dict:
