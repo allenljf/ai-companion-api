@@ -483,7 +483,8 @@ async def test_generate_with_image_provider_returns_hero_image_url():
     assert result["hero_image_url"].startswith("https://")
     assert "guide-hero/" in result["hero_image_url"]
     [call] = image_provider.calls
-    assert call["width"] == 1152 and call["height"] == 2048  # 與 Phase 1 hero 同規格
+    # 橫幅 16:9（與 Phase 1 海報 hero 的直式不同——行程頁是橫幅版位）
+    assert call["width"] == 2048 and call["height"] == 1152
     assert "京都" in call["prompt"]
     assert len(store.objects) == 1
 

@@ -195,7 +195,8 @@ def build_guide_hero_prompt(city: str) -> str:
     return _compose(body, HERO_HARD_CONSTRAINTS)
 
 
-GUIDE_HERO_WIDTH, GUIDE_HERO_HEIGHT = 1152, 2048  # 與 Phase 1 hero 同規格（Gemini → 9:16 2K）
+# 橫幅 16:9（Gemini → 2K）：行程頁是橫幅版位，與 Phase 1 海報 hero 的直式 9:16 不同
+GUIDE_HERO_WIDTH, GUIDE_HERO_HEIGHT = 2048, 1152
 
 
 def guide_hero_key(city: str) -> str:
