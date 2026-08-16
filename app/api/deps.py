@@ -52,14 +52,18 @@ def get_llm_client() -> LLMClient:
 
 @lru_cache(maxsize=1)
 def get_image_provider():
-    """圖片生成 provider（階段 8）。金鑰沒設時仍可啟動——產圖時 401 →
-    service 的 partial-fail 吸收（ready + URL null），不擋文字功能。"""
-    from app.services.image.client import CloudflareImageProvider
+    """圖片生成 provider：預設 Vertex（gemini-3.1-flash-image，ADC 認證）；
+    IMAGE_PROVIDER=cloudflare 切回備援。認證失敗時產圖拋錯 → service partial-fail 吸收。"""
+    if settings.image_provider == "cloudflare":
+        from app.services.image.client import CloudflareImageProvider
 
-    return CloudflareImageProvider(
-        account_id=settings.cloudflare_account_id or "",
-        api_token=settings.cloudflare_api_token or "",
-    )
+        return CloudflareImageProvider(
+            account_id=settings.cloudflare_account_id or "",
+            api_token=settings.cloudflare_api_token or "",
+        )
+    from app.services.image.client import GeminiImageProvider
+
+    return GeminiImageProvider(settings.vertex_project_id, settings.vertex_location)
 
 
 @lru_cache(maxsize=1)

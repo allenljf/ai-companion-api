@@ -44,10 +44,14 @@ CACHE_KEY_PREFIX = "companion:completion:"
 QUOTE_MAX_LENGTH = 30
 S3_PREFIX = "share-v2"
 
-HERO_MODEL = "@cf/black-forest-labs/flux-2-klein-4b"
-HERO_WIDTH, HERO_HEIGHT = 1152, 2048
-DECORATION_MODEL = "@cf/black-forest-labs/flux-1-schnell"
-DECORATION_STEPS = 8
+from app.config import settings
+
+# 模型由 settings 決定（預設 Vertex gemini-3.1-flash-image；IMAGE_*_MODEL env 可覆寫）。
+# 模型 id 是冪等 key 的因子之一——換模型自動換 key 重新產圖，不會誤用舊快取
+HERO_MODEL = settings.image_hero_model
+HERO_WIDTH, HERO_HEIGHT = 1152, 2048  # Gemini provider 轉為 9:16 + 2K（實際 1536×2752）
+DECORATION_MODEL = settings.image_decoration_model
+DECORATION_STEPS = 8  # 只對 CF flux-schnell 有意義；Gemini provider 忽略
 
 
 class QuizSessionNotFound(Exception):
@@ -182,7 +186,7 @@ class ShareImageV2Service:
                 PROMPT_VERSION, prompt_version,
             ]).encode()
         ).hexdigest()
-        return f"{S3_PREFIX}/{digest}-hero.jpg"
+        return f"{S3_PREFIX}/{digest}-hero.png"
 
     def decoration_slots(self, analysis: dict) -> dict[str, str]:
         """stamp 以 destination、tag 以 destination+tag 為 key（跨用戶共用快取）。"""
@@ -191,10 +195,10 @@ class ShareImageV2Service:
         ).hexdigest()[:8]
         dest_slug = self._destination_slug(analysis)
 
-        slots = {"stamp": f"{S3_PREFIX}/packs/dest/{dest_slug}/stamp-{version}.jpg"}
+        slots = {"stamp": f"{S3_PREFIX}/packs/dest/{dest_slug}/stamp-{version}.png"}
         for index, tag in enumerate(tag_values(analysis)):
             tag_hash = hashlib.sha256(f"{dest_slug}|{tag.strip().lower()}".encode()).hexdigest()[:16]
-            slots[f"tag_{index}"] = f"{S3_PREFIX}/packs/tag/{tag_hash}-{version}.jpg"
+            slots[f"tag_{index}"] = f"{S3_PREFIX}/packs/tag/{tag_hash}-{version}.png"
         return slots
 
     def _destination_slug(self, analysis: dict) -> str:

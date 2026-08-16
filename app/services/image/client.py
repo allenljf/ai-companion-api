@@ -95,6 +95,92 @@ class CloudflareImageProvider(ImageProvider):
         return data
 
 
+class GeminiImageProvider(ImageProvider):
+    """Vertex AI 的 Gemini 產圖模型（gemini-3.1-flash-image，2026-08-16 起的主 provider）。
+
+    spike 實測：
+    - generationConfig 必須 responseModalities ["TEXT","IMAGE"]（只給 IMAGE 會被 block）
+    - imageConfig.aspectRatio + imageSize（"2K" 9:16 = 1536×2752，優於原始 1152×2048 規格）
+    - 對三層 prompt（含硬約束 override 語句）的遵循度遠優於 flux-schnell——stamp 深炭黑底一次過
+    - 認證同 VertexAIProvider：ADC OAuth（Cloud Run runtime SA / 本地 gcloud ADC）
+    """
+
+    def __init__(
+        self,
+        project_id: str,
+        location: str = "global",
+        *,
+        token_provider=None,
+        timeout: float = DEFAULT_TIMEOUT_SECONDS,
+        transport: httpx.AsyncBaseTransport | None = None,
+    ):
+        from app.services.llm.client import _AdcTokenProvider
+
+        host = (
+            "https://aiplatform.googleapis.com"
+            if location == "global"
+            else f"https://{location}-aiplatform.googleapis.com"
+        )
+        self._token_provider = token_provider or _AdcTokenProvider()
+        self._client = httpx.AsyncClient(
+            base_url=f"{host}/v1/projects/{project_id}/locations/{location}/publishers/google/models",
+            timeout=httpx.Timeout(timeout),
+            transport=transport,
+        )
+
+    async def generate(
+        self, prompt: str, *, model: str,
+        width: int | None = None, height: int | None = None, steps: int | None = None,
+    ) -> bytes:
+        # width/height 介面相容轉換：推導長寬比與解析度級距；steps 對 Gemini 無意義，忽略
+        payload = {
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "responseModalities": ["TEXT", "IMAGE"],
+                "imageConfig": {
+                    "aspectRatio": _aspect_ratio(width, height),
+                    "imageSize": "2K" if max(width or 0, height or 0) >= 1500 else "1K",
+                },
+            },
+        }
+        token = self._token_provider()
+        response = await self._client.post(
+            f"/{model}:generateContent", json=payload,
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        if response.status_code != 200:
+            raise ImageGenerationError(
+                f"Vertex generateContent HTTP {response.status_code}: {response.text[:300]}"
+            )
+
+        import base64
+
+        body = response.json()
+        candidates = body.get("candidates") or []
+        if not candidates:
+            block = (body.get("promptFeedback") or {}).get("blockReason", "unknown")
+            raise ImageGenerationError(f"Vertex 回應無 candidates（blockReason={block}）")
+
+        for part in (candidates[0].get("content") or {}).get("parts") or []:
+            inline = part.get("inlineData")
+            if inline and inline.get("data"):
+                data = base64.b64decode(inline["data"])
+                if not (data.startswith(JPEG_MAGIC) or data.startswith(PNG_MAGIC)):
+                    raise ImageGenerationError("產出內容不是合法圖檔（magic bytes 非 JPEG/PNG）")
+                return data
+        raise ImageGenerationError("Vertex 回應只有文字、沒有圖片 part")
+
+
+def _aspect_ratio(width: int | None, height: int | None) -> str:
+    """寬高 → Gemini 支援的長寬比字串；無尺寸（裝飾方圖）預設 1:1。"""
+    if not width or not height:
+        return "1:1"
+    from math import gcd
+
+    divisor = gcd(width, height)
+    return f"{width // divisor}:{height // divisor}"
+
+
 def image_content_type(data: bytes) -> str:
     return "image/png" if data.startswith(PNG_MAGIC) else "image/jpeg"
 
