@@ -1,9 +1,16 @@
 """share-image-v2：App 端合成海報的素材產圖（source-spec 4.4，對照 ShareImageV2Service.php）。
 
-五個素材槽位：hero（per-completion 快取）、stamp、tag_0/1/2（以 destination[/tag] 為 key
-**跨用戶共用快取**）。`ready` = 本次啟動的 job 全部 settled（遠端失敗仍 ready、URL 為 null，
-App 以 fallback_category 降級）；`processing` 僅在 completion lock 被他人持有且 hero 尚未存在時回。
+素材槽位：hero（per-completion 快取）、stamp（以 destination 為 key **跨用戶共用快取**）。
+`ready` = 本次啟動的 job 全部 settled（遠端失敗仍 ready、URL 為 null，App 以 fallback_category
+降級）；`processing` 僅在 completion lock 被他人持有且 hero 尚未存在時回。
 status 沒有 failed、share_fallback/fail_reason 恆 null。
+
+**tag icon 素材暫停用**（見下方 GENERATE_TAG_ICONS）：2026-08-16 線上實測發現 Vertex
+`gemini-3.1-flash-image` 的產圖配額是 GenContentImageGenRequestsPerMinutePerProjectPerBaseModelGlobal
+= **每分鐘 2 張、僅 global 端點**（區域端點 404、Imagen 系列無獨立配額可繞），一次請求要產
+5 張（1 hero + 1 stamp + 3 tag）必超額；tag 排最後產生所以最常失敗。決定：先只產 hero + stamp，
+tag icon 相關程式碼保留、以 GENERATE_TAG_ICONS 開關控制，額度調升或改用其他 provider 時改回 True
+即可重新啟用（decoration_slots/_response 已按此開關寫好條件分支，不需要再改邏輯）。
 
 冪等：hero key 含（uuid | 模型 | 尺寸 | PROMPT_VERSION | hero prompt 全文 SHA-256 前 12 碼）——
 調整 prompt 檔後同一 uuid 重打會自動換 key 重新產圖，調校時不用重跑測驗。
@@ -52,6 +59,10 @@ HERO_MODEL = settings.image_hero_model
 HERO_WIDTH, HERO_HEIGHT = 1152, 2048  # Gemini provider 轉為 9:16 + 2K（實際 1536×2752）
 DECORATION_MODEL = settings.image_decoration_model
 DECORATION_STEPS = 8  # 只對 CF flux-schnell 有意義；Gemini provider 忽略
+
+# tag icon 產圖開關：見上方模組說明。False 時 decoration_slots() 只回 stamp、
+# _response() 的 tag_icon_urls/tag_fallback_categories 回空陣列（不產、不計費、不回 URL）。
+GENERATE_TAG_ICONS = False
 
 
 class QuizSessionNotFound(Exception):
@@ -208,16 +219,23 @@ class ShareImageV2Service:
         return f"{S3_PREFIX}/{digest}-hero.png"
 
     def decoration_slots(self, analysis: dict) -> dict[str, str]:
-        """stamp 以 destination、tag 以 destination+tag 為 key（跨用戶共用快取）。"""
+        """stamp 以 destination、tag 以 destination+tag 為 key（跨用戶共用快取）。
+
+        tag icon 暫停用（GENERATE_TAG_ICONS=False）：只回傳 stamp 槽位，
+        _generate_assets() 的迴圈自然就不會排 tag job。
+        """
         version = hashlib.md5(
             f"{DECORATION_MODEL}|square|{PROMPT_VERSION}".encode()
         ).hexdigest()[:8]
         dest_slug = self._destination_slug(analysis)
 
         slots = {"stamp": f"{S3_PREFIX}/packs/dest/{dest_slug}/stamp-{version}.png"}
-        for index, tag in enumerate(tag_values(analysis)):
-            tag_hash = hashlib.sha256(f"{dest_slug}|{tag.strip().lower()}".encode()).hexdigest()[:16]
-            slots[f"tag_{index}"] = f"{S3_PREFIX}/packs/tag/{tag_hash}-{version}.png"
+        if GENERATE_TAG_ICONS:
+            for index, tag in enumerate(tag_values(analysis)):
+                tag_hash = hashlib.sha256(
+                    f"{dest_slug}|{tag.strip().lower()}".encode()
+                ).hexdigest()[:16]
+                slots[f"tag_{index}"] = f"{S3_PREFIX}/packs/tag/{tag_hash}-{version}.png"
         return slots
 
     def _destination_slug(self, analysis: dict) -> str:
@@ -236,12 +254,18 @@ class ShareImageV2Service:
         tags = tag_values(analysis)
 
         stamp_key = decorations.get("stamp")
+        # tag icon 暫停用：不產也不回 URL（見 GENERATE_TAG_ICONS）；highlight_tags 文字仍在 content 裡完整回傳
         tag_urls: list[str | None] = []
         tag_categories: list[str] = []
-        for index in range(MAX_TAGS):
-            key = decorations.get(f"tag_{index}")
-            tag_urls.append(self._store.url(key) if key and await self._store.exists(key) else None)
-            tag_categories.append(tag_fallback_category(tags[index]) if index < len(tags) else "generic")
+        if GENERATE_TAG_ICONS:
+            for index in range(MAX_TAGS):
+                key = decorations.get(f"tag_{index}")
+                tag_urls.append(
+                    self._store.url(key) if key and await self._store.exists(key) else None
+                )
+                tag_categories.append(
+                    tag_fallback_category(tags[index]) if index < len(tags) else "generic"
+                )
 
         return {
             "status": status,

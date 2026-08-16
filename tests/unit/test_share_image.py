@@ -77,7 +77,8 @@ async def test_missing_analysis_cache_raises_c007():
 
 
 @pytest.mark.asyncio
-async def test_first_call_generates_five_assets_and_returns_ready():
+async def test_first_call_generates_hero_and_stamp_only_and_returns_ready():
+    # tag icon 暫停用（Vertex 產圖配額每分鐘 2 張，一次 5 張必超額，見 GENERATE_TAG_ICONS）
     provider = FakeProvider()
     store = InMemoryObjectStore()
     gallery = InMemoryGallery()
@@ -87,24 +88,23 @@ async def test_first_call_generates_five_assets_and_returns_ready():
 
     assert result["status"] == "ready"
     assert result["fail_reason"] is None and result["share_fallback"] is None
-    assert len(provider.calls) == 5  # hero + stamp + tag×3
+    assert len(provider.calls) == 2  # hero + stamp（tag icon 停用，不產也不計費）
     assert result["hero_url"] and result["hero_url"].startswith("https://")
     assert result["decorations"]["stamp_url"]
-    assert all(url for url in result["decorations"]["tag_icon_urls"])
-    assert len(store.objects) == 5
+    assert result["decorations"]["tag_icon_urls"] == []
+    assert result["decorations"]["tag_fallback_categories"] == []
+    assert len(store.objects) == 2
 
-    # hero 走 klein 直式，裝飾走 schnell 方圖
+    # hero 走 klein 直式，stamp 走方圖
     hero_call = next(c for c in provider.calls if c["width"] == 1152)
     assert hero_call["height"] == 2048
-    assert sum(1 for c in provider.calls if c["width"] is None) == 4
+    assert sum(1 for c in provider.calls if c["width"] is None) == 1
 
-    # content 供 App 排版
+    # content 供 App 排版（highlight_tags 文字仍完整回傳，只是不產對應插畫）
     assert result["content"]["travel_identity"] == "獨處療癒師"
     assert result["content"]["companion_name"] == "阿旅"
+    assert result["content"]["highlight_tags"] == ["身心療癒派", "大自然充電族", "安心舒適圈"]
     assert result["hero_fallback_category"] == "culture"
-    assert result["decorations"]["tag_fallback_categories"] == [
-        "relaxation", "generic", "generic",
-    ]
 
 
 @pytest.mark.asyncio
@@ -145,7 +145,6 @@ async def test_partial_failure_stamp_only():
     assert result["status"] == "ready"  # 沒有 failed 狀態
     assert result["hero_url"] is not None
     assert result["decorations"]["stamp_url"] is None  # 失敗槽位 URL 為 null
-    assert all(url for url in result["decorations"]["tag_icon_urls"])
     assert result["fail_reason"] is None
 
 
@@ -185,7 +184,7 @@ async def test_decorations_shared_across_users_same_destination():
     kv = InMemoryKV()
     service = await make_service(provider=provider, store=store, kv=kv)
     await service.generate(UUID)
-    calls_first = len(provider.calls)  # 5
+    calls_first = len(provider.calls)  # hero + stamp
 
     other_uuid = "c9999999-8f2f-4c1e-9d2f-1c9a35c1dccc"
     await kv.set(
@@ -194,7 +193,7 @@ async def test_decorations_shared_across_users_same_destination():
         ttl_seconds=3600,
     )
     result = await service.generate(other_uuid)
-    # 同目的地/同 tags：stamp+tag×3 走跨用戶快取，只重產 hero
+    # 同目的地：stamp 走跨用戶快取，只重產 hero
     assert len(provider.calls) == calls_first + 1
     assert result["decorations"]["stamp_url"]
 
@@ -215,6 +214,22 @@ async def test_contended_pack_lock_no_duplicate_job():
     assert result["decorations"]["stamp_url"] is None
     stamp_prompts = [c for c in provider.calls if "passport-stamp" in c["prompt"]]
     assert stamp_prompts == []  # 沒有重複計費
+
+
+@pytest.mark.asyncio
+async def test_tag_icons_disabled_no_slots_no_jobs_no_urls():
+    from app.services.companion.share_image import GENERATE_TAG_ICONS
+
+    assert GENERATE_TAG_ICONS is False  # 明確鎖定目前狀態；改回 True 時這條測試會提醒同步更新其他測試
+
+    provider = FakeProvider()
+    service = await make_service(provider=provider)
+    result = await service.generate(UUID)
+
+    assert "tag_0" not in service.decoration_slots(ANALYSIS)
+    assert not any("destination-specific travel-journal" in c["prompt"] for c in provider.calls)
+    assert result["decorations"]["tag_icon_urls"] == []
+    assert result["decorations"]["tag_fallback_categories"] == []
 
 
 @pytest.mark.asyncio
