@@ -14,7 +14,7 @@
 | Hosting | **Google Cloud Run**（asia-east1，min-instances 0） | timeout 300s；冷啟動 3.5s、熱請求 0.05s；記憶體 ~60MB/512Mi |
 | DB | **Neon Postgres**（免費層） | cache（24h 分析快取）/ 併發鎖 / gallery 三用途；SQLite 因 Cloud Run 暫時檔案系統不可用 |
 | LLM | **Vertex AI**（`gemini-3.6-flash`，吃 GCP $300 試用額度） | 輕量任務 `:minimal`、重度結構化 `:low`（thinking 模型要壓思考預算）；ADC 認證免金鑰；Groq/AI Studio key 保留為備援（`LLM_*` env 可切） |
-| 產圖 | **Cloudflare Workers AI**（免費層 10,000 neurons/天） | hero 用 `flux-2-klein-4b`（1152×2048 直式，multipart）、裝飾用 `flux-1-schnell`（方圖）；**不支援參考圖**（實測被忽略）→ 旅伴合成砍掉；約 543 neurons/次測驗 ≈ 18 次/天。選型調研：`docs/research/image-gen-free-tier.md` |
+| 產圖 | **Vertex AI**（`gemini-3.1-flash-image`，吃 GCP $300 額度，約 $0.2/次測驗） | hero 2K（1536×2752）零文字、stamp 硬約束一次過；**支援參考圖**（旅伴合成有路可走）；試用帳戶 RPM 低 → 併發 2 + 429 重試，缺的素材重打自動補齊；Cloudflare 留備援（`IMAGE_PROVIDER=cloudflare`）。調研：`docs/research/image-gen-free-tier.md` |
 | 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
 | prompt | `app/prompts/*.txt`（Jinja2） | 原 DCS 內容已全部落地成檔案 |
 
@@ -85,7 +85,7 @@ Repo secrets：`GCP_SA_KEY`、`GCP_PROJECT_ID`、`GEMINI_API_KEY`、`GROQ_API_KE
 
 ## 已知限制
 
-- **額度**：LLM 走 Vertex AI 計入 GCP 帳單（試用額度 $300 內免費，額度頁可查餘額）；Cloudflare 10,000 neurons/天 ≈ 18 次測驗產圖
+- **額度**：LLM 與產圖都走 Vertex AI 計入 GCP 帳單（試用額度 $300 內免費，額度頁可查餘額）；**試用帳戶產圖 RPM 低**——單次呼叫可能只完成部分素材（partial-fail 設計），App 重打同 uuid 會自動補齊缺的槽位
 - **單 instance 假設**：rate limiter 是記憶體版（多副本時各自計數）；max-instances 已設 1
-- **產圖降級**：不支援參考圖 → 無旅伴人物合成、風格一致性靠 prompt 文字；stamp/tag 硬約束遵循待調校（migration-plan 階段 8 備註）
+- **產圖**：旅伴人物合成尚未實作（gemini image 支援參考圖，屬未來擴充）；tag 插畫背景尚非純白（去背調校待辦）；stamp 會渲染可讀英文（拼字正確，是否保留屬設計取捨）
 - **prompt 調校待辦**：集中記錄在 `docs/migration-plan.md` 各階段備註（destination 偶回國家/英文、字數規格遵循弱等）——都是換免費模型後的已知品質落差，功能可用
