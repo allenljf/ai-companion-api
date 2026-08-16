@@ -13,7 +13,7 @@
 |---|---|---|
 | Hosting | **Google Cloud Run**（asia-east1，min-instances 0） | timeout 300s；冷啟動 3.5s、熱請求 0.05s；記憶體 ~60MB/512Mi |
 | DB | **Neon Postgres**（免費層） | cache（24h 分析快取）/ 併發鎖 / gallery 三用途；SQLite 因 Cloud Run 暫時檔案系統不可用 |
-| LLM | **Groq**（免費層） | `qwen/qwen3.6-27b:none` 輕量任務；`llama-3.3-70b-versatile` 重度結構化（TPM 12000 才裝得下 guide/revise 的長 prompt + 8000 max_tokens） |
+| LLM | **Vertex AI**（`gemini-3.6-flash`，吃 GCP $300 試用額度） | 輕量任務 `:minimal`、重度結構化 `:low`（thinking 模型要壓思考預算）；ADC 認證免金鑰；Groq/AI Studio key 保留為備援（`LLM_*` env 可切） |
 | 產圖 | **Cloudflare Workers AI**（免費層 10,000 neurons/天） | hero 用 `flux-2-klein-4b`（1152×2048 直式，multipart）、裝飾用 `flux-1-schnell`（方圖）；**不支援參考圖**（實測被忽略）→ 旅伴合成砍掉；約 543 neurons/次測驗 ≈ 18 次/天。選型調研：`docs/research/image-gen-free-tier.md` |
 | 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
 | prompt | `app/prompts/*.txt`（Jinja2） | 原 DCS 內容已全部落地成檔案 |
@@ -71,7 +71,7 @@ Repo secrets：`GCP_SA_KEY`、`GCP_PROJECT_ID`、`GEMINI_API_KEY`、`GROQ_API_KE
 
 | 變數 | 用途 |
 |---|---|
-| `GROQ_API_KEY` / `GEMINI_API_KEY` | LLM（Gemini 目前額度耗盡備用） |
+| `GROQ_API_KEY` / `GEMINI_API_KEY` | 備援 LLM provider（主力已切 Vertex AI，ADC 認證不需金鑰） |
 | `DATABASE_URL` | Neon（KV 快取/鎖/gallery；沒設會退回記憶體版） |
 | `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` | 產圖 |
 | `LLM_TRAVEL_SUMMARY` 等 `LLM_*` | 各 API 的模型路由覆寫，格式 `provider:model[:reasoning_effort]` |
@@ -85,7 +85,7 @@ Repo secrets：`GCP_SA_KEY`、`GCP_PROJECT_ID`、`GEMINI_API_KEY`、`GROQ_API_KE
 
 ## 已知限制
 
-- **免費層額度**：Groq qwen TPM 8000 / llama TPM 12000（連續打回歸測試會 429）；Cloudflare 10,000 neurons/天 ≈ 18 次測驗產圖；額度爆掉的付費逃生口見 `docs/research/image-gen-free-tier.md`
+- **額度**：LLM 走 Vertex AI 計入 GCP 帳單（試用額度 $300 內免費，額度頁可查餘額）；Cloudflare 10,000 neurons/天 ≈ 18 次測驗產圖
 - **單 instance 假設**：rate limiter 是記憶體版（多副本時各自計數）；max-instances 已設 1
 - **產圖降級**：不支援參考圖 → 無旅伴人物合成、風格一致性靠 prompt 文字；stamp/tag 硬約束遵循待調校（migration-plan 階段 8 備註）
 - **prompt 調校待辦**：集中記錄在 `docs/migration-plan.md` 各階段備註（destination 偶回國家/英文、字數規格遵循弱等）——都是換免費模型後的已知品質落差，功能可用
