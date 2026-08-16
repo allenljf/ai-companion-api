@@ -12,7 +12,7 @@
 | 項目 | 選擇 | 實測備註 |
 |---|---|---|
 | Hosting | **Google Cloud Run**（asia-east1，min-instances 0） | timeout 300s；冷啟動 3.5s、熱請求 0.05s；記憶體 ~60MB/512Mi |
-| DB | **Neon Postgres**（免費層） | cache（24h 分析快取）/ 併發鎖 / gallery 三用途；SQLite 因 Cloud Run 暫時檔案系統不可用 |
+| DB | **Neon Postgres**（免費層） | 分析快取（**永久保留**，清除自行下 SQL）/ 併發鎖（有 TTL）/ gallery（**永久保留**，API 只回最新 100 筆）；SQLite 因 Cloud Run 暫時檔案系統不可用 |
 | LLM | **Vertex AI**（`gemini-3.6-flash`，吃 GCP $300 試用額度） | 輕量任務 `:minimal`、重度結構化 `:low`（thinking 模型要壓思考預算）；ADC 認證免金鑰；Groq/AI Studio key 保留為備援（`LLM_*` env 可切） |
 | 產圖 | **Vertex AI**（`gemini-3.1-flash-image`，吃 GCP $300 額度，約 $0.2/次測驗） | hero 2K（1536×2752）零文字、stamp 硬約束一次過；**支援參考圖**（旅伴合成有路可走）；試用帳戶 RPM 低 → 併發 2 + 429 重試，缺的素材重打自動補齊；Cloudflare 留備援（`IMAGE_PROVIDER=cloudflare`）。調研：`docs/research/image-gen-free-tier.md` |
 | 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
@@ -24,7 +24,7 @@
 |---|---|---|
 | `GET /v1/companion/ai-partner` | 旅伴設定選項 | — |
 | `POST /v1/companion/quiz` | 測驗題目（加權選題 + 語氣改寫） | — |
-| `POST /v1/companion/quiz-completions` | 八人格判定 + 文案生成（快取 24h） | — |
+| `POST /v1/companion/quiz-completions` | 八人格判定 + 文案生成（結果永久快取） | — |
 | `POST /v1/companion/share-image-v2` | 分享海報素材（hero + 郵戳 + 3 tag） | 10/min |
 | `POST /v1/companion/self-introduction` | 旅伴自我介紹 | 10/min |
 | `GET /v1/companion/quiz-gallery` | 測驗結果牆（只含產圖成功項） | — |

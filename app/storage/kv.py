@@ -15,8 +15,10 @@ class InMemoryKV:
         self._clock = clock
         self._store: dict[str, tuple[float, Any]] = {}
 
-    async def set(self, key: str, value: Any, ttl_seconds: float) -> None:
-        self._store[key] = (self._clock() + ttl_seconds, value)
+    async def set(self, key: str, value: Any, ttl_seconds: float | None) -> None:
+        # ttl_seconds=None = 永不過期（海報分析快取等，清除交給使用者手動 DB 操作）
+        expires_at = float("inf") if ttl_seconds is None else self._clock() + ttl_seconds
+        self._store[key] = (expires_at, value)
 
     async def get(self, key: str) -> Any | None:
         entry = self._store.get(key)
@@ -31,7 +33,7 @@ class InMemoryKV:
     async def delete(self, key: str) -> None:
         self._store.pop(key, None)
 
-    async def add(self, key: str, value: Any, ttl_seconds: float) -> bool:
+    async def add(self, key: str, value: Any, ttl_seconds: float | None) -> bool:
         """不存在或已過期才寫入（搶鎖語意）；拿到鎖回 True。
 
         單執行緒 event loop 內無 await 的區段天然原子，不需額外鎖。
@@ -39,5 +41,6 @@ class InMemoryKV:
         entry = self._store.get(key)
         if entry is not None and self._clock() <= entry[0]:
             return False
-        self._store[key] = (self._clock() + ttl_seconds, value)
+        expires_at = float("inf") if ttl_seconds is None else self._clock() + ttl_seconds
+        self._store[key] = (expires_at, value)
         return True

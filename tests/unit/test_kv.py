@@ -48,6 +48,16 @@ async def test_set_overwrites_value_and_ttl():
 
 
 @pytest.mark.asyncio
+async def test_ttl_none_never_expires():
+    # 海報相關資料（分析快取）永久保留，使用者要清自己去 DB 清
+    now = [0.0]
+    kv = make_kv(now)
+    await kv.set("k", "forever", ttl_seconds=None)
+    now[0] = 10**9
+    assert await kv.get("k") == "forever"
+
+
+@pytest.mark.asyncio
 async def test_delete():
     kv = InMemoryKV()
     await kv.set("k", "v", ttl_seconds=60)

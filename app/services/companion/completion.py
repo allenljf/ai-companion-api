@@ -31,8 +31,9 @@ TASK = "quiz_completions"
 COMPLETION_MAX_TOKENS = 3000
 COMPANION_QUOTE_MAX_LENGTH = 30
 RECOMMENDATION_MAX_LENGTH = 200
-# 分析快取 TTL：24h，供 POST share-image 按需產圖取用
-COMPLETION_CACHE_TTL = 86400
+# 分析快取不設 TTL（2026-08-16 需求變更）：永久保留，供 share-image 隨時產圖；
+# 清除交給使用者手動 DB 操作（原始服務為 24h）
+COMPLETION_CACHE_TTL = None
 CACHE_KEY_PREFIX = "companion:completion:"
 
 

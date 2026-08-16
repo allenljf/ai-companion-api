@@ -100,10 +100,14 @@ async def test_success_envelope_and_identity_override():
 
 
 @pytest.mark.asyncio
-async def test_success_caches_analysis_24h():
+async def test_success_caches_analysis_permanently():
+    # 2026-08-16 需求變更：分析快取不設 TTL（永久保留，清除交給使用者手動 DB 操作）
     client, _ = make_client(llm_reply())
     kv = InMemoryKV()
     await complete_quiz(dict(BASE_PARAMS), client, kv)
+    assert (CACHE_KEY_PREFIX + UUID) in kv._store
+    expires_at, _ = kv._store[CACHE_KEY_PREFIX + UUID]
+    assert expires_at == float("inf")
     cached = await kv.get(CACHE_KEY_PREFIX + UUID)
     assert cached is not None
     assert cached["analysis"]["travel_identity"] == "遠征冒險團"  # 覆寫後才快取

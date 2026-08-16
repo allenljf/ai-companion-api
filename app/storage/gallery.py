@@ -7,8 +7,8 @@ class InMemoryGallery:
         self._records: list[dict] = []
 
     async def push(self, record: dict) -> None:
+        # 不裁切（同 Postgres 版：資料保留，「最新 limit 筆」由讀取端實現）
         self._records.insert(0, record)
-        del self._records[self.limit :]
 
     async def list(self) -> list[dict]:
-        return list(self._records)
+        return list(self._records[: self.limit])

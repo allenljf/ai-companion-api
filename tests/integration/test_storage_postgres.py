@@ -105,11 +105,22 @@ async def test_gallery_push_and_list_newest_first(gallery):
 
 
 @pytest.mark.asyncio
-async def test_gallery_trims_to_limit(gallery):
-    # 驗收：超過 100 筆會裁切（測試用小上限）
+async def test_gallery_read_limited_but_rows_retained(gallery):
+    # 2026-08-16 需求變更：API 仍回最新 limit 筆，但**不刪除舊資料**（清除交給使用者手動 DB 操作）
     gallery.limit = 5
     for i in range(8):
         await gallery.push({"n": i})
     records = await gallery.list()
     assert len(records) == 5
     assert [r["n"] for r in records] == [7, 6, 5, 4, 3]
+    assert await gallery.count_rows() == 8  # 舊列還在 DB 裡
+
+
+@pytest.mark.asyncio
+async def test_kv_ttl_none_persists(kv):
+    import uuid as uuid_mod
+
+    k = f"test:{uuid_mod.uuid4()}"
+    await kv.set(k, {"forever": True}, ttl_seconds=None)
+    assert await kv.get(k) == {"forever": True}
+    await kv.delete(k)

@@ -43,17 +43,20 @@ class PostgresKV:
             self._initialized = True
         return self._pool.connection()
 
-    async def set(self, key: str, value: Any, ttl_seconds: float) -> None:
+    async def set(self, key: str, value: Any, ttl_seconds: float | None) -> None:
+        """ttl_seconds=None = 永不過期（expires_at 存 'infinity'；清除交給使用者手動 DB 操作）。"""
         async with await self._conn() as conn:
             await conn.execute("DELETE FROM kv_cache WHERE expires_at <= now()")
             await conn.execute(
                 """
                 INSERT INTO kv_cache (key, value, expires_at)
-                VALUES (%s, %s::jsonb, now() + make_interval(secs => %s))
+                VALUES (%s, %s::jsonb,
+                        CASE WHEN %s::float8 IS NULL THEN 'infinity'::timestamptz
+                             ELSE now() + make_interval(secs => %s) END)
                 ON CONFLICT (key) DO UPDATE
                     SET value = EXCLUDED.value, expires_at = EXCLUDED.expires_at
                 """,
-                (key, json.dumps(value, ensure_ascii=False), ttl_seconds),
+                (key, json.dumps(value, ensure_ascii=False), ttl_seconds, ttl_seconds),
             )
 
     async def get(self, key: str) -> Any | None:
@@ -127,34 +130,30 @@ class PostgresGallery:
         return self._pool.connection()
 
     async def push(self, record: dict) -> None:
-        """寫入一筆並裁切到最新 limit 筆 + 清過期（各語句原子，併發最壞暫多一筆）。"""
+        """只寫入、不刪除（2026-08-16 需求變更：資料永久保留，清除交給使用者手動 DB 操作；
+        API 的「最新 limit 筆」由讀取端 LIMIT 實現）。"""
         async with await self._conn() as conn:
             await conn.execute(
                 f"INSERT INTO {self._table} (record) VALUES (%s::jsonb)",
                 (json.dumps(record, ensure_ascii=False),),
             )
-            await conn.execute(
-                f"""
-                DELETE FROM {self._table}
-                WHERE id NOT IN (SELECT id FROM {self._table} ORDER BY id DESC LIMIT %s)
-                   OR created_at <= now() - make_interval(secs => %s)
-                """,
-                (self.limit, self.ttl_seconds),
-            )
 
     async def list(self) -> list[dict]:
-        """新到舊；過期不回（TTL 安全網，裁切才是主要保留機制）。"""
+        """新到舊、只回最新 limit 筆（DB 內舊資料保留不刪）。"""
         async with await self._conn() as conn:
             cursor = await conn.execute(
-                f"""
-                SELECT record FROM {self._table}
-                WHERE created_at > now() - make_interval(secs => %s)
-                ORDER BY id DESC LIMIT %s
-                """,
-                (self.ttl_seconds, self.limit),
+                f"SELECT record FROM {self._table} ORDER BY id DESC LIMIT %s",
+                (self.limit,),
             )
             rows = await cursor.fetchall()
         return [row[0] for row in rows]
+
+    async def count_rows(self) -> int:
+        """DB 實際列數（驗證「不刪除」行為與手動清理前檢查用）。"""
+        async with await self._conn() as conn:
+            cursor = await conn.execute(f"SELECT count(*) FROM {self._table}")
+            row = await cursor.fetchone()
+        return int(row[0])
 
     async def drop_table(self) -> None:
         """測試清理用。"""
