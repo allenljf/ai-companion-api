@@ -25,9 +25,6 @@ class Settings(BaseSettings):
     # gemini-3.6-flash 是 thinking 模型：輕量任務 :minimal 壓思考預算（對應 Groq 時代的 :none），
     # 重度結構化（guide/revise/completions）:low。要暫時切回 Groq 用 LLM_* env 覆寫即可。
     llm_travel_summary: str = "vertex:gemini-3.6-flash:minimal"
-    llm_travel_summary_from_orders: str = "vertex:gemini-3.6-flash:minimal"
-    llm_travel_summary_from_wish: str = "vertex:gemini-3.6-flash:minimal"
-    llm_travel_summary_from_history: str = "vertex:gemini-3.6-flash:minimal"
     llm_recommend_city: str = "vertex:gemini-3.6-flash:minimal"
     llm_travel_guide: str = "vertex:gemini-3.6-flash:low"
     llm_travel_revise: str = "vertex:gemini-3.6-flash:low"

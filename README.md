@@ -1,6 +1,6 @@
 # AI Companion API
 
-把 kkday-b2c-api 的「AI 旅伴」（Phase 1 + Phase 2 共 **17 支 API**）重寫成獨立的 Python / FastAPI 雲端服務，跑在免費層上。
+把 kkday-b2c-api 的「AI 旅伴」（Phase 1 + Phase 2；2026-08-16 移除 6 支未使用端點後現為 **11 支 API**）重寫成獨立的 Python / FastAPI 雲端服務，跑在免費層上。
 
 - **規格真相**：`docs/source-spec.md`（17 支 API 的輸入輸出、prompt 全文、normalize 規則）
 - **路線圖與各階段實錄**：`docs/migration-plan.md`（進度表的「備註」欄記錄了每個階段實際踩到的坑）
@@ -18,7 +18,7 @@
 | 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
 | prompt | `app/prompts/*.txt`（Jinja2） | 原 DCS 內容已全部落地成檔案 |
 
-## 端點總覽（17 支 + debug）
+## 端點總覽（11 支 + debug）
 
 | 路由 | 說明 | 限流 |
 |---|---|---|
@@ -28,13 +28,9 @@
 | `POST /v1/companion/share-image-v2` | 分享海報素材（hero + 郵戳 + 3 tag） | 10/min |
 | `POST /v1/companion/self-introduction` | 旅伴自我介紹 | 10/min |
 | `GET /v1/companion/quiz-gallery` | 測驗結果牆（只含產圖成功項） | — |
-| `GET /v1/companion/orders` `wish_list` `history` | 假資料端點（前端測試用） | — |
 | `POST /v1/plan/travel-summary` | 聊天室初始化摘要（四入口） | 20/min |
-| `POST /v1/plan/travel-summary-from-orders` | 帶訂單開場 | 10/min |
-| `POST /v1/plan/travel-summary-from-wish` | 從願望清單開場 | 10/min |
-| `POST /v1/plan/travel-summary-from-history` | 從瀏覽紀錄開場 | 10/min |
 | `POST /v1/plan/recommend-city` | 城市推薦多輪對話 | 30/min |
-| `POST /v1/plan/travel-guide` | 一次性產出完整行程 | 15/min |
+| `POST /v1/plan/travel-guide` | 一次性產出完整行程 + 目的地 hero 圖（`hero_image_url`，同城市跨用戶快取、失敗降級 null） | 15/min |
 | `POST /v1/plan/travel-revise` | 自然語言修改行程 | 20/min |
 | `GET /debug/*` | 平台驗證用（sleep/memory/storage），不屬 App 契約 | — |
 

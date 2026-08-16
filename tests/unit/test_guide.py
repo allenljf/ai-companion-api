@@ -432,3 +432,104 @@ async def test_generate_days_fallback_to_itinerary_length():
     client, _ = make_client(llm_reply(days=0))
     result = await generate(dict(BASE_PARAMS), client)
     assert result["days"] == 2
+
+
+# ---------------------------------------------------------------------------
+# 行程 hero 圖（2026-08-16 新增）：與 Phase 1 同風格、以行程主目的地為主體
+# ---------------------------------------------------------------------------
+
+
+class FakeImageProvider:
+    def __init__(self):
+        self.calls: list[dict] = []
+        self.fail = False
+
+    async def generate(self, prompt, *, model, width=None, height=None, steps=None):
+        self.calls.append({"prompt": prompt, "model": model, "width": width, "height": height})
+        if self.fail:
+            raise RuntimeError("image boom")
+        return b"\xff\xd8\xff\xe0img"
+
+
+class TestGuideHeroPrompt:
+    def test_three_layers_and_city_substituted(self):
+        from app.services.plan.guide import build_guide_hero_prompt
+        from app.services.companion.share_prompts import HERO_HARD_CONSTRAINTS
+
+        prompt = build_guide_hero_prompt("京都")
+        # 與 Phase 1 同風格：同一份 art_style（第 1 層）+ 同一組硬約束（第 3 層、放最後）
+        assert prompt.startswith("Anime-style illustration")
+        assert '"京都"' in prompt
+        assert prompt.rstrip().endswith(HERO_HARD_CONSTRAINTS)
+
+
+@pytest.mark.asyncio
+async def test_generate_without_image_provider_returns_null_hero_image():
+    client, _ = make_client(llm_reply())
+    result = await generate(dict(BASE_PARAMS), client)
+    assert result["hero_image_url"] is None  # 欄位存在、未接產圖時為 null
+
+
+@pytest.mark.asyncio
+async def test_generate_with_image_provider_returns_hero_image_url():
+    from app.storage.objects import InMemoryObjectStore
+
+    client, _ = make_client(llm_reply())
+    image_provider, store = FakeImageProvider(), InMemoryObjectStore()
+    result = await generate(
+        dict(BASE_PARAMS), client, image_provider=image_provider, image_store=store
+    )
+    assert result["fail_reason"] is None
+    assert result["hero_image_url"].startswith("https://")
+    assert "guide-hero/" in result["hero_image_url"]
+    [call] = image_provider.calls
+    assert call["width"] == 1152 and call["height"] == 2048  # 與 Phase 1 hero 同規格
+    assert "京都" in call["prompt"]
+    assert len(store.objects) == 1
+
+
+@pytest.mark.asyncio
+async def test_guide_hero_image_cached_by_city_across_users():
+    from app.storage.objects import InMemoryObjectStore
+
+    client, _ = make_client(llm_reply())
+    image_provider, store = FakeImageProvider(), InMemoryObjectStore()
+    first = await generate(
+        dict(BASE_PARAMS), client, image_provider=image_provider, image_store=store
+    )
+    client2, _ = make_client(llm_reply())
+    second = await generate(
+        dict(BASE_PARAMS), client2, image_provider=image_provider, image_store=store
+    )
+    assert len(image_provider.calls) == 1  # 同城市跨請求共用快取，不重產
+    assert second["hero_image_url"] == first["hero_image_url"]
+
+
+@pytest.mark.asyncio
+async def test_guide_hero_image_failure_soft_degrades():
+    from app.storage.objects import InMemoryObjectStore
+
+    client, _ = make_client(llm_reply())
+    image_provider = FakeImageProvider()
+    image_provider.fail = True
+    result = await generate(
+        dict(BASE_PARAMS), client, image_provider=image_provider, image_store=InMemoryObjectStore()
+    )
+    assert result["fail_reason"] is None  # 產圖失敗不影響行程本體
+    assert result["hero_image_url"] is None
+    # 行程內容照常
+    assert result["city"] == "京都" and result["days"] == 2
+
+
+@pytest.mark.asyncio
+async def test_guide_hero_image_skipped_on_llm_failure():
+    from app.storage.objects import InMemoryObjectStore
+
+    client, _ = make_client(RuntimeError("boom"))
+    image_provider = FakeImageProvider()
+    result = await generate(
+        dict(BASE_PARAMS), client, image_provider=image_provider, image_store=InMemoryObjectStore()
+    )
+    assert result["fail_reason"] is not None
+    assert result["hero_image_url"] is None
+    assert image_provider.calls == []  # 行程失敗就不花產圖成本

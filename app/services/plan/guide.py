@@ -117,7 +117,9 @@ def build_user_message(params: dict) -> str:
 # ---------------------------------------------------------------------------
 
 
-async def generate(params: dict, client: LLMClient) -> dict:
+async def generate(
+    params: dict, client: LLMClient, *, image_provider=None, image_store=None
+) -> dict:
     model = client.model_for(TASK)
 
     result = await call_and_parse(
@@ -141,10 +143,15 @@ async def generate(params: dict, client: LLMClient) -> dict:
             model, f"LLM fail: 輸出城市「{output_city}」與請求城市「{requested_city}」不一致"
         )
 
-    return _success_result(
+    success = _success_result(
         decoded, output_city, model,
         allowed_order_oids(params), allowed_product_ids(params),
     )
+    # 行程 hero 圖（行程本體成功才產）：產圖失敗只降級 null，不影響行程回應
+    success["hero_image_url"] = await _generate_hero_image(
+        output_city, image_provider, image_store
+    )
+    return success
 
 
 def _success_result(
@@ -178,9 +185,64 @@ def _success_result(
     }
 
 
+def build_guide_hero_prompt(city: str) -> str:
+    """行程 hero 圖三層 prompt：與 Phase 1 share-image 同風格——
+    第 1 層同一份 art_style（anime）、第 3 層同一組 HERO 硬約束（無文字），
+    第 2 層主體換成「行程主目的地」場景（phase2/guide_hero_image.txt）。"""
+    from app.services.companion.share_prompts import HERO_HARD_CONSTRAINTS, _compose
+
+    body = render_prompt("phase2/guide_hero_image").strip().replace("{city}", city)
+    return _compose(body, HERO_HARD_CONSTRAINTS)
+
+
+GUIDE_HERO_WIDTH, GUIDE_HERO_HEIGHT = 1152, 2048  # 與 Phase 1 hero 同規格（Gemini → 9:16 2K）
+
+
+def guide_hero_key(city: str) -> str:
+    """以城市為 key 跨用戶共用快取（同城市只產一次）；prompt/模型變動自動換 key。"""
+    import hashlib
+
+    from app.config import settings
+
+    version = hashlib.md5(
+        "|".join([
+            settings.image_hero_model,
+            f"{GUIDE_HERO_WIDTH}x{GUIDE_HERO_HEIGHT}",
+            hashlib.sha256(build_guide_hero_prompt(city).encode()).hexdigest()[:12],
+        ]).encode()
+    ).hexdigest()[:8]
+    city_slug = hashlib.md5(city.encode()).hexdigest()[:12]
+    return f"guide-hero/{city_slug}-{version}.png"
+
+
+async def _generate_hero_image(city: str, image_provider, image_store) -> str | None:
+    """有接產圖 provider 且行程有城市才產；失敗（含 429）一律降級 null、不重試
+    ——guide 是同步等待的請求，不值得為配圖拉長延遲，App 拿 null 就不顯圖。"""
+    if image_provider is None or image_store is None or not city:
+        return None
+    key = guide_hero_key(city)
+    try:
+        if await image_store.exists(key):
+            return image_store.url(key)
+        from app.config import settings
+        from app.services.image.client import image_content_type
+
+        data = await image_provider.generate(
+            build_guide_hero_prompt(city),
+            model=settings.image_hero_model,
+            width=GUIDE_HERO_WIDTH,
+            height=GUIDE_HERO_HEIGHT,
+        )
+        return await image_store.upload(key, data, content_type=image_content_type(data))
+    except Exception as exc:
+        logger.warning("guide hero image failed: %s: %s", city, exc)
+        return None
+
+
 def _failure_result(model: str, fail_reason: str) -> dict:
     return {
         "city": None,
+        "hero_image_url": None,
         "days": None,
         "date_range": None,
         "days_provisional": True,

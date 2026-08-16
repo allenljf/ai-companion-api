@@ -36,9 +36,6 @@ def get_llm_client() -> LLMClient:
 
     routing = {
         "travel_summary": _parse_route(settings.llm_travel_summary),
-        "travel_summary_from_orders": _parse_route(settings.llm_travel_summary_from_orders),
-        "travel_summary_from_wish": _parse_route(settings.llm_travel_summary_from_wish),
-        "travel_summary_from_history": _parse_route(settings.llm_travel_summary_from_history),
         "recommend_city": _parse_route(settings.llm_recommend_city),
         "travel_guide": _parse_route(settings.llm_travel_guide),
         "travel_revise": _parse_route(settings.llm_travel_revise),

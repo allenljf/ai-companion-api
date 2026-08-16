@@ -20,9 +20,6 @@ WINDOW_SECONDS = 60.0
 LIMITS = {
     "share_image_v2": 10,
     "self_introduction": 10,
-    "from_orders": 10,
-    "from_wish": 10,
-    "from_history": 10,
     "travel_guide": 15,
     "travel_summary": 20,
     "travel_revise": 20,

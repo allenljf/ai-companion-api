@@ -89,28 +89,6 @@ async def quiz_gallery(gallery=Depends(get_gallery)) -> dict:
     return success_envelope({"count": len(records), "items": records})
 
 
-@lru_cache(maxsize=3)
-def _load_fake(name: str) -> dict:
-    return json.loads((settings.data_dir / "fake" / f"{name}.json").read_text(encoding="utf-8"))
-
-
-@router.get("/orders", summary="假訂單清單（前端測試用，原樣回傳）")
-async def fake_orders() -> dict:
-    # 假資料端點（source-spec 5.0）：檔案原樣回傳（含 dynamic/queue_it 信封），
-    # 等真實下游服務接上後替換實作即可，App 端不用改
-    return _load_fake("orders")
-
-
-@router.get("/wish_list", summary="假收藏商品清單（前端測試用，原樣回傳）")
-async def fake_wish_list() -> dict:
-    return _load_fake("wish_list")
-
-
-@router.get("/history", summary="假瀏覽/購買紀錄（前端測試用，原樣回傳）")
-async def fake_history() -> dict:
-    return _load_fake("history")
-
-
 @router.post("/self-introduction", summary="旅伴自我介紹開場白",
              dependencies=[Depends(throttle("self_introduction"))])
 async def self_introduction(

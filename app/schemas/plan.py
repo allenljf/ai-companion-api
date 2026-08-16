@@ -32,17 +32,6 @@ class PersonaFields(BaseModel):
     speech_style: str | None = Field(None, max_length=30)
 
 
-class OrderInput(BaseModel):
-    prod_name: str = Field(..., max_length=200)
-    package_name: str | None = Field(None, max_length=200)
-    destination_name: str | None = Field(None, max_length=100)
-
-
-class TravelSummaryFromOrdersRequest(PersonaFields):
-    # App 端已依出發日由近到遠排序，1~3 筆
-    orders: list[OrderInput] = Field(..., min_length=1, max_length=3)
-
-
 class ProductInput(BaseModel):
     prod_id: str = Field(..., max_length=50)
     prod_name: str = Field(..., max_length=200)
@@ -55,15 +44,6 @@ class ProductInput(BaseModel):
             if len(name) > 100:
                 raise ValueError("The destination_names items may not be greater than 100 characters.")
         return self
-
-
-class TravelSummaryFromWishRequest(PersonaFields):
-    # 上限 20 是聚合摘要用途下的成本折衷（多筆商品共同推導最多 3 個城市）
-    products: list[ProductInput] = Field(..., min_length=1, max_length=20)
-
-
-class TravelSummaryFromHistoryRequest(PersonaFields):
-    products: list[ProductInput] = Field(..., min_length=1, max_length=20)
 
 
 class ChatMessage(BaseModel):

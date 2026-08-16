@@ -1,4 +1,4 @@
-"""quiz-gallery 與三支假資料端點（階段 9 驗收）。"""
+"""quiz-gallery 端點（階段 9 驗收）。"""
 
 import asyncio
 
@@ -52,18 +52,3 @@ class TestQuizGallery:
         assert data["count"] == 1
         assert data["items"][0]["travel_identity"] == "有圖"
 
-
-class TestFakeDataEndpoints:
-    @pytest.mark.parametrize("path,expect_in_data", [
-        ("/v1/companion/orders", "orders"),
-        ("/v1/companion/wish_list", "prods"),
-        ("/v1/companion/history", "prods"),
-    ])
-    def test_returns_file_verbatim_with_envelope(self, client, path, expect_in_data):
-        res = client.get(path)
-        assert res.status_code == 200
-        body = res.json()
-        # 原樣回傳：檔案本身就含 metadata/dynamic/queue_it 信封，不再包一層
-        assert body["metadata"]["status"] == "0000"
-        assert "dynamic" in body and "queue_it" in body
-        assert expect_in_data in body["data"]
