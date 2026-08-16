@@ -20,21 +20,24 @@ class Settings(BaseSettings):
     # LLM 任務路由："provider:model[:reasoning_effort]"（provider = gemini | groq）
     # 每支 API 可獨立指定模型（CLAUDE.md 技術決策），換模型改 env 即可。
     # Qwen 是 reasoning 模型，輕量任務關掉思考（:none）避免 tokens 被吃光
-    llm_travel_summary: str = "groq:qwen/qwen3.6-27b:none"
-    llm_travel_summary_from_orders: str = "groq:qwen/qwen3.6-27b:none"
-    llm_travel_summary_from_wish: str = "groq:qwen/qwen3.6-27b:none"
-    llm_travel_summary_from_history: str = "groq:qwen/qwen3.6-27b:none"
-    llm_recommend_city: str = "groq:qwen/qwen3.6-27b:none"
-    # guide 例外走 llama-3.3-70b：qwen 的 TPM 8000 裝不下「長 prompt + max_tokens 8000」（實測 413），
-    # llama-3.3-70b TPM 12000 才夠；非 reasoning 模型，不需要 effort 參數
-    llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
-    # revise 輸入含完整行程 + 完整對話，比 guide 更長，同樣只有 llama 的 TPM 12000 裝得下
-    llm_travel_revise: str = "groq:llama-3.3-70b-versatile"
-    # Phase 1：quiz 改寫 / 自我介紹是輕量任務走 qwen；completions 是重度結構化（15 keys +
-    # reasoning 10 句 + 多約束）走 llama-3.3-70b（同 guide 的取捨，繁中靠 OpenCC 後處理）
-    llm_quiz: str = "groq:qwen/qwen3.6-27b:none"
-    llm_quiz_completions: str = "groq:llama-3.3-70b-versatile"
-    llm_self_introduction: str = "groq:qwen/qwen3.6-27b:none"
+    # 2026-08-16 全面切 Vertex AI（原 Groq 免費層：qwen TPM 8000 / llama TPM 12000 撞 429、
+    # 簡繁混雜、且 Groq 無產圖生態；AI Studio 金鑰 prepay 額度耗盡 → 走 Vertex 吃 GCP 試用額度）。
+    # gemini-3.6-flash 是 thinking 模型：輕量任務 :minimal 壓思考預算（對應 Groq 時代的 :none），
+    # 重度結構化（guide/revise/completions）:low。要暫時切回 Groq 用 LLM_* env 覆寫即可。
+    llm_travel_summary: str = "vertex:gemini-3.6-flash:minimal"
+    llm_travel_summary_from_orders: str = "vertex:gemini-3.6-flash:minimal"
+    llm_travel_summary_from_wish: str = "vertex:gemini-3.6-flash:minimal"
+    llm_travel_summary_from_history: str = "vertex:gemini-3.6-flash:minimal"
+    llm_recommend_city: str = "vertex:gemini-3.6-flash:minimal"
+    llm_travel_guide: str = "vertex:gemini-3.6-flash:low"
+    llm_travel_revise: str = "vertex:gemini-3.6-flash:low"
+    llm_quiz: str = "vertex:gemini-3.6-flash:minimal"
+    llm_quiz_completions: str = "vertex:gemini-3.6-flash:low"
+    llm_self_introduction: str = "vertex:gemini-3.6-flash:minimal"
+
+    # Vertex AI（LLM 主 provider）：Cloud Run 上以 runtime SA 的 ADC 認證，不需金鑰
+    vertex_project_id: str = "ai-companion-505507"
+    vertex_location: str = "global"
 
     # 圖片生成（階段 8）：Cloudflare Workers AI，免費層 10,000 neurons/天
     cloudflare_account_id: str | None = None

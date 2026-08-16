@@ -3,7 +3,7 @@
 from functools import lru_cache
 
 from app.config import settings
-from app.services.llm.client import LLMClient, OpenAICompatProvider
+from app.services.llm.client import LLMClient, OpenAICompatProvider, VertexAIProvider
 from app.storage.kv import InMemoryKV
 
 # Gemini / Groq 都提供 OpenAI 相容端點，共用同一個 provider 實作
@@ -24,7 +24,11 @@ def _parse_route(spec: str) -> tuple[str, str, str | None]:
 
 @lru_cache(maxsize=1)
 def get_llm_client() -> LLMClient:
-    providers: dict[str, OpenAICompatProvider] = {}
+    providers: dict = {
+        # 主 provider：ADC 認證（Cloud Run runtime SA / 本地 gcloud ADC），無金鑰也能註冊，
+        # 認證失敗時 chat 拋錯 → call_and_parse 軟失敗
+        "vertex": VertexAIProvider(settings.vertex_project_id, settings.vertex_location),
+    }
     if settings.gemini_api_key:
         providers["gemini"] = OpenAICompatProvider(GEMINI_BASE_URL, settings.gemini_api_key)
     if settings.groq_api_key:
