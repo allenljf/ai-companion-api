@@ -61,6 +61,7 @@ async def make_service(**overrides):
         store=overrides.get("store") or InMemoryObjectStore(),
         poll_interval=0.001,
         pack_wait_timeout=0.01,
+        retry_delays=overrides.get("retry_delays", (0.0,)),
     )
     return service
 
@@ -222,6 +223,37 @@ async def test_hero_key_changes_when_prompt_changes():
     key_before = service.hero_key(UUID, ANALYSIS)
     key_after = service.hero_key(UUID, ANALYSIS | {"destination_en": "Osaka"})
     assert key_before != key_after  # 冪等 key 含 hero prompt SHA-256
+
+
+@pytest.mark.asyncio
+async def test_quota_429_retried_and_recovers():
+    # Vertex 試用帳戶產圖 RPM 低：429 要退避重試（線上實測 5 張並行會撞）
+    class QuotaFlakyProvider(FakeProvider):
+        def __init__(self):
+            super().__init__()
+            self.failed_once: set[str] = set()
+
+        async def generate(self, prompt, *, model, width=None, height=None, steps=None):
+            self.calls.append({"prompt": prompt, "model": model, "width": width, "height": height})
+            if "passport-stamp" in prompt and "stamp" not in self.failed_once:
+                self.failed_once.add("stamp")
+                raise ImageGenerationError("Vertex generateContent HTTP 429: RESOURCE_EXHAUSTED")
+            return JPEG
+
+    provider = QuotaFlakyProvider()
+    service = await make_service(provider=provider)
+    result = await service.generate(UUID)
+    assert result["decorations"]["stamp_url"] is not None  # 重試後成功
+
+
+@pytest.mark.asyncio
+async def test_non_quota_error_not_retried():
+    provider = FakeProvider()
+    provider.fail_prompts = ["passport-stamp"]  # 一般錯誤（非 429）
+    service = await make_service(provider=provider)
+    await service.generate(UUID)
+    stamp_calls = [c for c in provider.calls if "passport-stamp" in c["prompt"]]
+    assert len(stamp_calls) == 1  # 不重試
 
 
 @pytest.mark.asyncio

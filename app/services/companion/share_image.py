@@ -68,6 +68,8 @@ class ShareImageV2Service:
         store,
         poll_interval: float = 0.2,
         pack_wait_timeout: float = PACK_LOCK_TTL,
+        max_concurrency: int = 2,
+        retry_delays: tuple = (20.0,),
     ):
         self._provider = provider
         self._kv = kv
@@ -75,6 +77,10 @@ class ShareImageV2Service:
         self._store = store
         self._poll_interval = poll_interval
         self._pack_wait_timeout = pack_wait_timeout
+        # Vertex 試用帳戶產圖 RPM 低（線上實測 5 張並行必撞 429）：
+        # 併發壓到 2 + 429 退避重試；LOCK_TTL 120s 內完成綽綽有餘
+        self._max_concurrency = max_concurrency
+        self._retry_delays = retry_delays
 
     async def generate(self, completion_uuid: str, partner_image_url: str | None = None) -> dict:
         cached = await self._kv.get(CACHE_KEY_PREFIX + completion_uuid)
@@ -142,28 +148,41 @@ class ShareImageV2Service:
 
         try:
             if jobs:
-                await asyncio.gather(*(self._run_job(slot, *spec) for slot, spec in jobs.items()))
+                semaphore = asyncio.Semaphore(self._max_concurrency)
+                await asyncio.gather(
+                    *(self._run_job(semaphore, slot, *spec) for slot, spec in jobs.items())
+                )
             await self._await_contended(contended)
         finally:
             for pack_lock in locked_packs:
                 await self._kv.delete(pack_lock)
 
-    async def _run_job(self, slot: str, key: str, prompt: str, model: str,
-                       width: int | None, height: int | None) -> None:
-        """單一槽位產圖 + 上傳；失敗只記錄（partial-fail，單槽位失敗不影響其他）。"""
-        started = time.monotonic()
-        try:
-            data = await self._provider.generate(
-                prompt, model=model, width=width, height=height,
-                steps=None if model == HERO_MODEL else DECORATION_STEPS,
-            )
-            await self._store.upload(key, data, content_type=image_content_type(data))
-            logger.info(
-                "asset generated",
-                extra={"slot": slot, "ms": int((time.monotonic() - started) * 1000)},
-            )
-        except Exception as exc:
-            logger.warning("asset generation failed", extra={"slot": slot, "error": str(exc)})
+    async def _run_job(self, semaphore: asyncio.Semaphore, slot: str, key: str, prompt: str,
+                       model: str, width: int | None, height: int | None) -> None:
+        """單一槽位產圖 + 上傳；429 退避重試，其他失敗只記錄（partial-fail 不影響其他槽位）。"""
+        async with semaphore:
+            started = time.monotonic()
+            last_error: Exception | None = None
+            for attempt, delay in enumerate((0.0, *self._retry_delays)):
+                if delay:
+                    await asyncio.sleep(delay)
+                try:
+                    data = await self._provider.generate(
+                        prompt, model=model, width=width, height=height,
+                        steps=None if model == HERO_MODEL else DECORATION_STEPS,
+                    )
+                    await self._store.upload(key, data, content_type=image_content_type(data))
+                    # 錯誤/耗時直接進訊息字串（Cloud Run 的 textPayload 看不到 logging extra）
+                    logger.info(
+                        "asset generated: %s in %dms (attempt %d)",
+                        slot, int((time.monotonic() - started) * 1000), attempt + 1,
+                    )
+                    return
+                except Exception as exc:
+                    last_error = exc
+                    if "429" not in str(exc):
+                        break  # 只有配額類錯誤值得重試
+            logger.warning("asset generation failed: %s: %s", slot, last_error)
 
     async def _await_contended(self, contended: list[tuple[str, str]]) -> None:
         """他人持有 pack lock 的槽位輪詢等待：鎖清除或物件出現即停；絕不刪除他人鎖。"""
