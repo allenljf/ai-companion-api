@@ -17,13 +17,7 @@ from app.core.prompt_loader import render_prompt
 from app.core.truncate import truncate_at_sentence
 from app.core.zh import to_traditional
 from app.services.llm.client import LLMClient, call_and_parse
-from app.services.plan.guide import (
-    allowed_order_oids,
-    allowed_product_ids,
-    booked_orders_payload,
-    convert_day_text,
-    selected_products_payload,
-)
+from app.services.plan.guide import convert_day_text
 from app.services.plan.persona import persona_text, wrap_user_input
 
 logger = logging.getLogger(__name__)
@@ -39,6 +33,52 @@ FAILURE_REPLY = "嗯…我這邊卡了一下，再說一次剛剛那句好嗎？
 # ---------------------------------------------------------------------------
 # 白名單收集：行程既有 id（itinerary.* 刻意不深驗，必須防非 scalar）
 # ---------------------------------------------------------------------------
+
+
+def allowed_order_oids(params: dict) -> list[str]:
+    """本次帶入 orders 的合法 oid（非 scalar 視同沒帶；oid "0" 不被 falsy 吃掉）。"""
+    return _collect_ids(params.get("orders"), "oid")
+
+
+def allowed_product_ids(params: dict) -> list[str]:
+    """本次帶入 products 的合法 prod_id（同 oid 的把關方式，走獨立清單）。"""
+    return _collect_ids(params.get("products"), "prod_id")
+
+
+def _collect_ids(entries, key: str) -> list[str]:
+    ids = []
+    for entry in entries or []:
+        value = scalar_trim(entry.get(key) if isinstance(entry, dict) else None)
+        if value != "":
+            ids.append(value)
+    return ids
+
+
+def booked_orders_payload(params: dict) -> list[dict]:
+    """LLM user message 用的 orders payload（材料原樣傳遞，oid 供對映）。"""
+    return [
+        {
+            "oid": str(order.get("oid") or ""),
+            "prod_name": str(order.get("prod_name") or ""),
+            "package_name": str(order.get("package_name") or ""),
+            "destination_name": str(order.get("destination_name") or ""),
+            "go_dt": str(order.get("go_dt") or ""),
+        }
+        for order in params.get("orders") or []
+    ]
+
+
+def selected_products_payload(params: dict) -> list[dict]:
+    """LLM user message 用的 products payload（材料原樣傳遞，prod_id 供對映）。"""
+    return [
+        {
+            "prod_id": str(product.get("prod_id") or ""),
+            "prod_name": str(product.get("prod_name") or ""),
+            "introduction": str(product.get("introduction") or ""),
+            "destination_names": [str(n) for n in (product.get("destination_names") or [])],
+        }
+        for product in params.get("products") or []
+    ]
 
 
 def collect_itinerary_oids(days: list) -> list[str]:

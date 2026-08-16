@@ -84,29 +84,6 @@ class TestValidation400:
         prefs = {f"k{i}": "v" for i in range(31)}
         assert client.post(URL, json=VALID_BODY | {"preferences": prefs}).status_code == 400
 
-    def test_orders_max_3(self, client):
-        orders = [{"oid": f"O{i}", "prod_name": "門票"} for i in range(4)]
-        assert client.post(URL, json=VALID_BODY | {"orders": orders}).status_code == 400
-
-    def test_order_missing_oid(self, client):
-        assert (
-            client.post(URL, json=VALID_BODY | {"orders": [{"prod_name": "門票"}]}).status_code
-            == 400
-        )
-
-    def test_order_bad_go_dt(self, client):
-        orders = [{"oid": "O1", "prod_name": "門票", "go_dt": "2026/09/01"}]
-        assert client.post(URL, json=VALID_BODY | {"orders": orders}).status_code == 400
-
-    def test_products_max_10(self, client):
-        products = [{"prod_id": f"P{i}", "prod_name": "商品"} for i in range(11)]
-        assert client.post(URL, json=VALID_BODY | {"products": products}).status_code == 400
-
-    def test_product_missing_prod_id(self, client):
-        assert (
-            client.post(URL, json=VALID_BODY | {"products": [{"prod_name": "商品"}]}).status_code
-            == 400
-        )
 
 
 class TestSoftFailure200:
@@ -143,31 +120,17 @@ class TestSuccess:
         [item] = day["items"]
         assert item["type"] == "spot" and "lat" in item and "transport_mode" not in item
 
-    def test_orders_flow_whitelist_and_anchor(self, client, stub):
-        stub.reply = json.dumps(
-            {
-                "city": "大阪",
-                "days": 1,
-                "messages": [],
-                "unplanned_days": [],
-                "itinerary": [
-                    {"day": 1, "items": [
-                        {"name": "環球影城", "type": "spot", "oid": "26KK1", "lat": 1, "lng": 2},
-                        {"name": "幻覺", "type": "spot", "oid": "FAKE"},
-                    ]}
-                ],
-            },
-            ensure_ascii=False,
-        )
+    def test_extra_orders_products_fields_ignored(self, client, stub):
+        # 2026-08-16 起本 API 不收 orders/products；多帶不報錯（Pydantic 預設忽略未知欄位）
+        stub.reply = LLM_OK
         res = client.post(
             URL,
-            json={
-                "summary": "大阪行",
-                "city": "大阪",
-                "orders": [{"oid": "26KK1", "prod_name": "環球影城門票", "go_dt": "2026-09-01"}],
+            json=VALID_BODY | {
+                "orders": [{"oid": "26KK1", "prod_name": "門票"}],
+                "products": [{"prod_id": "P1", "prod_name": "商品"}],
             },
         )
+        assert res.status_code == 200
         day = res.json()["data"]["itinerary_patch"]["days"][0]
-        assert day["items"][0]["oid"] == "26KK1"
-        assert day["items"][1]["oid"] is None
-        assert day["booked_anchor"] == {"oids": ["26KK1"]}
+        assert day["items"][0]["oid"] is None  # 不會產生任何 id 對映
+        assert day["booked_anchor"] is None

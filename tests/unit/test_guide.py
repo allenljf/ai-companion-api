@@ -7,8 +7,6 @@ import pytest
 from app.core.prompt_loader import render_prompt
 from app.services.llm.client import LLMClient, LLMProvider
 from app.services.plan.guide import (
-    allowed_order_oids,
-    allowed_product_ids,
     build_system_prompt,
     build_user_message,
     generate,
@@ -31,28 +29,6 @@ PRODUCT = {
 
 
 # ---------------------------------------------------------------------------
-# 白名單抽取
-# ---------------------------------------------------------------------------
-
-
-class TestWhitelists:
-    def test_allowed_order_oids(self):
-        params = {"orders": [ORDER, {"oid": " X2 "}, {"oid": ["bad"]}, {"oid": ""}, {}]}
-        assert allowed_order_oids(params) == ["26KK216164788", "X2"]
-
-    def test_oid_zero_not_eaten(self):
-        assert allowed_order_oids({"orders": [{"oid": "0"}]}) == ["0"]
-
-    def test_allowed_product_ids(self):
-        params = {"products": [PRODUCT, {"prod_id": {"x": 1}}, {"prod_id": " P2 "}]}
-        assert allowed_product_ids(params) == ["157138", "P2"]
-
-    def test_empty_when_not_given(self):
-        assert allowed_order_oids({}) == []
-        assert allowed_product_ids({"products": None}) == []
-
-
-# ---------------------------------------------------------------------------
 # prompt 組裝：條件注入段（沒帶時與基礎版完全相同）
 # ---------------------------------------------------------------------------
 
@@ -61,52 +37,20 @@ BASE_PARAMS = {"summary": "想去京都放鬆", "city": "京都", "preferences":
 
 
 class TestBuildSystemPrompt:
-    def test_base_prompt_has_no_conditional_sections(self):
+    def test_prompt_has_no_orders_or_products_sections(self):
+        # 2026-08-16：本 API 不再接受 orders/products，prompt 也不再提及
         prompt = build_system_prompt(BASE_PARAMS)
-        assert "## 已預訂項目（必須排入行程）" not in prompt
-        assert "## 使用者挑選的商品（必須排入行程）" not in prompt
+        assert "已預訂項目" not in prompt and "使用者挑選的商品" not in prompt
+        assert "orders" not in prompt and "products" not in prompt
         assert "你是 KKday「AI 旅伴」的旅遊行程規劃引擎。" in prompt
         assert "11. 全文使用繁體中文。" in prompt
         assert "只輸出純 JSON" in prompt
 
-    def test_no_orders_products_prompt_identical_to_base_template(self):
-        # 驗收條件：沒帶 orders/products 時，prompt 與基礎版完全相同
+    def test_matches_template_with_persona_only(self):
         from app.services.plan.persona import persona_text
 
-        expected = render_prompt(
-            "phase2/guide",
-            persona=persona_text(BASE_PARAMS),
-            booked_orders_section="",
-            selected_products_section="",
-        )
+        expected = render_prompt("phase2/guide", persona=persona_text(BASE_PARAMS))
         assert build_system_prompt(BASE_PARAMS) == expected
-
-    def test_orders_section_injected_and_only_difference(self):
-        with_orders = build_system_prompt(BASE_PARAMS | {"orders": [ORDER]})
-        section = render_prompt("phase2/guide_orders_section")
-        assert "## 已預訂項目（必須排入行程）" in with_orders
-        assert "## 使用者挑選的商品" not in with_orders
-        # 注入段是唯一差異：移除注入段後與基礎版完全相同
-        assert with_orders.replace(section, "") == build_system_prompt(BASE_PARAMS)
-
-    def test_products_section_injected_and_only_difference(self):
-        with_products = build_system_prompt(BASE_PARAMS | {"products": [PRODUCT]})
-        section = render_prompt("phase2/guide_products_section")
-        assert "## 使用者挑選的商品（必須排入行程）" in with_products
-        assert "## 已預訂項目" not in with_products
-        assert with_products.replace(section, "") == build_system_prompt(BASE_PARAMS)
-
-    def test_both_sections_orders_first(self):
-        prompt = build_system_prompt(BASE_PARAMS | {"orders": [ORDER], "products": [PRODUCT]})
-        assert prompt.index("## 已預訂項目") < prompt.index("## 使用者挑選的商品")
-
-    def test_sections_sit_between_rules_and_output_format(self):
-        prompt = build_system_prompt(BASE_PARAMS | {"orders": [ORDER]})
-        assert (
-            prompt.index("11. 全文使用繁體中文。")
-            < prompt.index("## 已預訂項目")
-            < prompt.index("只輸出純 JSON")
-        )
 
     def test_persona_injected(self):
         prompt = build_system_prompt(BASE_PARAMS | {"companion_name": "阿旅", "personality": "幽默"})
@@ -127,33 +71,10 @@ class TestBuildUserMessage:
         }
         assert "orders" not in payload and "products" not in payload
 
-    def test_orders_payload_fields(self):
-        payload = self._payload(BASE_PARAMS | {"orders": [ORDER]})
-        assert payload["orders"] == [
-            {
-                "oid": "26KK216164788",
-                "prod_name": "大阪環球影城門票",
-                "package_name": "一日券",
-                "destination_name": "大阪",
-                "go_dt": "2026-09-01",
-            }
-        ]
-
-    def test_products_payload_fields(self):
-        payload = self._payload(BASE_PARAMS | {"products": [PRODUCT]})
-        assert payload["products"] == [
-            {
-                "prod_id": "157138",
-                "prod_name": "新天鵝堡一日遊",
-                "introduction": "含交通接駁",
-                "destination_names": ["慕尼黑"],
-            }
-        ]
-
-    def test_missing_optional_material_fields_become_empty_strings(self):
-        payload = self._payload(BASE_PARAMS | {"orders": [{"oid": "X1", "prod_name": "門票"}]})
-        assert payload["orders"][0]["package_name"] == ""
-        assert payload["orders"][0]["go_dt"] == ""
+    def test_orders_and_products_never_sent(self):
+        # 即使 App 誤帶，也不會進 prompt（schema 層已擋，這裡是雙保險）
+        payload = self._payload(BASE_PARAMS | {"orders": [ORDER], "products": [PRODUCT]})
+        assert "orders" not in payload and "products" not in payload
 
 
 # ---------------------------------------------------------------------------
@@ -322,49 +243,18 @@ async def test_generate_missing_itinerary_soft_fails():
 
 
 @pytest.mark.asyncio
-async def test_generate_filters_hallucinated_oid_and_derives_anchor():
+async def test_generate_nulls_any_hallucinated_ids():
+    # 白名單永遠為空 → LLM 若自己生 oid/prod_id 一律濾掉（契約欄位仍在、值為 null）
     reply = llm_reply(
-        itinerary=[
-            {
-                "items": [
-                    {"name": "環球影城", "type": "spot", "oid": "26KK216164788",
-                     "lat": 34.66, "lng": 135.43},
-                    {"name": "幻覺樂園", "type": "spot", "oid": "FAKE999"},
-                ]
-            }
-        ],
+        itinerary=[{"items": [{"name": "環球影城", "type": "spot",
+                               "oid": "26KK1", "prod_id": "157138"}]}],
         days=1,
     )
     client, _ = make_client(reply)
-    result = await generate(dict(BASE_PARAMS) | {"orders": [ORDER]}, client)
-    items = result["itinerary_patch"]["days"][0]["items"]
-    assert items[0]["oid"] == "26KK216164788"
-    assert items[1]["oid"] is None
-    assert result["itinerary_patch"]["days"][0]["booked_anchor"] == {"oids": ["26KK216164788"]}
-
-
-@pytest.mark.asyncio
-async def test_generate_dedupes_oid_across_days_and_prod_id_independent():
-    reply = llm_reply(
-        itinerary=[
-            {"items": [{"name": "A", "type": "spot", "oid": "26KK216164788"}]},
-            {"items": [
-                {"name": "B", "type": "spot", "oid": "26KK216164788"},
-                {"name": "C", "type": "spot", "prod_id": "157138"},
-            ]},
-        ]
-    )
-    client, _ = make_client(reply)
-    result = await generate(
-        dict(BASE_PARAMS) | {"orders": [ORDER], "products": [PRODUCT]}, client
-    )
-    days = result["itinerary_patch"]["days"]
-    assert days[0]["items"][0]["oid"] == "26KK216164788"
-    assert days[1]["items"][0]["oid"] is None
-    # prod_id 不受 oid 去重影響、也不影響 booked_anchor
-    assert days[1]["items"][1]["prod_id"] == "157138"
-    assert days[0]["booked_anchor"] == {"oids": ["26KK216164788"]}
-    assert days[1]["booked_anchor"] is None
+    result = await generate(dict(BASE_PARAMS), client)
+    day = result["itinerary_patch"]["days"][0]
+    assert day["items"][0]["oid"] is None and day["items"][0]["prod_id"] is None
+    assert day["booked_anchor"] is None
 
 
 @pytest.mark.asyncio

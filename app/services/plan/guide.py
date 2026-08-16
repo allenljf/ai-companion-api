@@ -1,6 +1,8 @@
 """travel-guide：問卷完成後一次性產出完整逐日行程（source-spec 5.6 / 8.10）。
 
-無狀態設計：summary/preferences/orders/products 皆由 App 帶入，單次完整生成、不多輪追問。
+無狀態設計：summary/preferences 由 App 帶入，單次完整生成、不多輪追問。
+2026-08-16 起不再接受 orders/products（獨立 App 不帶訂單/商品資訊），
+item 的 oid/prod_id 欄位保留在契約中但恆為 null。
 
 後端把關（不信任模型自律）：
 - 城市一致性：請求帶 city 時輸出必須一致，不一致視為失敗（不回半新半舊的結果）
@@ -31,85 +33,22 @@ DEFAULT_COMPLETION_MESSAGE = "行程排好了！"
 
 
 # ---------------------------------------------------------------------------
-# 白名單抽取（對照 BookedOrderPromptTrait / SelectedProductPromptTrait）
-# ---------------------------------------------------------------------------
-
-
-def allowed_order_oids(params: dict) -> list[str]:
-    """輸入 orders 的合法 oid 白名單（非 scalar 視同沒帶；oid "0" 不被 falsy 吃掉）。"""
-    return _collect_ids(params.get("orders"), "oid")
-
-
-def allowed_product_ids(params: dict) -> list[str]:
-    """輸入 products 的合法 prod_id 白名單（同 oid 的把關方式，走獨立清單）。"""
-    return _collect_ids(params.get("products"), "prod_id")
-
-
-def _collect_ids(entries, key: str) -> list[str]:
-    ids = []
-    for entry in entries or []:
-        value = scalar_trim(entry.get(key) if isinstance(entry, dict) else None)
-        if value != "":
-            ids.append(value)
-    return ids
-
-
-# ---------------------------------------------------------------------------
 # prompt 組裝
 # ---------------------------------------------------------------------------
 
 
 def build_system_prompt(params: dict) -> str:
-    return render_prompt(
-        "phase2/guide",
-        persona=persona_text(params),
-        booked_orders_section=(
-            render_prompt("phase2/guide_orders_section") if params.get("orders") else ""
-        ),
-        selected_products_section=(
-            render_prompt("phase2/guide_products_section") if params.get("products") else ""
-        ),
-    )
-
-
-def booked_orders_payload(params: dict) -> list[dict]:
-    """LLM user message 用的 orders payload（材料原樣傳遞，oid 供對映）；guide/revise 共用。"""
-    return [
-        {
-            "oid": str(order.get("oid") or ""),
-            "prod_name": str(order.get("prod_name") or ""),
-            "package_name": str(order.get("package_name") or ""),
-            "destination_name": str(order.get("destination_name") or ""),
-            "go_dt": str(order.get("go_dt") or ""),
-        }
-        for order in params.get("orders") or []
-    ]
-
-
-def selected_products_payload(params: dict) -> list[dict]:
-    """LLM user message 用的 products payload（材料原樣傳遞，prod_id 供對映）；guide/revise 共用。"""
-    return [
-        {
-            "prod_id": str(product.get("prod_id") or ""),
-            "prod_name": str(product.get("prod_name") or ""),
-            "introduction": str(product.get("introduction") or ""),
-            "destination_names": [str(n) for n in (product.get("destination_names") or [])],
-        }
-        for product in params.get("products") or []
-    ]
+    return render_prompt("phase2/guide", persona=persona_text(params))
 
 
 def build_user_message(params: dict) -> str:
-    payload: dict = {
-        "summary": str(params.get("summary") or ""),
-        "city": str(params.get("city") or ""),
-        "preferences": dict(params.get("preferences") or {}),
-    }
-    if params.get("orders"):
-        payload["orders"] = booked_orders_payload(params)
-    if params.get("products"):
-        payload["products"] = selected_products_payload(params)
-    return wrap_user_input(payload)
+    return wrap_user_input(
+        {
+            "summary": str(params.get("summary") or ""),
+            "city": str(params.get("city") or ""),
+            "preferences": dict(params.get("preferences") or {}),
+        }
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -143,10 +82,7 @@ async def generate(
             model, f"LLM fail: 輸出城市「{output_city}」與請求城市「{requested_city}」不一致"
         )
 
-    success = _success_result(
-        decoded, output_city, model,
-        allowed_order_oids(params), allowed_product_ids(params),
-    )
+    success = _success_result(decoded, output_city, model)
     # 行程 hero 圖（行程本體成功才產）：產圖失敗只降級 null，不影響行程回應
     success["hero_image_url"] = await _generate_hero_image(
         output_city, image_provider, image_store
@@ -154,11 +90,10 @@ async def generate(
     return success
 
 
-def _success_result(
-    decoded: dict, output_city: str, model: str,
-    oid_whitelist: list[str], product_id_whitelist: list[str],
-) -> dict:
-    days = normalize_days(decoded.get("itinerary") or [], oid_whitelist, product_id_whitelist)
+def _success_result(decoded: dict, output_city: str, model: str) -> dict:
+    # 白名單一律為空：本 API 不再接受 orders/products（獨立 App 不帶這些資訊），
+    # 因此 LLM 若幻覺出 oid/prod_id 會被 normalize 全數濾成 null（契約欄位形狀不變）
+    days = normalize_days(decoded.get("itinerary") or [], [], [])
     unplanned_days = [int(d) for d in decoded.get("unplanned_days") or [] if _is_intish(d)]
     total_days = _coerce_int(decoded.get("days")) or len(days)
     phase = "done" if not unplanned_days and days else "plan"

@@ -93,10 +93,6 @@ class TravelGuideRequest(PersonaFields):
     # 只限整體 key 數 ≤30，不對內容做結構驗證
     preferences: dict[str, object] | None = None
 
-    orders: list[GuideOrderInput] | None = Field(None, max_length=3)
-    # 來自 from-wish／from-history 被點選城市底下的 products；尚未購買，不推導 booked_anchor
-    products: list[ProductInput] | None = Field(None, max_length=10)
-
     @model_validator(mode="after")
     def _check_preferences_size(self):
         if self.preferences is not None and len(self.preferences) > 30:
