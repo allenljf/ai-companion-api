@@ -77,8 +77,8 @@ async def test_missing_analysis_cache_raises_c007():
 
 
 @pytest.mark.asyncio
-async def test_first_call_generates_hero_and_stamp_only_and_returns_ready():
-    # tag icon 暫停用（Vertex 產圖配額每分鐘 2 張，一次 5 張必超額，見 GENERATE_TAG_ICONS）
+async def test_first_call_generates_hero_only_and_returns_ready():
+    # stamp/tag icon 皆暫停用（Vertex 產圖配額每分鐘 2 張、全專案共用，見 GENERATE_STAMP/GENERATE_TAG_ICONS）
     provider = FakeProvider()
     store = InMemoryObjectStore()
     gallery = InMemoryGallery()
@@ -88,17 +88,17 @@ async def test_first_call_generates_hero_and_stamp_only_and_returns_ready():
 
     assert result["status"] == "ready"
     assert result["fail_reason"] is None and result["share_fallback"] is None
-    assert len(provider.calls) == 2  # hero + stamp（tag icon 停用，不產也不計費）
+    assert len(provider.calls) == 1  # hero only（stamp/tag icon 停用，不產也不計費）
     assert result["hero_url"] and result["hero_url"].startswith("https://")
-    assert result["decorations"]["stamp_url"]
+    assert result["decorations"]["stamp_url"] is None
+    assert result["decorations"]["stamp_fallback_category"] is None
     assert result["decorations"]["tag_icon_urls"] == []
     assert result["decorations"]["tag_fallback_categories"] == []
-    assert len(store.objects) == 2
+    assert len(store.objects) == 1
 
-    # hero 走 klein 直式，stamp 走方圖
-    hero_call = next(c for c in provider.calls if c["width"] == 1152)
-    assert hero_call["height"] == 2048
-    assert sum(1 for c in provider.calls if c["width"] is None) == 1
+    # hero 走 klein 直式
+    hero_call = provider.calls[0]
+    assert hero_call["width"] == 1152 and hero_call["height"] == 2048
 
     # content 供 App 排版（highlight_tags 文字仍完整回傳，只是不產對應插畫）
     assert result["content"]["travel_identity"] == "獨處療癒師"
@@ -136,7 +136,10 @@ async def test_completion_lock_held_returns_processing_without_jobs():
 
 
 @pytest.mark.asyncio
-async def test_partial_failure_stamp_only():
+async def test_partial_failure_stamp_only(monkeypatch):
+    # stamp 目前預設暫停用（GENERATE_STAMP=False）；這裡開回 True 純為測試裝飾素材
+    # partial-fail 機制本身（將來重新啟用時仍要成立），不代表產品現況
+    monkeypatch.setattr("app.services.companion.share_image.GENERATE_STAMP", True)
     provider = FakeProvider()
     provider.fail_prompts = ["passport-stamp"]
     service = await make_service(provider=provider)
@@ -178,7 +181,10 @@ async def test_hero_success_appends_gallery_once():
 
 
 @pytest.mark.asyncio
-async def test_decorations_shared_across_users_same_destination():
+async def test_decorations_shared_across_users_same_destination(monkeypatch):
+    # stamp 目前預設暫停用（GENERATE_STAMP=False）；這裡開回 True 純為測試跨用戶
+    # 裝飾快取機制本身（將來重新啟用時仍要成立），不代表產品現況
+    monkeypatch.setattr("app.services.companion.share_image.GENERATE_STAMP", True)
     provider = FakeProvider()
     store = InMemoryObjectStore()
     kv = InMemoryKV()
@@ -199,8 +205,11 @@ async def test_decorations_shared_across_users_same_destination():
 
 
 @pytest.mark.asyncio
-async def test_contended_pack_lock_no_duplicate_job():
+async def test_contended_pack_lock_no_duplicate_job(monkeypatch):
     # 他人持有 stamp 的 pack lock 且物件始終沒出現：等待逾時後 stamp URL 為 null、不重複產圖
+    # stamp 目前預設暫停用（GENERATE_STAMP=False）；這裡開回 True 純為測試 pack lock
+    # 機制本身（將來重新啟用時仍要成立），不代表產品現況
+    monkeypatch.setattr("app.services.companion.share_image.GENERATE_STAMP", True)
     provider = FakeProvider()
     kv = InMemoryKV()
     store = InMemoryObjectStore()
@@ -233,6 +242,22 @@ async def test_tag_icons_disabled_no_slots_no_jobs_no_urls():
 
 
 @pytest.mark.asyncio
+async def test_stamp_disabled_no_slot_no_job_no_url():
+    from app.services.companion.share_image import GENERATE_STAMP
+
+    assert GENERATE_STAMP is False  # 明確鎖定目前狀態；改回 True 時這條測試會提醒同步更新其他測試
+
+    provider = FakeProvider()
+    service = await make_service(provider=provider)
+    result = await service.generate(UUID)
+
+    assert "stamp" not in service.decoration_slots(ANALYSIS)
+    assert not any("passport-stamp" in c["prompt"] for c in provider.calls)
+    assert result["decorations"]["stamp_url"] is None
+    assert result["decorations"]["stamp_fallback_category"] is None
+
+
+@pytest.mark.asyncio
 async def test_hero_key_changes_when_prompt_changes():
     service = await make_service()
     key_before = service.hero_key(UUID, ANALYSIS)
@@ -241,8 +266,12 @@ async def test_hero_key_changes_when_prompt_changes():
 
 
 @pytest.mark.asyncio
-async def test_quota_429_retried_and_recovers():
+async def test_quota_429_retried_and_recovers(monkeypatch):
     # Vertex 試用帳戶產圖 RPM 低：429 要退避重試（線上實測 5 張並行會撞）
+    # stamp 目前預設暫停用（GENERATE_STAMP=False）；這裡開回 True 純為測試 429 退避
+    # 重試機制本身（將來重新啟用時仍要成立），不代表產品現況
+    monkeypatch.setattr("app.services.companion.share_image.GENERATE_STAMP", True)
+
     class QuotaFlakyProvider(FakeProvider):
         def __init__(self):
             super().__init__()
@@ -262,7 +291,10 @@ async def test_quota_429_retried_and_recovers():
 
 
 @pytest.mark.asyncio
-async def test_non_quota_error_not_retried():
+async def test_non_quota_error_not_retried(monkeypatch):
+    # stamp 目前預設暫停用（GENERATE_STAMP=False）；這裡開回 True 純為測試「非配額錯誤
+    # 不重試」機制本身（將來重新啟用時仍要成立），不代表產品現況
+    monkeypatch.setattr("app.services.companion.share_image.GENERATE_STAMP", True)
     provider = FakeProvider()
     provider.fail_prompts = ["passport-stamp"]  # 一般錯誤（非 429）
     service = await make_service(provider=provider)

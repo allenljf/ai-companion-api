@@ -1,6 +1,6 @@
 """share-image-v2：App 端合成海報的素材產圖（source-spec 4.4，對照 ShareImageV2Service.php）。
 
-素材槽位：hero（per-completion 快取）、stamp（以 destination 為 key **跨用戶共用快取**）。
+素材槽位：hero（per-completion 快取）；stamp/tag 目前皆暫停產生（見下方說明），只保留 hero。
 `ready` = 本次啟動的 job 全部 settled（遠端失敗仍 ready、URL 為 null，App 以 fallback_category
 降級）；`processing` 僅在 completion lock 被他人持有且 hero 尚未存在時回。
 status 沒有 failed、share_fallback/fail_reason 恆 null。
@@ -11,6 +11,14 @@ status 沒有 failed、share_fallback/fail_reason 恆 null。
 5 張（1 hero + 1 stamp + 3 tag）必超額；tag 排最後產生所以最常失敗。決定：先只產 hero + stamp，
 tag icon 相關程式碼保留、以 GENERATE_TAG_ICONS 開關控制，額度調升或改用其他 provider 時改回 True
 即可重新啟用（decoration_slots/_response 已按此開關寫好條件分支，不需要再改邏輯）。
+
+**stamp 素材也暫停用**（見下方 GENERATE_STAMP，2026-08-18）：上述配額是**每分鐘 2 張、全專案
+共用**（不是每個請求各自 2 張）。多個使用者同時打 share-image-v2 時，hero+stamp 這 2 張並行送出
+仍很容易把當下這一分鐘的配額用完，導致別的使用者的 hero 撞 429。決定：stamp 也先暫停，一次
+請求只送 1 張（hero），把僅剩的配額都留給每個人都需要的 hero；stamp 程式碼與 prompt 全部保留，
+GENERATE_STAMP 改回 True 即重新啟用，不需要重寫。**App 端注意**：`decorations.stamp_url` 與
+`decorations.stamp_fallback_category` 目前固定回 `null`——請不要再接受、快取或顯示舊版回應裡的
+stamp 圖片（含任何本地端已存的 stamp URL/快取檔），一律視為「這次沒有 stamp」處理。
 
 冪等：hero key 含（uuid | 模型 | 尺寸 | PROMPT_VERSION | hero prompt 全文 SHA-256 前 12 碼）——
 調整 prompt 檔後同一 uuid 重打會自動換 key 重新產圖，調校時不用重跑測驗。
@@ -60,9 +68,13 @@ HERO_WIDTH, HERO_HEIGHT = 1152, 2048  # Gemini provider 轉為 9:16 + 2K（實�
 DECORATION_MODEL = settings.image_decoration_model
 DECORATION_STEPS = 8  # 只對 CF flux-schnell 有意義；Gemini provider 忽略
 
-# tag icon 產圖開關：見上方模組說明。False 時 decoration_slots() 只回 stamp、
+# tag icon 產圖開關：見上方模組說明。False 時 decoration_slots() 不排 tag 槽位、
 # _response() 的 tag_icon_urls/tag_fallback_categories 回空陣列（不產、不計費、不回 URL）。
 GENERATE_TAG_ICONS = False
+
+# stamp 產圖開關：見上方模組說明。False 時 decoration_slots() 不排 stamp 槽位、
+# _response() 的 stamp_url/stamp_fallback_category 固定回 null（不產、不計費、不回 URL）。
+GENERATE_STAMP = False
 
 
 class QuizSessionNotFound(Exception):
@@ -221,15 +233,17 @@ class ShareImageV2Service:
     def decoration_slots(self, analysis: dict) -> dict[str, str]:
         """stamp 以 destination、tag 以 destination+tag 為 key（跨用戶共用快取）。
 
-        tag icon 暫停用（GENERATE_TAG_ICONS=False）：只回傳 stamp 槽位，
-        _generate_assets() 的迴圈自然就不會排 tag job。
+        stamp（GENERATE_STAMP=False）與 tag icon（GENERATE_TAG_ICONS=False）都暫停用：
+        兩者皆不排入槽位，_generate_assets() 的迴圈自然就不會排對應 job。
         """
         version = hashlib.md5(
             f"{DECORATION_MODEL}|square|{PROMPT_VERSION}".encode()
         ).hexdigest()[:8]
         dest_slug = self._destination_slug(analysis)
 
-        slots = {"stamp": f"{S3_PREFIX}/packs/dest/{dest_slug}/stamp-{version}.png"}
+        slots: dict[str, str] = {}
+        if GENERATE_STAMP:
+            slots["stamp"] = f"{S3_PREFIX}/packs/dest/{dest_slug}/stamp-{version}.png"
         if GENERATE_TAG_ICONS:
             for index, tag in enumerate(tag_values(analysis)):
                 tag_hash = hashlib.sha256(
@@ -253,7 +267,8 @@ class ShareImageV2Service:
         decorations = self.decoration_slots(analysis)
         tags = tag_values(analysis)
 
-        stamp_key = decorations.get("stamp")
+        # stamp 暫停用：不產也不回 URL/fallback_category（見 GENERATE_STAMP）
+        stamp_key = decorations.get("stamp") if GENERATE_STAMP else None
         # tag icon 暫停用：不產也不回 URL（見 GENERATE_TAG_ICONS）；highlight_tags 文字仍在 content 裡完整回傳
         tag_urls: list[str | None] = []
         tag_categories: list[str] = []
@@ -289,7 +304,7 @@ class ShareImageV2Service:
                     if stamp_key and await self._store.exists(stamp_key)
                     else None
                 ),
-                "stamp_fallback_category": "generic",
+                "stamp_fallback_category": "generic" if GENERATE_STAMP else None,
                 "tag_icon_urls": tag_urls,
                 "tag_fallback_categories": tag_categories,
             },

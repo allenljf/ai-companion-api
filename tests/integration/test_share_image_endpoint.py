@@ -80,7 +80,7 @@ def test_ready_flow(client, kv):
     data = body["data"]
     assert data["status"] == "ready"
     assert data["hero_url"].startswith("https://storage.googleapis.com/")
-    assert data["decorations"]["stamp_url"]
+    assert data["decorations"]["stamp_url"] is None  # stamp 暫停用（見 share_image.GENERATE_STAMP）
     assert data["decorations"]["tag_icon_urls"] == []  # tag icon 暫停用（見 share_image.GENERATE_TAG_ICONS）
     assert data["content"]["travel_identity"] == "獨處療癒師"
     assert data["share_fallback"] is None and data["fail_reason"] is None

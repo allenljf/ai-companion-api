@@ -14,7 +14,7 @@
 | Hosting | **Google Cloud Run**（asia-east1，min-instances 0） | timeout 300s；冷啟動 3.5s、熱請求 0.05s；記憶體 ~60MB/512Mi |
 | DB | **Neon Postgres**（免費層） | 分析快取（**永久保留**，清除自行下 SQL）/ 併發鎖（有 TTL）/ gallery（**永久保留**，API 只回最新 100 筆）；SQLite 因 Cloud Run 暫時檔案系統不可用 |
 | LLM | **Vertex AI**（`gemini-3.6-flash`，吃 GCP $300 試用額度） | 輕量任務 `:minimal`、重度結構化 `:low`（thinking 模型要壓思考預算）；ADC 認證免金鑰；Groq/AI Studio key 保留為備援（`LLM_*` env 可切） |
-| 產圖 | **Vertex AI**（`gemini-3.1-flash-image`，吃 GCP $300 額度，約 $0.2/次測驗） | hero 2K（1536×2752）零文字、stamp 硬約束一次過；**支援參考圖**（旅伴合成有路可走）；試用帳戶 RPM 低 → 併發 2 + 429 重試，缺的素材重打自動補齊；Cloudflare 留備援（`IMAGE_PROVIDER=cloudflare`）。調研：`docs/research/image-gen-free-tier.md` |
+| 產圖 | **Vertex AI**（`gemini-3.1-flash-image`，吃 GCP $300 額度，約 $0.2/次測驗） | hero 2K（1536×2752）零文字；**stamp/tag 插畫暫停產生**（見下方限制，目前只產 hero）；**支援參考圖**（旅伴合成有路可走）；試用帳戶 RPM 低 → 併發 2 + 429 重試，缺的素材重打自動補齊；Cloudflare 留備援（`IMAGE_PROVIDER=cloudflare`）。調研：`docs/research/image-gen-free-tier.md` |
 | 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
 | prompt | `app/prompts/*.txt`（Jinja2） | 原 DCS 內容已全部落地成檔案 |
 
@@ -25,7 +25,7 @@
 | `GET /v1/companion/ai-partner` | 旅伴設定選項 | — |
 | `POST /v1/companion/quiz` | 測驗題目（加權選題 + 語氣改寫） | — |
 | `POST /v1/companion/quiz-completions` | 八人格判定 + 文案生成（結果永久快取） | — |
-| `POST /v1/companion/share-image-v2` | 分享海報素材（hero + 郵戳；**tag 插畫暫停用**，見下方限制） | 10/min |
+| `POST /v1/companion/share-image-v2` | 分享海報素材（**目前只產 hero**；郵戳/tag 插畫暫停用，見下方限制） | 10/min |
 | `POST /v1/companion/self-introduction` | 旅伴自我介紹 | 10/min |
 | `GET /v1/companion/quiz-gallery` | 測驗結果牆（只含產圖成功項） | — |
 | `POST /v1/plan/travel-summary` | 聊天室初始化摘要（四入口） | 20/min |
@@ -82,7 +82,7 @@ Repo secrets：`GCP_SA_KEY`、`GCP_PROJECT_ID`、`GEMINI_API_KEY`、`GROQ_API_KE
 ## 已知限制
 
 - **額度**：LLM 與產圖都走 Vertex AI 計入 GCP 帳單（試用額度 $300 內免費，額度頁可查餘額）
-- **產圖配額（重要）**：`gemini-3.1-flash-image` 的 `GenContentImageGenRequestsPerMinutePerProjectPerBaseModelGlobal` 配額是**每分鐘 2 張、只在 global 端點**（區域端點該模型 404、Imagen 系列無獨立配額可繞）。一次 share-image-v2 若產 5 張（hero+stamp+3 tag）必超額 → **tag 插畫已暫停產生**（`app/services/companion/share_image.py` 的 `GENERATE_TAG_ICONS = False`），目前只產 hero + stamp（2 張，符合配額）。`decorations.tag_icon_urls`/`tag_fallback_categories` 固定回空陣列；`content.highlight_tags` 文字仍完整回傳。額度調升或改用其他 provider 產裝飾素材時，把該旗標改回 `True` 即可重新啟用（邏輯已就緒，不需要改程式結構）。
+- **產圖配額（重要）**：`gemini-3.1-flash-image` 的 `GenContentImageGenRequestsPerMinutePerProjectPerBaseModelGlobal` 配額是**每分鐘 2 張、只在 global 端點、全專案共用**（不是每個請求各自 2 張；區域端點該模型 404、Imagen 系列無獨立配額可繞）。一次 share-image-v2 若產 5 張（hero+stamp+3 tag）必超額，即使只送 hero+stamp 2 張，多使用者同時打也很容易在同一分鐘內把配額用光 → **stamp 與 tag 插畫皆已暫停產生**（`app/services/companion/share_image.py` 的 `GENERATE_STAMP = False`、`GENERATE_TAG_ICONS = False`），目前**只產 hero**（1 張，把配額留給每個人都需要的素材）。`decorations.stamp_url`/`stamp_fallback_category` 固定回 `null`；`decorations.tag_icon_urls`/`tag_fallback_categories` 固定回空陣列；`content.highlight_tags` 文字仍完整回傳。**App 端請勿再接受、快取或顯示 stamp 圖片**（含舊回應快取到的 stamp URL），一律視為本次沒有 stamp。額度調升或改用其他 provider 產裝飾素材時，把對應旗標改回 `True` 即可重新啟用（邏輯已就緒，不需要改程式結構）。
 - **單 instance 假設**：rate limiter 是記憶體版（多副本時各自計數）；max-instances 已設 1
-- **產圖**：旅伴人物合成尚未實作（gemini image 支援參考圖，屬未來擴充）；stamp 會渲染可讀英文（拼字正確，是否保留屬設計取捨）
+- **產圖**：旅伴人物合成尚未實作（gemini image 支援參考圖，屬未來擴充）
 - **prompt 調校待辦**：集中記錄在 `docs/migration-plan.md` 各階段備註（destination 偶回國家/英文、字數規格遵循弱等）——都是換免費模型後的已知品質落差，功能可用
