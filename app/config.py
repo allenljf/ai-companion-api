@@ -18,15 +18,15 @@ class Settings(BaseSettings):
     database_url: str | None = None
 
     # LLM 任務路由："provider:model[:reasoning_effort]"（provider = gemini | groq）
-    # 2026-08-18：保守回退到 Vertex 的輕量 Gemini 模型，避免 Groq 免費層限流；
-    # 產圖仍走 Cloudflare（免費 neurons），不再用 Gemini 3.6 Flash / Groq 的高波動模型。
-    llm_travel_summary: str = "vertex:gemini-2.5-flash-lite"
-    llm_recommend_city: str = "vertex:gemini-2.5-flash-lite"
-    llm_travel_guide: str = "vertex:gemini-2.5-flash-lite"
-    llm_travel_revise: str = "vertex:gemini-2.5-flash-lite"
-    llm_quiz: str = "vertex:gemini-2.5-flash-lite"
-    llm_quiz_completions: str = "vertex:gemini-2.5-flash-lite"
-    llm_self_introduction: str = "vertex:gemini-2.5-flash-lite"
+    # 2026-08-18：Gemini 2.5 系列仍然可用，但最新的輕量主力已是 3.5 Flash-Lite；
+    # 這裡改用 Vertex 的低成本新模型，維持文字路由穩定且更貼近最新官方列表。
+    llm_travel_summary: str = "vertex:gemini-3.5-flash-lite"
+    llm_recommend_city: str = "vertex:gemini-3.5-flash-lite"
+    llm_travel_guide: str = "vertex:gemini-3.5-flash-lite"
+    llm_travel_revise: str = "vertex:gemini-3.5-flash-lite"
+    llm_quiz: str = "vertex:gemini-3.5-flash-lite"
+    llm_quiz_completions: str = "vertex:gemini-3.5-flash-lite"
+    llm_self_introduction: str = "vertex:gemini-3.5-flash-lite"
 
     # Vertex AI（LLM 主 provider）：Cloud Run 上以 runtime SA 的 ADC 認證，不需金鑰
     vertex_project_id: str = "ai-companion-505507"
