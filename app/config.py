@@ -18,19 +18,16 @@ class Settings(BaseSettings):
     database_url: str | None = None
 
     # LLM 任務路由："provider:model[:reasoning_effort]"（provider = gemini | groq）
-    # 每支 API 可獨立指定模型（CLAUDE.md 技術決策），換模型改 env 即可。
-    # Qwen 是 reasoning 模型，輕量任務關掉思考（:none）避免 tokens 被吃光
-    # 2026-08-16 全面切 Vertex AI（原 Groq 免費層：qwen TPM 8000 / llama TPM 12000 撞 429、
-    # 簡繁混雜、且 Groq 無產圖生態；AI Studio 金鑰 prepay 額度耗盡 → 走 Vertex 吃 GCP 試用額度）。
-    # gemini-3.6-flash 是 thinking 模型：輕量任務 :minimal 壓思考預算（對應 Groq 時代的 :none），
-    # 重度結構化（guide/revise/completions）:low。要暫時切回 Groq 用 LLM_* env 覆寫即可。
-    llm_travel_summary: str = "vertex:gemini-3.6-flash:minimal"
-    llm_recommend_city: str = "vertex:gemini-3.6-flash:minimal"
-    llm_travel_guide: str = "vertex:gemini-3.6-flash:low"
-    llm_travel_revise: str = "vertex:gemini-3.6-flash:low"
-    llm_quiz: str = "vertex:gemini-3.6-flash:minimal"
-    llm_quiz_completions: str = "vertex:gemini-3.6-flash:low"
-    llm_self_introduction: str = "vertex:gemini-3.6-flash:minimal"
+    # 2026-08-18：文字任務改走 Groq（免費/低成本），產圖走 Cloudflare（免費 neurons）
+    # 這個 repo 目前沒有 Cloudflare LLM provider implementation，故文字模型用 Groq，圖片模型用 Cloudflare。
+    # 輕量任務優先用 8B/9B，重度結構化任務用 70B 系列；不再用 Vertex Gemini 3.6 Flash。
+    llm_travel_summary: str = "groq:llama-3.1-8b-instant"
+    llm_recommend_city: str = "groq:llama-3.1-8b-instant"
+    llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
+    llm_travel_revise: str = "groq:llama-3.3-70b-versatile"
+    llm_quiz: str = "groq:llama-3.1-8b-instant"
+    llm_quiz_completions: str = "groq:llama-3.3-70b-versatile"
+    llm_self_introduction: str = "groq:llama-3.1-8b-instant"
 
     # Vertex AI（LLM 主 provider）：Cloud Run 上以 runtime SA 的 ADC 認證，不需金鑰
     vertex_project_id: str = "ai-companion-505507"
