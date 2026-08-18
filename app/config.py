@@ -18,15 +18,14 @@ class Settings(BaseSettings):
     database_url: str | None = None
 
     # LLM 任務路由："provider:model[:reasoning_effort]"（provider = gemini | groq）
-    # 2026-08-18：文字任務改走 Groq（免費/低成本），產圖走 Cloudflare（免費 neurons）
-    # 這個 repo 目前沒有 Cloudflare LLM provider implementation，故文字模型用 Groq，圖片模型用 Cloudflare。
-    # 輕量任務優先用 8B/9B，重度結構化任務用 70B 系列；不再用 Vertex Gemini 3.6 Flash。
+    # 2026-08-18：先用 Groq 最穩定的 8B instant 模型，避免 70B / reasoning 模型在免費層撞 TPM/429。
+    # 產圖仍走 Cloudflare（免費 neurons），不再用 Vertex Gemini 3.6 Flash。
     llm_travel_summary: str = "groq:llama-3.1-8b-instant"
     llm_recommend_city: str = "groq:llama-3.1-8b-instant"
-    llm_travel_guide: str = "groq:llama-3.3-70b-versatile"
-    llm_travel_revise: str = "groq:llama-3.3-70b-versatile"
+    llm_travel_guide: str = "groq:llama-3.1-8b-instant"
+    llm_travel_revise: str = "groq:llama-3.1-8b-instant"
     llm_quiz: str = "groq:llama-3.1-8b-instant"
-    llm_quiz_completions: str = "groq:llama-3.3-70b-versatile"
+    llm_quiz_completions: str = "groq:llama-3.1-8b-instant"
     llm_self_introduction: str = "groq:llama-3.1-8b-instant"
 
     # Vertex AI（LLM 主 provider）：Cloud Run 上以 runtime SA 的 ADC 認證，不需金鑰
