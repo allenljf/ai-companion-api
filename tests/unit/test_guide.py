@@ -211,11 +211,19 @@ async def test_generate_city_mismatch_is_failure():
 
 @pytest.mark.asyncio
 async def test_generate_simplified_city_not_false_failure():
-    # LLM 吐簡體「京都」同字，但如「东京」vs「東京」需先轉繁再比對
+    # LLM 吐簡體「東京」時需先轉繁比對，但回應仍需保留 request.city 的原字串。
     client, _ = make_client(llm_reply(city="东京"))
     result = await generate(dict(BASE_PARAMS) | {"city": "東京"}, client)
     assert result["fail_reason"] is None
     assert result["city"] == "東京"
+
+
+@pytest.mark.asyncio
+async def test_generate_traditional_variant_returns_exact_requested_city():
+    client, _ = make_client(llm_reply(city="臺北"))
+    result = await generate(dict(BASE_PARAMS) | {"city": "台北"}, client)
+    assert result["fail_reason"] is None
+    assert result["city"] == "台北"
 
 
 @pytest.mark.asyncio

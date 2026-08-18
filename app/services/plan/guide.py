@@ -5,7 +5,7 @@
 item 的 oid/prod_id 欄位保留在契約中但恆為 null。
 
 後端把關（不信任模型自律）：
-- 城市一致性：請求帶 city 時輸出必須一致，不一致視為失敗（不回半新半舊的結果）
+- 城市一致性：請求帶 city 時，先正規化驗證同一城市，成功回應仍原樣採用請求值；真正不一致視為失敗
 - oid/prod_id 白名單 + 全行程去重、booked_anchor 推導 → app.core.normalize
 - messages 最多 2 則、單則 ≤60 字（句尾截斷保險）
 - 簡轉繁後處理（風險 #3）：城市名先轉繁再比對，防簡體拼寫繞過一致性檢查
@@ -73,15 +73,19 @@ async def generate(
     if not itinerary or not isinstance(itinerary, list):
         return _failure_result(model, "LLM fail: LLM 回應無法解析為預期 JSON（缺 itinerary 欄位）")
 
-    # 城市一致性保證（技法 5）：請求已指定城市時輸出必須一致，不一致視為失敗。
-    # 先轉繁再比對——簡體「东京」不能繞過「東京」的一致性檢查
+    # 城市一致性保證（技法 5）：請求已指定城市時只用模型輸出做驗證，
+    # 成功回應永遠保留 request.city 原字串。兩邊同樣轉繁，讓「台北」/「臺北」
+    # 與「东京」/「東京」不會被誤判為不同城市，但 Taipei/台北市 仍會失敗。
     requested_city = str(params.get("city") or "").strip()
-    output_city = to_traditional(scalar_trim(decoded.get("city"))) or requested_city
-    if requested_city and output_city and output_city != requested_city:
+    llm_city = scalar_trim(decoded.get("city"))
+    normalized_requested_city = to_traditional(requested_city)
+    normalized_llm_city = to_traditional(llm_city)
+    if requested_city and normalized_llm_city and normalized_llm_city != normalized_requested_city:
         return _failure_result(
-            model, f"LLM fail: 輸出城市「{output_city}」與請求城市「{requested_city}」不一致"
+            model, f"LLM fail: 輸出城市「{llm_city}」與請求城市「{requested_city}」不一致"
         )
 
+    output_city = requested_city or normalized_llm_city
     success = _success_result(decoded, output_city, model)
     # 行程 hero 圖（行程本體成功才產）：產圖失敗只降級 null，不影響行程回應
     success["hero_image_url"] = await _generate_hero_image(

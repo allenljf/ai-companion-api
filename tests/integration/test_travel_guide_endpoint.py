@@ -104,6 +104,14 @@ class TestSoftFailure200:
 
 
 class TestSuccess:
+    def test_city_variant_returns_exact_requested_city(self, client, stub):
+        stub.reply = LLM_OK.replace("京都", "臺北")
+        res = client.post(URL, json=VALID_BODY | {"city": "台北"})
+        data = res.json()["data"]
+        assert res.status_code == 200
+        assert data["fail_reason"] is None
+        assert data["city"] == "台北"
+
     def test_full_envelope(self, client, stub):
         stub.reply = LLM_OK
         res = client.post(URL, json=VALID_BODY)
