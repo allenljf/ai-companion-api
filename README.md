@@ -1,88 +1,202 @@
 # AI Companion API
 
-把 kkday-b2c-api 的「AI 旅伴」（Phase 1 + Phase 2；2026-08-16 移除 6 支未使用端點後現為 **11 支 API**）重寫成獨立的 Python / FastAPI 雲端服務，跑在免費層上。
+> A production-oriented AI travel companion backend built with FastAPI, Vertex AI, and Google Cloud Run.
 
-- **規格真相**：`docs/source-spec.md`（17 支 API 的輸入輸出、prompt 全文、normalize 規則）
-- **路線圖與各階段實錄**：`docs/migration-plan.md`（進度表的「備註」欄記錄了每個階段實際踩到的坑）
-- **原始 PHP 快照**：`reference/`（唯讀查證用）
-- **線上服務**：https://ai-companion-api-30568057620.asia-east1.run.app （API 文件：`/docs`）
+AI Companion API turns travel preferences and conversational context into structured, editable itineraries. It is designed around a practical constraint of LLM applications: model output is useful but never fully trusted. The service validates, normalizes, and safely degrades every AI-assisted response before returning it to a client.
 
-## 架構與選型（含實測結論）
+- Live API: https://ai-companion-api-30568057620.asia-east1.run.app
+- Interactive API documentation: https://ai-companion-api-30568057620.asia-east1.run.app/docs
+- Health check: https://ai-companion-api-30568057620.asia-east1.run.app/health
 
-| 項目 | 選擇 | 實測備註 |
-|---|---|---|
-| Hosting | **Google Cloud Run**（asia-east1，min-instances 0） | timeout 300s；冷啟動 3.5s、熱請求 0.05s；記憶體 ~60MB/512Mi |
-| DB | **Neon Postgres**（免費層） | 分析快取（**永久保留**，清除自行下 SQL）/ 併發鎖（有 TTL）/ gallery（**永久保留**，API 只回最新 100 筆）；SQLite 因 Cloud Run 暫時檔案系統不可用 |
-| LLM | **Vertex AI**（`gemini-3.6-flash`，吃 GCP $300 試用額度） | 輕量任務 `:minimal`、重度結構化 `:low`（thinking 模型要壓思考預算）；ADC 認證免金鑰；Groq/AI Studio key 保留為備援（`LLM_*` env 可切） |
-| 產圖 | **Vertex AI**（`gemini-3.1-flash-image`，吃 GCP $300 額度，約 $0.2/次測驗） | hero 2K（1536×2752）零文字；**stamp/tag 插畫暫停產生**（見下方限制，目前只產 hero）；**支援參考圖**（旅伴合成有路可走）；試用帳戶 RPM 低 → 併發 2 + 429 重試，缺的素材重打自動補齊；Cloudflare 留備援（`IMAGE_PROVIDER=cloudflare`）。調研：`docs/research/image-gen-free-tier.md` |
-| 物件儲存 | **GCS**（公開 bucket `ai-companion-assets-allenljf`） | 頭像/題庫圖/產圖素材 |
-| prompt | `app/prompts/*.txt`（Jinja2） | 原 DCS 內容已全部落地成檔案 |
+## Highlights
 
-## 端點總覽（11 支 + debug）
-
-| 路由 | 說明 | 限流 |
-|---|---|---|
-| `GET /v1/companion/ai-partner` | 旅伴設定選項 | — |
-| `POST /v1/companion/quiz` | 測驗題目（加權選題 + 語氣改寫） | — |
-| `POST /v1/companion/quiz-completions` | 八人格判定 + 文案生成（結果永久快取） | — |
-| `POST /v1/companion/share-image-v2` | 分享海報素材（**目前只產 hero**；郵戳/tag 插畫暫停用，見下方限制） | 10/min |
-| `POST /v1/companion/self-introduction` | 旅伴自我介紹 | 10/min |
-| `GET /v1/companion/quiz-gallery` | 測驗結果牆（只含產圖成功項） | — |
-| `POST /v1/plan/travel-summary` | 聊天室初始化摘要（四入口） | 20/min |
-| `POST /v1/plan/recommend-city` | 城市推薦多輪對話 | 30/min |
-| `POST /v1/plan/travel-guide` | 一次性產出完整行程 + 目的地 hero 圖（`hero_image_url`，同城市跨用戶快取、失敗降級 null） | 15/min |
-| `POST /v1/plan/travel-revise` | 自然語言修改行程 | 20/min |
-| `GET /debug/*` | 平台驗證用（sleep/memory/storage），不屬 App 契約 | — |
-
-**共通契約**（source-spec 2.3 / 6.5）：LLM 軟失敗回 HTTP 200 + `fail_reason` 有值 + 可渲染兜底；驗證失敗 400（`110001`）；限流 429；share-image 快取過期回 200 + `metadata.status=C007`。原始服務未實作的：legacy share-image v1（刻意不移植）。
-
-## 開發
-
-```bash
-python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"   # 首次
-cp .env.example .env                                          # 填入金鑰
-.venv/bin/uvicorn app.main:app --reload                       # 開發伺服器
-.venv/bin/pytest                                              # 測試（mock LLM；Neon 整合測試需 DATABASE_URL）
-.venv/bin/pytest -m prompt_regression                         # 真實 LLM 回歸測試（耗額度，手動跑；注意 Groq TPM，測項間隔 60-90s）
-```
-
-## 帳號與金鑰設定（一次性精靈）
-
-```bash
-./scripts/setup-wizard.sh        # GitHub / GCP / Neon / Gemini / Groq / 首次部署
-./scripts/cloudflare-wizard.sh   # Cloudflare Workers AI（階段 8 產圖）
-```
-
-皆可 Ctrl-C 中斷後重跑，已填的值會保留。
-
-## 部署
-
-Push 到 `main` → GitHub Actions 測試 → `gcloud run deploy --source .`（`.github/workflows/deploy.yml`）。
-
-Repo secrets：`GCP_SA_KEY`、`GCP_PROJECT_ID`、`GEMINI_API_KEY`、`GROQ_API_KEY`、`DATABASE_URL`、`CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_API_TOKEN`。
-
-> ⚠️ deploy.yml 的 `--update-env-vars` 用 `^##^` 當分隔符——**不要改回 `^@^`**，`DATABASE_URL` 含 `@` 會被切斷（踩過，見 migration-plan 階段 6 備註）。
-
-環境變數一覽（本地 `.env` 同名）：
-
-| 變數 | 用途 |
+| Area | Implementation |
 |---|---|
-| `GROQ_API_KEY` / `GEMINI_API_KEY` | 備援 LLM provider（主力已切 Vertex AI，ADC 認證不需金鑰） |
-| `DATABASE_URL` | Neon（KV 快取/鎖/gallery；沒設會退回記憶體版） |
-| `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` | 產圖 |
-| `LLM_TRAVEL_SUMMARY` 等 `LLM_*` | 各 API 的模型路由覆寫，格式 `provider:model[:reasoning_effort]` |
+| API | Python 3.11+, FastAPI, Pydantic v2 request contracts |
+| Text generation | Vertex AI with `gemini-3.5-flash-lite` and task-level model routing |
+| Image generation | Cloudflare Workers AI for travel hero assets |
+| Storage | Neon Postgres for cache, locking, and gallery data; GCS for media objects |
+| Deployment | GitHub Actions CI/CD to Google Cloud Run |
+| Testing | Unit tests, API integration tests, and opt-in live prompt regression tests |
 
-## 監控
+## Product Flow
 
-- **每請求 access log**（method/path/status/duration_ms）→ Cloud Run Logs Explorer，可建 log-based metrics
-- **LLM 失敗**：回應的 `fail_reason` + service 層 error log；**產圖失敗**：`asset generation failed` warning log
-- **延遲/錯誤率/instance 數**：Cloud Run console 內建 metrics 頁
-- 額度儀表板：Groq console（TPM/RPD）、Cloudflare dashboard（neurons）、Neon console（storage）
+```mermaid
+flowchart LR
+		A[Choose AI companion] --> B[Travel preference quiz]
+		B --> C[Travel identity and introduction]
+		C --> D[City recommendation or summary]
+		D --> E[Structured itinerary]
+		E --> F[Natural-language itinerary revision]
+		C --> G[Shareable travel hero image]
+```
 
-## 已知限制
+The API currently exposes 10 public product endpoints, organized into companion setup and trip planning workflows.
 
-- **額度**：LLM 與產圖都走 Vertex AI 計入 GCP 帳單（試用額度 $300 內免費，額度頁可查餘額）
-- **產圖配額（重要）**：`gemini-3.1-flash-image` 的 `GenContentImageGenRequestsPerMinutePerProjectPerBaseModelGlobal` 配額是**每分鐘 2 張、只在 global 端點、全專案共用**（不是每個請求各自 2 張；區域端點該模型 404、Imagen 系列無獨立配額可繞）。一次 share-image-v2 若產 5 張（hero+stamp+3 tag）必超額，即使只送 hero+stamp 2 張，多使用者同時打也很容易在同一分鐘內把配額用光 → **stamp 與 tag 插畫皆已暫停產生**（`app/services/companion/share_image.py` 的 `GENERATE_STAMP = False`、`GENERATE_TAG_ICONS = False`），目前**只產 hero**（1 張，把配額留給每個人都需要的素材）。`decorations.stamp_url`/`stamp_fallback_category` 固定回 `null`；`decorations.tag_icon_urls`/`tag_fallback_categories` 固定回空陣列；`content.highlight_tags` 文字仍完整回傳。**App 端請勿再接受、快取或顯示 stamp 圖片**（含舊回應快取到的 stamp URL），一律視為本次沒有 stamp。額度調升或改用其他 provider 產裝飾素材時，把對應旗標改回 `True` 即可重新啟用（邏輯已就緒，不需要改程式結構）。
-- **單 instance 假設**：rate limiter 是記憶體版（多副本時各自計數）；max-instances 已設 1
-- **產圖**：旅伴人物合成尚未實作（gemini image 支援參考圖，屬未來擴充）
-- **prompt 調校待辦**：集中記錄在 `docs/migration-plan.md` 各階段備註（destination 偶回國家/英文、字數規格遵循弱等）——都是換免費模型後的已知品質落差，功能可用
+| Area | Endpoint | Responsibility |
+|---|---|---|
+| Companion | `GET /v1/companion/ai-partner` | Provides available companion personas |
+| Companion | `POST /v1/companion/quiz` | Selects and adapts quiz questions |
+| Companion | `POST /v1/companion/quiz-completions` | Produces travel identity and companion-facing copy |
+| Companion | `POST /v1/companion/self-introduction` | Generates a persona introduction |
+| Companion | `POST /v1/companion/share-image-v2` | Produces shareable hero-image assets |
+| Companion | `GET /v1/companion/quiz-gallery` | Returns generated quiz-result gallery records |
+| Planning | `POST /v1/plan/travel-summary` | Initializes the planning context |
+| Planning | `POST /v1/plan/recommend-city` | Runs a bounded city-recommendation dialogue |
+| Planning | `POST /v1/plan/travel-guide` | Generates a complete structured itinerary |
+| Planning | `POST /v1/plan/travel-revise` | Revises an existing itinerary from natural language |
+
+## Architecture
+
+```mermaid
+flowchart TB
+		Client[Web or mobile client] --> API[FastAPI on Cloud Run]
+		API --> Schema[Pydantic validation]
+		Schema --> Services[Companion and planning services]
+		Services --> LLM[Vertex AI: Gemini 3.5 Flash-Lite]
+		Services --> Prompts[Jinja2 prompts in source control]
+		Services --> DB[Neon Postgres]
+		Services --> Image[Cloudflare Workers AI]
+		Image --> GCS[Google Cloud Storage]
+		DB --> Cache[Cache, locks, gallery]
+```
+
+Cloud Run uses its runtime service account and Application Default Credentials to call Vertex AI, so text-generation credentials are not embedded in application code. The service is deployed in `asia-east1` with a 300-second request timeout for long structured itinerary generation.
+
+```mermaid
+flowchart LR
+		Push[Push to main] --> CI[GitHub Actions: install and test]
+		CI --> Deploy[gcloud run deploy --source]
+		Deploy --> Run[Cloud Run service]
+```
+
+## LLM Integration and Reliability
+
+The application separates provider transport, task routing, prompts, output parsing, and domain normalization. This makes model-facing code replaceable while keeping API contracts stable.
+
+```mermaid
+sequenceDiagram
+		participant C as Client
+		participant A as FastAPI service
+		participant V as Vertex AI
+		participant N as Normalize layer
+
+		C->>A: travel-guide request
+		A->>A: Validate request and render prompt
+		A->>V: Generate structured JSON
+		V-->>A: Model output
+		A->>N: Parse, validate, and normalize
+		N-->>A: Safe itinerary or fallback
+		A-->>C: Stable response envelope
+```
+
+### Design Decisions
+
+| Problem | Backend decision | Result |
+|---|---|---|
+| LLM calls can timeout, rate-limit, or return malformed JSON | Convert AI failures to a renderable HTTP 200 response with `fail_reason` and a deterministic fallback | Clients do not receive an unusable partial itinerary or a server error for an expected provider failure |
+| Models can invent identifiers or invalid enum values | Normalize outputs through defensive Pydantic and pure-function transformations | Only request-authorized IDs survive; invalid values become safe defaults |
+| A model may alter a selected destination | Treat request `city` as authoritative; normalize both values only for equivalence checking, then return the exact request string | `台北` and `臺北` do not false-fail, while a real destination mismatch is rejected |
+| Prompts require review and iteration | Store Jinja2 prompt templates in `app/prompts/` | Prompt changes are versioned, diffable, and independent from Python control flow |
+| Hero-image generation can fail or hit quota | Cache generated assets and return `hero_image_url: null` on image failure | The itinerary remains usable without blocking on optional media |
+
+### Stable Response Contract
+
+All LLM-backed endpoints use the same reliability contract:
+
+| Situation | HTTP status | Response behavior |
+|---|---:|---|
+| Invalid request | 400 | Validation envelope with field errors |
+| Rate limit reached | 429 | Throttle response |
+| LLM transport, parsing, or schema failure | 200 | Renderable fallback plus `fail_reason` |
+| Optional image failure | 200 | Main content succeeds; image URL is `null` |
+
+This deliberately distinguishes a malformed client request from an external AI-provider failure. It lets the client render a consistent UI and offer an explicit retry instead of treating every model failure as an application outage.
+
+## Project Structure
+
+```text
+app/
+	api/          FastAPI routes and dependency injection
+	core/         JSON parsing, normalization, throttling, prompt utilities
+	prompts/      Version-controlled Jinja2 prompt templates
+	schemas/      Pydantic request and response contracts
+	services/     Companion, itinerary, LLM, and image workflows
+	storage/      Postgres, GCS, cache, and gallery adapters
+tests/
+	unit/         Pure logic and service tests
+	integration/  FastAPI endpoint contract tests
+	prompt_regression/  Opt-in live model checks
+```
+
+## Development
+
+### Prerequisites
+
+- Python 3.11 or later
+- A Google Cloud project with Vertex AI access for real text generation
+- Application Default Credentials locally: `gcloud auth application-default login`
+- Optional: Neon Postgres, Google Cloud Storage, and Cloudflare Workers AI credentials
+
+### Run Locally
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/uvicorn app.main:app --reload
+```
+
+The API is then available at `http://127.0.0.1:8000`, with interactive documentation at `/docs`.
+
+### Configuration
+
+| Environment variable | Purpose |
+|---|---|
+| `VERTEX_PROJECT_ID` | Google Cloud project for Vertex AI calls |
+| `VERTEX_LOCATION` | Vertex AI location; defaults to `global` |
+| `DATABASE_URL` | Neon Postgres connection string; falls back to in-memory storage locally |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Workers AI account |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare Workers AI token |
+| `LLM_TRAVEL_GUIDE` and other `LLM_*` routes | Per-task provider and model override |
+
+Never commit credentials. Production configuration is supplied through GitHub repository secrets during deployment.
+
+## Testing
+
+```bash
+# Unit and integration tests with mocked providers
+.venv/bin/pytest
+
+# Live prompt regression tests; uses real model quota
+.venv/bin/pytest -m prompt_regression
+```
+
+The CI workflow runs all tests except live prompt regression checks on pull requests and pushes. Live checks are intentionally opt-in because LLM output is nondeterministic and consumes provider quota.
+
+## Deployment and Observability
+
+Every push to `main` runs tests in GitHub Actions and, after they pass, deploys the service to Cloud Run.
+
+| Concern | Implementation |
+|---|---|
+| Authentication | GitHub Actions authenticates to GCP with a repository secret; Cloud Run uses its service account for Vertex AI |
+| Runtime | Cloud Run, 512 MiB memory, one CPU, 300-second timeout, scale-to-zero enabled |
+| Request visibility | Access logs capture HTTP method, path, status, and duration |
+| AI failures | Service logs record provider and image-generation failures; API responses expose `fail_reason` safely |
+| Capacity protection | Endpoint-specific in-memory throttling and image cache/lock behavior |
+
+## Known Trade-offs and Next Steps
+
+- The current rate limiter is process-local because the Cloud Run service is intentionally capped at one instance. A distributed limiter is the next step before horizontal scaling.
+- Generated imagery is optional and quota-sensitive; text itinerary delivery takes priority when image generation is unavailable.
+- Production hardening candidates include distributed rate limits, OpenTelemetry tracing, provider health checks, background image jobs, and a curated prompt-evaluation dataset.
+
+## API Exploration
+
+Start with the interactive documentation, then inspect these representative flows:
+
+1. `POST /v1/companion/quiz-completions` for structured travel identity generation.
+2. `POST /v1/plan/travel-guide` for a complete itinerary and safe LLM-output normalization.
+3. `POST /v1/plan/travel-revise` for full-itinerary revision from natural-language input.
+
+The `travel-guide` service, its normalization layer, and the accompanying unit/integration tests are the best entry points for reviewing the project's approach to production LLM reliability.
