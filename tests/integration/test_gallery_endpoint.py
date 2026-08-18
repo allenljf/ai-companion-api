@@ -23,6 +23,26 @@ def client(gallery) -> TestClient:
 
 
 class TestQuizGallery:
+    def test_retries_once_after_transient_gallery_read_failure(self, client, gallery):
+        original_list = gallery.list
+        calls = 0
+
+        async def list_after_cold_start():
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                raise ConnectionError("database cold start")
+            return await original_list()
+
+        gallery.list = list_after_cold_start
+        asyncio.run(gallery.push({"travel_identity": "有圖", "share_image_url": "https://x/1.jpg"}))
+
+        res = client.get("/v1/companion/quiz-gallery")
+
+        assert res.status_code == 200
+        assert res.json()["data"]["count"] == 1
+        assert calls == 2
+
     def test_empty_gallery(self, client):
         res = client.get("/v1/companion/quiz-gallery")
         assert res.status_code == 200

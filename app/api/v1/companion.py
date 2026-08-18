@@ -1,4 +1,6 @@
+import asyncio
 import json
+import logging
 from functools import lru_cache
 
 from fastapi import APIRouter, Depends
@@ -26,6 +28,9 @@ from app.services.companion.share_image import QuizSessionNotFound, ShareImageV2
 from app.services.llm.client import LLMClient
 
 router = APIRouter(prefix="/v1/companion", tags=["companion"])
+logger = logging.getLogger(__name__)
+
+GALLERY_RETRY_DELAY_SECONDS = 0.25
 
 
 @lru_cache(maxsize=1)
@@ -81,9 +86,16 @@ async def share_image_v2(
 @router.get("/quiz-gallery", summary="其他人的測驗結果牆（只含產圖成功項）")
 async def quiz_gallery(gallery=Depends(get_gallery)) -> dict:
     """其他人的測驗結果牆（source-spec 4.6）：只收錄產圖成功的項目，新到舊。"""
+    try:
+        records = await gallery.list()
+    except Exception as exc:
+        # Neon 閒置後的 lazy pool 首次連線偶爾會失敗；這是唯讀查詢，可安全重試一次。
+        logger.warning("quiz gallery read failed; retrying once: %s", exc)
+        await asyncio.sleep(GALLERY_RETRY_DELAY_SECONDS)
+        records = await gallery.list()
     records = [
         record
-        for record in await gallery.list()
+        for record in records
         if isinstance(record, dict) and record.get("share_image_url")
     ]
     return success_envelope({"count": len(records), "items": records})
