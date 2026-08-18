@@ -36,13 +36,13 @@ class Settings(BaseSettings):
     vertex_project_id: str = "ai-companion-505507"
     vertex_location: str = "global"
 
-    # 圖片生成：2026-08-16 起主 provider 切 Vertex（gemini-3.1-flash-image，吃 GCP 試用額度，
-    # 硬約束遵循遠優於 flux-schnell）；Cloudflare 留備援（IMAGE_PROVIDER=cloudflare 可切回）
-    image_provider: str = "vertex"
-    image_hero_model: str = "gemini-3.1-flash-image"
-    image_decoration_model: str = "gemini-3.1-flash-image"
+    # 圖片生成：優先改用 Cloudflare Workers AI 免費額度（10,000 neurons/天）
+    # hero 用 flux-2-klein-4b（直式/參考圖模型）；裝飾素材用 flux-1-schnell（方圖）
+    image_provider: str = "cloudflare"
+    image_hero_model: str = "@cf/black-forest-labs/flux-2-klein-4b"
+    image_decoration_model: str = "@cf/black-forest-labs/flux-1-schnell"
 
-    # Cloudflare Workers AI（產圖備援，免費層 10,000 neurons/天）
+    # Cloudflare Workers AI（免費層 10,000 neurons/天，00:00 UTC 重置）
     cloudflare_account_id: str | None = None
     cloudflare_api_token: str | None = None
 
